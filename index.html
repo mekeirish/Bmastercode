@@ -1,937 +1,1342 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4b6cb7">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon.png">
-    <title>Mastercode - Premium PWA Factory</title>
-    <style>
-        :root {
-            --bg: #1a1c20; --card-bg: #23272d; --shadow: #121417;
-            --light: #2e333a; --accent: #4b6cb7; --text: #e0e0e0;
-            --danger: #ff5f56; --success: #27ae60; --warning: #f1c40f;
-        }
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg);
-            margin: 0; padding: 20px; color: var(--text); display: flex;
-            flex-direction: column; align-items: center; min-height: 100vh;
-        }
-        .container { width: 100%; max-width: 500px; padding-bottom: 50px; position: relative; }
-        h1 { text-align: center; font-size: 1.6rem; font-weight: 300; letter-spacing: 4px; color: #fff; margin: 0; text-transform: uppercase; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#050608">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.png">
+<title>Mastercode — PWA Factory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config={ theme:{ extend:{ fontFamily:{ inter:["Inter","sans-serif"] } } } }
+</script>
+<style>
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body{ width:100%; height:100%; margin:0; overflow:hidden; background:#050608; }
+body{
+  font-family:Inter,sans-serif; color:#f8fafc;
+  background:#050608;
+  position:relative;
+}
 
-        /* === GLASSMORPHISM === */
-        .card {
-            background: rgba(35, 39, 45, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 22px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            margin-bottom: 25px;
-        }
-        input, textarea {
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 14px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            color: #fff;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-            outline: none;
-            font-size: 1rem;
-        }
-        input:focus-visible, textarea:focus-visible { border-color: var(--accent); }
-        .btn, .btn-view, .sw-btn-icon {
-            background: rgba(35, 39, 45, 0.6);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 14px 16px;
-            color: var(--accent);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .btn:active, .btn-view:active, .sw-btn-icon:active {
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            transform: scale(0.98);
-        }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-view { padding: 0 15px; font-size: 0.7rem; white-space: nowrap; }
-        .btn-danger {
-            background: transparent;
-            border: none;
-            color: var(--danger);
-            font-size: 0.7rem;
-            cursor: pointer;
-            opacity: 0.6;
-            padding: 8px 0;
-            backdrop-filter: none;
-            box-shadow: none;
-        }
-        .btn-live {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid var(--warning);
-            border-radius: 16px;
-            background: rgba(241, 196, 15, 0.08);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            color: var(--warning);
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .btn-live:hover { background: rgba(241, 196, 15, 0.15); }
-        .btn-live:active { transform: scale(0.98); }
-        .sw-btn-icon {
-            font-size: 1.4rem;
-            padding: 8px 12px;
-            border-radius: 30px;
-            margin-left: 10px;
-        }
-        .btn { width: 100%; margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 12px; }
+/* ========================================================= AURORA BACKGROUND ========================================================= */
+.aurora{
+  position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+}
+.aurora::before,
+.aurora::after,
+.aurora .orb{
+  content:""; position:absolute; border-radius:50%;
+  filter: blur(90px); opacity:.55;
+  will-change:transform;
+}
+.aurora::before{
+  width:60vmax; height:60vmax;
+  background: radial-gradient(circle, rgba(99,102,241,.35), transparent 65%);
+  top:-20vmax; left:-15vmax;
+  animation: auroraA 38s ease-in-out infinite;
+}
+.aurora::after{
+  width:55vmax; height:55vmax;
+  background: radial-gradient(circle, rgba(168,85,247,.28), transparent 65%);
+  bottom:-18vmax; right:-15vmax;
+  animation: auroraB 46s ease-in-out infinite;
+}
+.aurora .orb{
+  width:45vmax; height:45vmax;
+  background: radial-gradient(circle, rgba(37,99,235,.22), transparent 70%);
+  top:35%; left:30%;
+  animation: auroraC 52s ease-in-out infinite;
+}
+@keyframes auroraA{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  50%{ transform: translate(6vmax,4vmax) scale(1.12); }
+}
+@keyframes auroraB{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  50%{ transform: translate(-5vmax,-3vmax) scale(1.15); }
+}
+@keyframes auroraC{
+  0%,100%{ transform: translate(-3vmax,2vmax) scale(1); }
+  50%{ transform: translate(4vmax,-4vmax) scale(1.08); }
+}
+.noise{
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-        label { display: block; margin: 0 0 10px 5px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; }
-        .token-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .led-container { display: flex; gap: 8px; }
-        .led { width: 10px; height: 10px; border-radius: 50%; background-color: #555; transition: 0.3s; }
-        .led-yellow { background-color: var(--warning); box-shadow: 0 0 10px var(--warning); animation: pulse-yellow 1s infinite; }
-        .led-green { background-color: var(--success); box-shadow: 0 0 10px var(--success); animation: none; }
-        .led-red { background-color: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+button, input, textarea{ font-family:inherit; }
+button{ -webkit-user-select:none; user-select:none; }
+.app{ position:relative; z-index:2; width:100%; height:100dvh; min-height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+.app-inner{
+  width:100%; max-width:680px; height:100%; margin:auto;
+  padding: max(10px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));
+  display:flex; flex-direction:column; overflow:hidden;
+}
+/* ========================================================= GLASS ========================================================= */
+.glass{
+  background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 18px 50px rgba(0,0,0,.28);
+  backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+}
+.glass-accent{
+  border:1px solid rgba(99,102,241,.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 0 0 1px rgba(99,102,241,.04),
+    0 18px 50px rgba(0,0,0,.28),
+    0 0 40px rgba(99,102,241,.06);
+}
+.glass-dark{
+  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.065);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+}
+/* ========================================================= HEADER ========================================================= */
+.header{ height:54px; min-height:54px; display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+.brand-logo{
+  width:40px; height:40px; flex:0 0 40px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  background: linear-gradient(145deg, rgba(99,102,241,.25), rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow: 0 0 25px rgba(99,102,241,.13), inset 0 1px rgba(255,255,255,.08);
+}
+.brand-logo::after{
+  content:""; position:absolute; inset:-50%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(168,85,247,.35) 90deg, transparent 180deg, rgba(99,102,241,.35) 270deg, transparent 360deg);
+  animation: logoSpin 12s linear infinite;
+  opacity:.5;
+}
+.brand-logo span{ font-size:17px; font-weight:800; position:relative; z-index:2; }
+@keyframes logoSpin{ to{ transform: rotate(360deg); } }
+.brand-name{ font-size:17px; line-height:18px; font-weight:800; letter-spacing:-.5px; }
+.brand-sub{ margin-top:2px; color:#64748b; font-size:7px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.header-right{ display:flex; align-items:center; gap:8px; }
+.token-status{
+  display:flex; align-items:center; gap:5px;
+  height:24px; padding:0 8px; border-radius:8px;
+  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06);
+  font-size:6.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  color:#64748b;
+}
+.token-status .dot{
+  width:6px; height:6px; border-radius:50%;
+  background:#475569; box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition:.3s ease;
+}
+.token-status.ok .dot{
+  background:#22c55e;
+  box-shadow: 0 0 4px #22c55e, 0 0 10px rgba(34,197,94,.6);
+}
+.token-status.ok{ color:#86efac; border-color:rgba(34,197,94,.2); }
+.token-status.bad .dot{
+  background:#ef4444;
+  box-shadow: 0 0 4px #ef4444, 0 0 10px rgba(239,68,68,.6);
+}
+.token-status.bad{ color:#fca5a5; border-color:rgba(239,68,68,.2); }
+.sw-open{
+  width:40px; height:40px; flex:0 0 40px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center; color:#a5b4fc; font-size:16px;
+  transition:.2s ease;
+}
+.sw-open:hover{ color:#c4b5fd; box-shadow: 0 0 20px rgba(168,85,247,.15); }
+/* ========================================================= MAIN LAYOUT ========================================================= */
+.main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:7px; overflow:hidden; }
+.card{ border-radius:19px; padding:11px; flex:0 0 auto; transition:.3s ease; }
+/* ========================================================= SECTION TITLES ========================================================= */
+.section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+.section-title{ font-size:8px; line-height:10px; text-transform:uppercase; letter-spacing:.17em; color:#64748b; font-weight:800; }
+.section-name{ font-size:12px; line-height:14px; font-weight:700; margin-top:1px; }
+.section-badge{
+  font-size:6px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  padding:3px 7px; border-radius:6px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+  color:#64748b;
+}
+.section-badge.accent{ color:#a5b4fc; border-color:rgba(99,102,241,.2); background:rgba(99,102,241,.08); }
+/* ========================================================= TOKEN ========================================================= */
+.token-row{ display:grid; grid-template-columns:minmax(0,1fr) 50px 58px; gap:5px; width:100%; }
+.field{
+  width:100%; min-width:0; height:38px; border-radius:11px;
+  background:rgba(0,0,0,.27); border:1px solid rgba(255,255,255,.075);
+  color:#f8fafc; outline:none; padding:0 11px; font-size:11px;
+  transition:.2s ease; overflow:hidden; text-overflow:ellipsis;
+}
+.field::placeholder{ color:#475569; }
+.field:focus{ border-color:rgba(99,102,241,.65); box-shadow:0 0 0 2px rgba(99,102,241,.1), 0 0 20px rgba(99,102,241,.08); }
+.small-btn{
+  height:38px; min-width:0; padding:0 7px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  white-space:nowrap; overflow:hidden; text-overflow:clip;
+  font-size:7px; font-weight:800; letter-spacing:.04em; color:#94a3b8;
+  transition:.18s ease;
+}
+.small-btn:active{ transform:scale(.97); }
+.small-btn:hover{ color:#cbd5e1; border-color:rgba(255,255,255,.12); }
+.clear-key{
+  display:block; margin-top:5px; border:0; padding:0; background:none;
+  color:#475569; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  transition:.2s ease;
+}
+.clear-key:hover{ color:#f87171; }
+.clear-key:active{ color:#f87171; }
+/* ========================================================= PROJECT ========================================================= */
+.project-grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(0, 1.4fr);
+  gap:8px; align-items:stretch; width:100%;
+}
+.project-col{ min-width:0; overflow:hidden; display:flex; flex-direction:column; }
+.field-label{
+  display:block; color:#64748b; font-size:7px; line-height:9px;
+  text-transform:uppercase; letter-spacing:.13em; font-weight:800;
+  margin:0 0 4px 2px;
+}
+.field-label-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:6px; margin-bottom:4px;
+}
+.field-label-row .field-label{ margin:0; }
+.editor-meta{
+  display:flex; align-items:center; gap:6px;
+  font-size:6px; color:#475569; font-weight:700;
+  font-variant-numeric:tabular-nums; letter-spacing:.05em;
+}
+.editor-meta .dot-live{
+  width:5px; height:5px; border-radius:50%;
+  background:#475569; transition:.3s ease;
+}
+.editor-meta.has-content .dot-live{
+  background:#22c55e;
+  box-shadow: 0 0 4px #22c55e, 0 0 8px rgba(34,197,94,.5);
+}
+.editor-meta.has-content{ color:#86efac; }
+/* ========================================================= HTML EDITOR ========================================================= */
+.html-editor{ position:relative; min-width:0; width:100%; flex:1; display:flex; overflow:hidden; }
+.html-editor textarea{
+  width:100%; height:100%; min-height:196px;
+  resize:none; padding:10px 10px 28px; border-radius:12px;
+  background:rgba(0,0,0,.36); border:1px solid rgba(255,255,255,.075);
+  color:#cbd5e1; outline:none; font-family:"Courier New",monospace;
+  font-size:8px; line-height:1.45;
+  box-sizing:border-box;
+  transition:.2s ease;
+}
+.html-editor textarea:focus{
+  border-color:rgba(99,102,241,.7);
+  box-shadow: 0 0 0 2px rgba(99,102,241,.1), 0 0 25px rgba(99,102,241,.12);
+  background:rgba(0,0,0,.42);
+}
+.paste-html{
+  position:absolute; right:5px; bottom:5px; height:22px; padding:0 8px; border-radius:7px;
+  background:rgba(99,102,241,.13); border:1px solid rgba(99,102,241,.2);
+  color:#a5b4fc; font-size:7px; font-weight:800; white-space:nowrap;
+  display:flex; align-items:center; gap:4px;
+  transition:.18s ease;
+}
+.paste-html:active{ transform:scale(.96); }
+.paste-html:hover{ background:rgba(99,102,241,.2); }
+/* ========================================================= ICON ========================================================= */
+.icon-zone{
+  position:relative;
+  flex:1; min-height:105px; border-radius:12px; border:1px dashed rgba(255,255,255,.09);
+  background:rgba(0,0,0,.18); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; overflow:hidden;
+  transition:.3s ease;
+}
+.icon-zone.loaded{ border-style:solid; border-color:rgba(99,102,241,.2); background:rgba(99,102,241,.04); }
+.icon-upload{ width:100%; padding:0 8px; }
+.icon-upload input{ width:100%; font-size:7px; color:#64748b; }
+.icon-upload input::file-selector-button{
+  border:0; border-radius:7px; padding:6px 8px; margin-right:5px;
+  background:rgba(255,255,255,.07); color:#cbd5e1; font-size:7px;
+  cursor:pointer; transition:.18s ease;
+}
+.icon-upload input::file-selector-button:hover{ background:rgba(255,255,255,.11); }
+.preview{
+  width:48px; height:48px; object-fit:cover; border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: 0 8px 25px rgba(0,0,0,.45), 0 0 20px rgba(99,102,241,.15);
+  margin-bottom:5px;
+}
+/* ========================================================= ACTIONS ========================================================= */
+.actions{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.action-btn{
+  position:relative;
+  height:43px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+  gap:7px; font-size:9px; font-weight:800; letter-spacing:.02em;
+  white-space:nowrap; overflow:hidden; cursor:pointer;
+  transition: transform .18s ease, box-shadow .3s ease, filter .3s ease;
+}
+.action-btn:active{ transform:scale(.985); }
+.forge{
+  color:white;
+  background: linear-gradient(135deg, #5967e8, #7147d8);
+  border:1px solid rgba(167,139,250,.28);
+  box-shadow: 0 10px 28px rgba(79,70,229,.25), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.forge::before{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.25), transparent 55%);
+  opacity:0; transition:opacity .3s ease; pointer-events:none;
+}
+.forge:hover::before{ opacity:1; }
+.forge:hover{ box-shadow: 0 14px 40px rgba(79,70,229,.4), inset 0 1px 0 rgba(255,255,255,.2); }
+.forge:disabled{ opacity:.5; cursor:not-allowed; }
+.forge:disabled:hover::before{ opacity:0; }
+.inject{
+  color:#a5b4fc; background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.075);
+  transition: all .25s ease;
+}
+.inject:hover{ color:#c4b5fd; border-color:rgba(99,102,241,.35); background:rgba(99,102,241,.06); box-shadow: 0 0 25px rgba(99,102,241,.12); }
+.inject .bolt{
+  display:inline-block; transition: transform .3s ease;
+}
+.inject:hover .bolt{ transform: scale(1.25) rotate(-8deg); filter: drop-shadow(0 0 6px #facc15); }
+.action-btn:disabled{ opacity:.45; cursor:not-allowed; }
+/* ========================================================= LIVE PANEL ========================================================= */
+.live{
+  min-height:53px; padding:8px 10px; border-radius:16px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex:0 0 auto;
+}
+.live-left{ min-width:0; display:flex; align-items:center; gap:9px; flex:1; }
+.live-icon{
+  width:38px; height:38px; flex:0 0 38px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.07);
+}
+.live-center{ min-width:0; flex:1; display:flex; flex-direction:column; gap:5px; }
+.live-title{ font-size:9px; font-weight:800; white-space:nowrap; }
+.live-open{
+  height:31px; padding:0 10px; flex:0 0 auto; border-radius:9px;
+  background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.07);
+  color:#cbd5e1; font-size:7px; font-weight:800; text-transform:uppercase;
+  transition:.2s ease;
+}
+.live-open:hover{ background:rgba(255,255,255,.08); color:#f8fafc; border-color:rgba(255,255,255,.15); }
+/* ========================================================= LED (gauche) ========================================================= */
+.led{
+  position:relative; width:14px; height:14px; flex:0 0 14px; border-radius:50%;
+  background:#334155; box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
+  transition:.35s ease;
+}
+.led::before{
+  content:""; position:absolute; width:4px; height:4px; top:3px; left:3px;
+  border-radius:50%; background:rgba(255,255,255,.5);
+}
+.led.yellow{
+  background:#facc15;
+  box-shadow: 0 0 6px #facc15, 0 0 16px #facc15, 0 0 32px rgba(250,204,21,.6);
+  animation:ledPulse 1.35s infinite;
+}
+.led.green{
+  background:#22c55e;
+  box-shadow: 0 0 6px #22c55e, 0 0 16px #22c55e, 0 0 32px rgba(34,197,94,.55);
+}
+.led.red{
+  background:#ef4444;
+  box-shadow: 0 0 6px #ef4444, 0 0 16px #ef4444, 0 0 32px rgba(239,68,68,.55);
+}
+@keyframes ledPulse{ 0%,100%{ transform:scale(.88); } 50%{ transform:scale(1.18); } }
 
-        @keyframes pulse-yellow {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
-        }
+/* ========================================================= PROGRESS BAR ========================================================= */
+.progress-wrap{
+  width:100%; height:8px; border-radius:999px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.05);
+  overflow:hidden; position:relative;
+  transition: box-shadow .4s ease;
+}
+.progress-wrap.active{
+  box-shadow: 0 0 14px rgba(99,102,241,.35), 0 0 30px rgba(99,102,241,.15);
+}
+.progress-bar{
+  height:100%; width:0%;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
+  background-size:200% 100%;
+  border-radius:999px;
+  transition:width .35s ease;
+  animation:progressShimmer 2s linear infinite;
+  position:relative;
+}
+.progress-bar::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  border-radius:999px;
+  animation: progressGlow 1.6s ease-in-out infinite;
+}
+.progress-bar.done{
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  animation:none;
+  box-shadow: 0 0 12px rgba(34,197,94,.6), 0 0 24px rgba(34,197,94,.3);
+}
+.progress-bar.done::after{ display:none; }
+.progress-bar.error{
+  background: linear-gradient(90deg, #ef4444, #f87171);
+  animation:none;
+  box-shadow: 0 0 12px rgba(239,68,68,.6);
+}
+.progress-bar.error::after{ display:none; }
+@keyframes progressShimmer{
+  0%{ background-position:0% 0; }
+  100%{ background-position:200% 0; }
+}
+@keyframes progressGlow{
+  0%,100%{ transform: translateX(-100%); opacity:0; }
+  50%{ opacity:1; }
+  100%{ transform: translateX(100%); opacity:0; }
+}
+.progress-label{
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:7px; color:#64748b; font-weight:700;
+}
+.progress-label span:first-child{
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.progress-label span:last-child{
+  font-variant-numeric:tabular-nums; color:#a5b4fc; font-weight:800;
+}
+.progress-label.done span:last-child{ color:#86efac; }
+.progress-label.error span:last-child{ color:#fca5a5; }
 
-        #status {
-            margin-top: 25px; font-size: 0.75rem; padding: 18px; border-radius: 15px; display: none;
-            background: rgba(22, 24, 28, 0.6); backdrop-filter: blur(4px); color: #888;
-            font-family: monospace; border: 1px solid rgba(255, 255, 255, 0.05);
-            white-space: pre-wrap; line-height: 1.5; word-break: break-word;
-        }
-        #toast {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: rgba(35, 39, 45, 0.8); backdrop-filter: blur(8px); color: var(--success);
-            padding: 15px 30px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            font-weight: bold; z-index: 1000; transition: top 0.4s; border: 1px solid var(--success);
-            max-width: 90vw; text-align: center;
-        }
-        .signature { margin-top: 50px; font-size: 0.7rem; color: #444; letter-spacing: 1.5px; text-align: center; width: 100%; }
-        .preview-icon { width: 80px; height: 80px; margin: 15px auto; border-radius: 18px; border: 2px solid var(--light); display: none; object-fit: cover; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); }
-        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255, 255, 255, 0.1); border-top: 2px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* MODALE SW */
-        #sw-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(35, 39, 45, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 2px solid var(--warning);
-            border-radius: 24px;
-            padding: 20px;
-            z-index: 10001;
-            width: 90%;
-            max-width: 700px;
-            max-height: 90vh;
-            box-sizing: border-box;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-        }
-        #sw-modal textarea {
-            height: 400px;
-            max-height: 55vh;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            background: rgba(30, 33, 38, 0.6);
-            color: #eee;
-            padding: 10px;
-            resize: vertical;
-        }
-        #sw-modal h3 { margin-top: 0; color: var(--warning); }
-        .sw-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px; }
-        .sw-buttons button {
-            background: var(--accent);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            color: white;
-        }
-        .sw-buttons button.reset { background: var(--danger); }
-        #sw-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 10000;
-        }
-        .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
-    </style>
+/* ========================================================= STATUS ========================================================= */
+.status{
+  flex:1; min-height:0; overflow:hidden; border-radius:16px; padding:9px 9px 4px 9px;
+  background:rgba(0,0,0,.32); border:1px solid rgba(255,255,255,.055);
+  position:relative; display:flex; flex-direction:column;
+}
+.status-inner{
+  flex:1; min-height:0; overflow:hidden; white-space:pre-wrap; word-break:break-word;
+  font-family:"Courier New",monospace; font-size:7px; line-height:1.25; color:#94a3b8;
+  padding-right:2px;
+}
+.status-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; flex:0 0 auto; }
+.status-head-left{ display:flex; align-items:center; gap:8px; }
+.live-badge{
+  display:none; align-items:center; gap:4px;
+  height:16px; padding:0 6px; border-radius:5px;
+  background:rgba(99,102,241,.15); border:1px solid rgba(99,102,241,.3);
+  color:#a5b4fc; font-size:5.5px; font-weight:800; letter-spacing:.16em;
+}
+.live-badge.show{ display:flex; animation: liveBlink 1.4s ease-in-out infinite; }
+.live-badge .dot-live-badge{
+  width:5px; height:5px; border-radius:50%; background:#a5b4fc;
+  box-shadow: 0 0 6px #a5b4fc;
+}
+@keyframes liveBlink{
+  0%,100%{ opacity:1; }
+  50%{ opacity:.5; }
+}
+.copy-report{
+  border:0; background:none; color:#64748b; font-size:7px; font-weight:800;
+  transition:.2s ease;
+}
+.copy-report:hover{ color:#a5b4fc; }
+.log-line{ display:block; }
+.log-line .cmd{ color:#6366f1; font-weight:700; }
+.log-line .ok{ color:#4ade80; font-weight:700; }
+.log-line .warn{ color:#facc15; font-weight:700; }
+.log-line .err{ color:#f87171; font-weight:700; }
+.log-line .info{ color:#cbd5e1; }
+/* ========================================================= FOOTER ========================================================= */
+.footer{
+  height:17px; min-height:17px; display:flex; align-items:center; justify-content:center;
+  color:#334155; font-size:6px; letter-spacing:.16em; text-transform:uppercase;
+}
+/* ========================================================= MODAL ========================================================= */
+.overlay{
+  position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,.72);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  opacity:0; pointer-events:none; transition:.2s ease;
+}
+.overlay.open{ opacity:1; pointer-events:auto; }
+.modal{
+  position:fixed; z-index:10001; left:50%; top:50%;
+  width:calc(100% - 20px); max-width:650px; max-height:calc(100dvh - 20px);
+  transform:translate(-50%,-48%) scale(.97); opacity:0; pointer-events:none;
+  transition:.22s ease; border-radius:22px; overflow:hidden;
+}
+.modal.open{ transform:translate(-50%,-50%) scale(1); opacity:1; pointer-events:auto; }
+.modal-body{ padding:14px; max-height:calc(100dvh - 20px); overflow:auto; }
+.custom-script{
+  width:100%; height:48dvh; min-height:200px; max-height:500px; resize:none;
+  border-radius:13px; padding:10px; background:rgba(0,0,0,.32);
+  border:1px solid rgba(255,255,255,.07); color:#cbd5e1; outline:none;
+  font-family:"Courier New",monospace; font-size:9px; line-height:1.5;
+  transition:.2s ease;
+}
+.custom-script:focus{ border-color:rgba(99,102,241,.6); box-shadow:0 0 0 2px rgba(99,102,241,.1); }
+/* ========================================================= SMALL PHONES ========================================================= */
+@media(max-height:680px){
+  .app-inner{ padding-top:max(6px,env(safe-area-inset-top)); }
+  .header{ height:45px; min-height:45px; margin-bottom:5px; }
+  .brand-logo{ width:34px; height:34px; flex-basis:34px; border-radius:10px; }
+  .brand-name{ font-size:14px; }
+  .sw-open{ width:34px; height:34px; flex-basis:34px; }
+  .card{ padding:8px; border-radius:16px; }
+  .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); }
+  .html-editor textarea{ min-height:158px; }
+  .icon-zone{ min-height:88px; }
+  .action-btn{ height:39px; }
+  .live{ min-height:47px; }
+  .footer{ display:none; }
+  .token-status{ display:none; }
+}
+@media(max-width:360px){
+  .app-inner{ padding-left:8px; padding-right:8px; }
+  .token-row{ grid-template-columns:minmax(0,1fr) 47px 54px; }
+  .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:6px; }
+  .field{ font-size:10px; }
+  .small-btn{ font-size:6.5px; padding:0 5px; }
+  .action-btn{ font-size:8px; }
+}
+</style>
 </head>
 <body>
 
-<div id="toast" role="status" aria-live="polite">✅ Action Réussie</div>
+<div class="aurora"><div class="orb"></div></div>
+<div class="noise"></div>
 
-<div class="container">
-    <div class="header-row">
-        <h1>Mastercode</h1>
-        <button class="sw-btn-icon" onclick="openSwModal()" title="Script personnalisé (SW)" aria-label="Script personnalisé">🧠 SW</button>
-    </div>
+<div class="app">
+  <div class="app-inner">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo"><span>M</span></div>
+        <div class="min-w-0">
+          <div class="brand-name">Mastercode</div>
+          <div class="brand-sub">Premium PWA Factory</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div id="tokenStatus" class="token-status">
+          <span class="dot"></span>
+          <span id="tokenStatusText">OFF</span>
+        </div>
+        <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
+      </div>
+    </header>
 
-    <div class="card">
-        <label for="ghToken">GitHub Access Token</label>
+    <!-- MAIN -->
+    <main class="main">
+      <!-- GITHUB -->
+      <section class="card glass">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Connexion</div>
+            <div class="section-name">GitHub Access</div>
+          </div>
+          <div class="section-badge">SECURE</div>
+        </div>
         <div class="token-row">
-            <input type="password" id="ghToken" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="saveKey('ghToken', this.value.trim())">
-            <button class="btn-view" onclick="toggleView('ghToken', this)">VOIR</button>
-            <button class="btn-view" onclick="pasteToken()">COLLER</button>
+          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())">
+          <button class="small-btn glass" onclick="toggleView('ghToken',this)">VOIR</button>
+          <button class="small-btn glass" onclick="pasteToken()">📋 COLLER</button>
         </div>
-        <button class="btn-danger" onclick="clearAllData()">🗑️ EFFACER LES CLÉS</button>
-    </div>
+        <button class="clear-key" onclick="clearAllData()">🗑 Effacer la clé</button>
+      </section>
 
-    <div class="card">
-        <label for="appName">Nom du Projet</label>
-        <input type="text" id="appName" placeholder="ex: master-factory" autocomplete="off" spellcheck="false">
-
-        <label for="htmlInput" style="margin-top:20px;">Code HTML Source</label>
-        <textarea id="htmlInput" rows="8" placeholder="Colle le code ici..." spellcheck="false"></textarea>
-
-        <label for="iconInput" style="margin-top:20px;">Icône PWA (Tous formats acceptés)</label>
-        <input type="file" id="iconInput" accept="image/*" onchange="previewIcon(this)">
-        <img id="iconPreview" class="preview-icon" alt="Aperçu de l'icône">
-    </div>
-
-    <button class="btn" onclick="generatePWA()" id="mainBtn">
-        <div class="spinner" id="loader"></div>
-        <span>FORGER L'APPLICATION</span>
-    </button>
-
-    <!-- Injecte uniquement les balises PWA dans index.html -->
-    <button class="btn" onclick="injectPwaToGitHub()" id="injectBtn">
-        <span>Yes, WE Can.</span>
-    </button>
-
-    <button class="btn-live" id="liveBtn" onclick="openLiveSite()">
-        <div class="led-container">
-            <div class="led" id="led1"></div>
-            <div class="led" id="led2"></div>
+      <!-- PROJECT -->
+      <section class="card glass glass-accent">
+        <div class="section-head">
+          <div>
+            <div class="section-title">Configuration</div>
+            <div class="section-name">Projet PWA</div>
+          </div>
+          <div class="section-badge accent">BUILD</div>
         </div>
-        <span>VOIR LE SITE LIVE</span>
-    </button>
+        <div class="project-grid">
+          <div class="project-col">
+            <label class="field-label">Nom du projet</label>
+            <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false">
+            <label class="field-label" style="margin-top:7px">Icône PWA</label>
+            <div id="iconZone" class="icon-zone">
+              <div id="iconPreviewWrap" class="hidden">
+                <img id="iconPreview" class="preview" alt="Aperçu">
+              </div>
+              <div id="iconUpload" class="icon-upload">
+                <input id="iconInput" type="file" accept="image/*" onchange="previewIcon(this)">
+              </div>
+            </div>
+          </div>
+          <div class="project-col">
+            <div class="field-label-row">
+              <label class="field-label">Code HTML</label>
+              <div id="editorMeta" class="editor-meta">
+                <span class="dot-live"></span>
+                <span id="charCount">0</span> c · <span id="lineCount">0</span> l
+              </div>
+            </div>
+            <div class="html-editor">
+              <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="updateEditorMeta()"></textarea>
+              <button class="paste-html" onclick="pasteHTML()">📋 COLLER</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <div id="status"></div>
-    <button class="btn" onclick="copyReport()" id="copyBtn" style="color: #666; font-size: 0.75rem; display: none; background: none; box-shadow: none; backdrop-filter: none; border: none; padding: 0;">📋 COPIER LE RAPPORT</button>
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button id="mainBtn" class="action-btn forge" onclick="generatePWA()">
+          <span id="loader" class="hidden">⟳</span>
+          <svg id="forgeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14.7 6.3a4 4 0 0 0-5.65 5.65l-5.7 5.7a2 2 0 1 0 2.83 2.83l5.7-5.7a4 4 0 0 0 5.65-5.65l-2.12 2.12-2.83-2.83L14.7 6.3Z"/>
+            <path d="m18 2 4 4"/>
+          </svg>
+          <span>FORGER</span>
+        </button>
+        <button id="injectBtn" class="action-btn inject" onclick="injectPwaToGitHub()">
+          <span class="bolt">⚡</span>
+          <span>INJECTER PWA</span>
+        </button>
+      </div>
 
-    <div class="signature">Made by Laiche Brahim 2026 Paris</div>
+      <!-- LIVE -->
+      <section id="liveBtn" class="live glass hidden">
+        <div class="live-left">
+          <div class="live-icon"><div id="liveOrb" class="led"></div></div>
+          <div class="live-center">
+            <div id="liveStatusTitle" class="live-title">Déploiement</div>
+            <div id="progressWrap" class="progress-wrap">
+              <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <div id="progressLabel" class="progress-label">
+              <span id="liveStatusText">Préparation...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+          </div>
+        </div>
+        <button class="live-open" onclick="openLiveSite()">OUVRIR</button>
+      </section>
+
+      <!-- STATUS -->
+      <section id="statusCard" class="status glass hidden">
+        <div class="status-head">
+          <div class="status-head-left">
+            <span class="text-[7px] uppercase tracking-[.15em] text-slate-600 font-bold">Rapport Mastercode</span>
+            <span id="liveBadge" class="live-badge"><span class="dot-live-badge"></span>LIVE</span>
+          </div>
+          <button class="copy-report" onclick="copyReport()">📋 COPIER</button>
+        </div>
+        <div id="status" class="status-inner"></div>
+      </section>
+    </main>
+
+    <footer class="footer">Mastercode · Laiche Brahim · Paris · 2026</footer>
+  </div>
 </div>
 
-<!-- MODALE SW (SCRIPT PERSONNALISÉ) -->
-<div id="sw-overlay" onclick="closeSwModal()"></div>
-<div id="sw-modal" role="dialog" aria-modal="true" aria-labelledby="sw-title">
-    <h3 id="sw-title">✍️ Script personnalisé (JavaScript)</h3>
-    <p style="font-size:0.75rem; color:#aaa;">Ce code sera injecté à la fin du &lt;body&gt;. Il peut surcharger les fonctions existantes ou ajouter des fonctionnalités (notifications push, etc.).</p>
-    <textarea id="customScript" spellcheck="false" placeholder="// Collez votre code JS ici...
-// Exemple :
-// window.showBrowserNotification = function(title, body, tag) { ... }
-// console.log('Mon script personnalisé !');"></textarea>
-    <div class="sw-buttons">
-        <button class="reset" onclick="resetCustomScript()">🗑️ Réinitialiser</button>
-        <button onclick="saveCustomScript()">💾 Sauvegarder</button>
-        <button onclick="closeSwModal()">Fermer</button>
+<!-- SW MODAL -->
+<div id="swOverlay" class="overlay" onclick="closeSwModal()"></div>
+<div id="swModal" class="modal glass">
+  <div class="modal-body">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/10 flex items-center justify-center">🧠</div>
+        <div>
+          <div class="text-[7px] uppercase tracking-[.17em] text-yellow-500/60 font-bold">Advanced</div>
+          <h2 class="text-sm font-bold text-yellow-100 mt-0.5">Script personnalisé</h2>
+        </div>
+      </div>
+      <button onclick="closeSwModal()" class="w-8 h-8 rounded-xl glass text-slate-500">×</button>
     </div>
+    <p class="text-[9px] leading-4 text-slate-500 mb-3">Le script sera injecté à la fin du body de l'application générée.</p>
+    <textarea id="customScript" class="custom-script" spellcheck="false" placeholder="// Votre JavaScript personnalisé ici..."></textarea>
+    <div class="grid grid-cols-3 gap-2 mt-3">
+      <button onclick="resetCustomScript()" class="h-10 rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 text-[7px] font-bold uppercase">🗑 RESET</button>
+      <button onclick="saveCustomScript()" class="h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[7px] font-bold uppercase">💾 SAUVER</button>
+      <button onclick="closeSwModal()" class="h-10 rounded-xl bg-white/5 border border-white/5 text-slate-300 text-[7px] font-bold uppercase">FERMER</button>
+    </div>
+  </div>
 </div>
 
-<canvas id="canvas" style="display:none;"></canvas>
+<canvas id="canvas" class="hidden"></canvas>
 
 <script>
-    // =====================================================================
-    //  CONSTANTES & ÉTAT
-    // =====================================================================
-    const GH_API = 'https://api.github.com';
-    const CUSTOM_SCRIPT_KEY = 'mastercode_custom_script';
-    // Aucune séquence HTML littérale (balise de script, de head, de body ou
-    // commentaire HTML) ne doit apparaître dans ce code : certains sandbox et
-    // outils d'injection coupent ou modifient le script au mauvais endroit.
-    // Les balises sont donc construites par concaténation.
-    const LT = '<';
-    const TAG_S = LT + 'script' + '>';
-    const TAG_E = LT + '/' + 'script' + '>';
-    const HEAD_O = LT + 'head' + '>';
-    const HEAD_C = LT + '/' + 'head' + '>';
-    const BODY_C = LT + '/' + 'body' + '>';
-    const DOCTYPE = LT + '!DOCTYPE html>';
-    const MARK_START = LT + '!-- mastercode:custom:start --' + '>';
-    const MARK_END = LT + '!-- mastercode:custom:end --' + '>';
+/* ========================================================= DOM ========================================================= */
+const byId=id=>document.getElementById(id);
+const $=id=>document.getElementById(id);
 
-    const byId = (id) => document.getElementById(id);
+/* ========================================================= CONSTANTES ========================================================= */
+const GH_API='https://api.github.com';
+const CUSTOM_SCRIPT_KEY='mastercode_custom_script';
+const LT='<';
+const TAG_S=LT+'script>';
+const TAG_E=LT+'/script>';
+const HEAD_O=LT+'head>';
+const HEAD_C=LT+'/head>';
+const BODY_C=LT+'/body>';
+const DOCTYPE=LT+'!DOCTYPE html>';
+const MARK_START=LT+'!-- mastercode:custom:start -->';
+const MARK_END=LT+'!-- mastercode:custom:end -->';
+const PROGRESS_DURATION = 45000;
+const BASE_TITLE = 'Mastercode — PWA Factory';
+const MAX_LOG_LINES = 6;
 
-    // Stockage sûr : certains sandbox bloquent localStorage (SecurityError)
-    const store = (() => {
-        const mem = {};
-        let ls = null;
-        try {
-            ls = window.localStorage;
-            ls.setItem('__mc_test', '1');
-            ls.removeItem('__mc_test');
-        } catch (e) { ls = null; }
-        return {
-            getItem(k) {
-                try { if (ls) return ls.getItem(k); } catch (e) { /* repli mémoire */ }
-                return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null;
-            },
-            setItem(k, v) {
-                try { if (ls) { ls.setItem(k, v); return; } } catch (e) { /* repli mémoire */ }
-                mem[k] = String(v);
-            },
-            removeItem(k) {
-                try { if (ls) ls.removeItem(k); } catch (e) { /* repli mémoire */ }
-                delete mem[k];
-            }
-        };
-    })();
+/* ========================================================= STORAGE ========================================================= */
+const store=(()=>{
+  const mem={}; let ls=null;
+  try{ ls=localStorage; ls.setItem('__mc_test','1'); ls.removeItem('__mc_test'); }catch(e){ ls=null; }
+  return{
+    getItem(k){ try{ if(ls) return ls.getItem(k); }catch(e){} return Object.prototype.hasOwnProperty.call(mem,k) ? mem[k] : null; },
+    setItem(k,v){ try{ if(ls){ ls.setItem(k,v); return; } }catch(e){} mem[k]=String(v); },
+    removeItem(k){ try{ if(ls) ls.removeItem(k); }catch(e){} delete mem[k]; }
+  };
+})();
 
-    // Toute erreur JS devient visible à l'écran (utile en sandbox)
-    window.addEventListener('error', (e) => {
-        try { updateStatus('❌ Erreur JS : ' + e.message); } catch (err) { /* ignore */ }
-    });
-    window.addEventListener('unhandledrejection', (e) => {
-        try { updateStatus('❌ Erreur : ' + ((e.reason && e.reason.message) || e.reason)); } catch (err) { /* ignore */ }
-    });
+/* ========================================================= STATE ========================================================= */
+let liveOwner='';
+let liveRepo='';
+let deploymentInterval=null;
+let progressInterval=null;
+let icon512='';
+let icon192='';
+let tokenValidated=false;
+let logCount=0;
 
-    let liveOwner = '';
-    let liveRepo = '';
-    let deploymentInterval = null;
-    let icon512 = '';
-    let icon192 = '';
+/* ========================================================= HAPTIC ========================================================= */
+function haptic(ms=10){
+  try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){}
+}
 
-        const saveKey = (id, val) => store.setItem(id, val);
-    byId('ghToken').value = store.getItem('ghToken') || '';
+/* ========================================================= TITLE ========================================================= */
+function setTitleSuffix(txt){
+  document.title = txt ? `Mastercode · ${txt}` : BASE_TITLE;
+}
 
-    // =====================================================================
-    //  SON TOM (un seul AudioContext réutilisé)
-    // =====================================================================
-    let audioCtx = null;
+/* ========================================================= TOKEN STATUS ========================================================= */
+function updateTokenStatus(){
+  const val = byId('ghToken').value.trim();
+  const el = byId('tokenStatus');
+  const txt = byId('tokenStatusText');
+  el.classList.remove('ok','bad');
+  if(!val){
+    txt.textContent='OFF';
+    tokenValidated=false;
+    return;
+  }
+  if(!tokenValidated){
+    txt.textContent='…';
+  }else{
+    el.classList.add('ok');
+    txt.textContent='ON';
+  }
+}
+function markTokenInvalid(){
+  const el = byId('tokenStatus');
+  const txt = byId('tokenStatusText');
+  el.classList.remove('ok');
+  el.classList.add('bad');
+  txt.textContent='ERR';
+  tokenValidated=false;
+}
+function onTokenInput(val){
+  store.setItem('ghToken', val);
+  tokenValidated=false;
+  updateTokenStatus();
+}
+byId('ghToken').value= store.getItem('ghToken')||'';
+updateTokenStatus();
 
-    function playTom(freq, duration) {
-        try {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+/* ========================================================= EDITOR META ========================================================= */
+function updateEditorMeta(){
+  const v = byId('htmlInput').value;
+  byId('charCount').textContent = v.length;
+  byId('lineCount').textContent = v ? v.split('\n').length : 0;
+  const meta = byId('editorMeta');
+  if(v.trim().length>0) meta.classList.add('has-content');
+  else meta.classList.remove('has-content');
+}
 
-            const sampleRate = audioCtx.sampleRate;
-            const bufferSize = Math.floor(sampleRate * duration);
-            const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                const t = i / sampleRate;
-                const env = Math.exp(-t / (duration * 0.3));
-                data[i] = Math.sin(2 * Math.PI * freq * t) * env;
-            }
-            const source = audioCtx.createBufferSource();
-            source.buffer = buffer;
-            const gain = audioCtx.createGain();
-            gain.gain.value = 0.3;
-            source.connect(gain);
-            gain.connect(audioCtx.destination);
-            source.start();
-        } catch (e) { /* son non critique */ }
+/* ========================================================= TOAST ========================================================= */
+function toast(message,error=false){
+  const old=byId('toast'); if(old) old.remove();
+  const el=document.createElement('div');
+  el.id='toast';
+  el.style.cssText=`
+    position:fixed; z-index:99999; top:12px; left:50%; transform:translateX(-50%);
+    padding:9px 14px; border-radius:12px;
+    color:${error?'#fca5a5':'#86efac'};
+    background:rgba(15,23,42,.92);
+    border:1px solid ${error?'rgba(239,68,68,.25)':'rgba(34,197,94,.25)'};
+    box-shadow:0 15px 40px rgba(0,0,0,.5);
+    font-size:9px; font-weight:700; backdrop-filter:blur(18px);
+    white-space:nowrap; max-width:90vw; overflow:hidden; text-overflow:ellipsis;
+  `;
+  el.textContent=(error?'⚠️ ':'✓ ')+message;
+  document.body.appendChild(el);
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>{
+    el.style.opacity='0'; el.style.transition='.25s';
+    setTimeout(()=>el.remove(),250);
+  },3500);
+}
+const showToast=toast;
+
+/* ========================================================= STATUS LOG ========================================================= */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function classifyLog(msg){
+  const m = msg.trim();
+  if(m.startsWith('✅') || /réussie|terminé|déployé|accessible/i.test(m)) return 'ok';
+  if(m.startsWith('⚠️')) return 'warn';
+  if(m.startsWith('❌') || /erreur/i.test(m)) return 'err';
+  if(m.startsWith('---')) return 'info';
+  if(/Upload|Activation|Création|Authentification|Injection/i.test(m)) return 'info';
+  return '';
+}
+function updateStatus(message,clear=false){
+  const card=byId('statusCard');
+  const status=byId('status');
+  card.classList.remove('hidden');
+  if(clear){
+    status.innerHTML='';
+    logCount=0;
+  }
+  const cls = classifyLog(message);
+  const line = document.createElement('span');
+  line.className = 'log-line';
+  const inner = cls
+    ? `<span class="cmd">&gt;</span> <span class="${cls}">${escapeHtml(message)}</span>`
+    : `<span class="cmd">&gt;</span> <span class="info">${escapeHtml(message)}</span>`;
+  line.innerHTML = inner;
+  status.appendChild(line);
+  status.appendChild(document.createTextNode('\n'));
+  logCount++;
+  /* Limite : garde uniquement les N dernières lignes pour éviter le scroll */
+  while(status.childNodes.length > MAX_LOG_LINES*2){
+    status.removeChild(status.firstChild);
+  }
+}
+
+/* ========================================================= COPY REPORT ========================================================= */
+async function copyReport(){
+  try{ await navigator.clipboard.writeText( byId('status').innerText ); toast('Rapport copié'); }
+  catch(e){ toast('Copie impossible',true); }
+}
+
+/* ========================================================= TOKEN VIEW ========================================================= */
+function toggleView(id,button){
+  const input=byId(id);
+  if(input.type==='password'){ input.type='text'; button.textContent='CACHER'; }
+  else{ input.type='password'; button.textContent='VOIR'; }
+}
+
+/* ========================================================= PASTE TOKEN ========================================================= */
+async function pasteToken(){
+  try{
+    const text= (await navigator.clipboard.readText()).trim();
+    if(!text){ toast('Presse-papier vide',true); return; }
+    byId('ghToken').value=text;
+    store.setItem('ghToken',text);
+    tokenValidated=false;
+    updateTokenStatus();
+    toast('Token collé');
+  }catch(e){ toast('Autorisation presse-papier refusée',true); }
+}
+
+/* ========================================================= PASTE HTML ========================================================= */
+async function pasteHTML(){
+  try{
+    const text= await navigator.clipboard.readText();
+    if(!text){ toast('Presse-papier vide',true); return; }
+    byId('htmlInput').value=text;
+    updateEditorMeta();
+    toast('Code HTML collé');
+    byId('htmlInput').focus();
+  }catch(e){ toast('Autorisation presse-papier refusée',true); }
+}
+
+/* ========================================================= CLEAR TOKEN ========================================================= */
+function clearAllData(){
+  if(confirm('Supprimer le token GitHub enregistré ?\n\nVotre script personnalisé sera conservé.')){
+    store.removeItem('ghToken');
+    byId('ghToken').value='';
+    tokenValidated=false;
+    updateTokenStatus();
+    toast('Clé effacée');
+  }
+}
+
+/* ========================================================= SW MODAL ========================================================= */
+function loadCustomScriptFromStorage(){ byId('customScript').value= store.getItem(CUSTOM_SCRIPT_KEY)||''; }
+function openSwModal(){ loadCustomScriptFromStorage(); byId('swModal').classList.add('open'); byId('swOverlay').classList.add('open'); }
+function closeSwModal(){ byId('swModal').classList.remove('open'); byId('swOverlay').classList.remove('open'); }
+function saveCustomScript(){ store.setItem(CUSTOM_SCRIPT_KEY, byId('customScript').value); toast('Script personnalisé sauvegardé'); closeSwModal(); }
+function resetCustomScript(){
+  if(confirm('Supprimer le script personnalisé ?')){
+    store.removeItem(CUSTOM_SCRIPT_KEY); byId('customScript').value=''; toast('Script réinitialisé'); closeSwModal();
+  }
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSwModal(); });
+
+/* ========================================================= ICON ========================================================= */
+function renderIcon(img,size){
+  const canvas=byId('canvas'); const ctx= canvas.getContext('2d');
+  canvas.width=size; canvas.height=size;
+  const side= Math.min( img.width, img.height );
+  const sx= (img.width-side)/2; const sy= (img.height-side)/2;
+  ctx.clearRect(0,0,size,size);
+  ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+  return canvas.toDataURL('image/png');
+}
+function previewIcon(input){
+  const file= input.files && input.files[0]; if(!file) return;
+  const reader= new FileReader();
+  reader.onload=e=>{
+    const img= new Image();
+    img.onload=()=>{
+      const url512= renderIcon(img,512);
+      const url192= renderIcon(img,192);
+      icon512= url512.split(',')[1];
+      icon192= url192.split(',')[1];
+      byId('iconPreview').src=url512;
+      byId('iconPreviewWrap').classList.remove('hidden');
+      byId('iconZone').classList.add('loaded');
+    };
+    img.onerror=()=>{ toast('Image illisible',true); };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ========================================================= UTF8 BASE64 ========================================================= */
+function utf8ToBase64(str){
+  const bytes= new TextEncoder().encode(str);
+  let binary=''; const chunk=0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    binary+=String.fromCharCode.apply(null, bytes.subarray(i,i+chunk));
+  }
+  return btoa(binary);
+}
+
+/* ========================================================= REPO NAME ========================================================= */
+function sanitizeRepoName(name){
+  return name.trim().replace(/\s+/g,'-').replace(/[^A-Za-z0-9._-]/g,'').replace(/^\.+/,'');
+}
+
+/* ========================================================= GITHUB HEADERS ========================================================= */
+function ghHeaders(token){
+  return{
+    Authorization:`Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Content-Type': 'application/json'
+  };
+}
+async function ghErrorMessage(resp){
+  try{ const data= await resp.json(); return data.message|| `HTTP ${resp.status}`; }
+  catch(e){ return `HTTP ${resp.status}`; }
+}
+
+/* ========================================================= GITHUB OWNER ========================================================= */
+async function getOwner(token){
+  const resp= await fetch(`${GH_API}/user`,{ headers: ghHeaders(token) });
+  if(!resp.ok){ markTokenInvalid(); throw new Error('Accès GitHub refusé : token invalide ou expiré'); }
+  tokenValidated=true;
+  updateTokenStatus();
+  return( await resp.json() ).login;
+}
+
+/* ========================================================= ENSURE REPO ========================================================= */
+async function ensureRepo(token, owner, repo){
+  const check= await fetch(`${GH_API}/repos/${owner}/${repo}`,{ headers: ghHeaders(token) });
+  if(check.status===200) return;
+  if(check.status!==404){ throw new Error(`Dépôt inaccessible : ${ await ghErrorMessage(check) }`); }
+  updateStatus('Création du dépôt GitHub...');
+  const create= await fetch(`${GH_API}/user/repos`,{
+    method:'POST', headers: ghHeaders(token),
+    body: JSON.stringify({ name:repo, auto_init:true })
+  });
+  if(!create.ok){ throw new Error(`Création du dépôt échouée : ${ await ghErrorMessage(create) }`); }
+}
+
+/* ========================================================= FILE SHA ========================================================= */
+async function getFileSha(token, owner, repo, path){
+  const resp= await fetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`,{ headers: ghHeaders(token) });
+  if(resp.status===200) return( await resp.json() ).sha;
+  if(resp.status===404) return null;
+  throw new Error(`Lecture de ${path} impossible : ${ await ghErrorMessage(resp) }`);
+}
+
+/* ========================================================= PUT FILE ========================================================= */
+async function putFile(token, owner, repo, path, contentB64, message){
+  const sha= await getFileSha(token, owner, repo, path);
+  const body={ message, content:contentB64 };
+  if(sha) body.sha=sha;
+  const resp= await fetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`,{
+    method:'PUT', headers: ghHeaders(token), body: JSON.stringify(body)
+  });
+  if(!resp.ok){ throw new Error(`Upload de ${path} échoué : ${ await ghErrorMessage(resp) }`); }
+}
+
+/* ========================================================= GITHUB PAGES ========================================================= */
+async function ensurePages(token, owner, repo){
+  const resp= await fetch(`${GH_API}/repos/${owner}/${repo}/pages`,{
+    method:'POST', headers: ghHeaders(token),
+    body: JSON.stringify({ source:{ branch:'main', path:'/' } })
+  });
+  if(resp.ok || resp.status===409) return;
+  throw new Error(`Activation de GitHub Pages échouée : ${ await ghErrorMessage(resp) }`);
+}
+
+/* ========================================================= INSERT HEAD ========================================================= */
+function insertInHead(html, block){
+  const close= html.search( new RegExp( LT+'/head>', 'i' ) );
+  if(close!==-1){ return( html.slice(0,close)+ block+ '\n'+ html.slice(close) ); }
+  const headOpen= html.match( new RegExp( LT+'head[^>]*>', 'i' ) );
+  if(headOpen){ const i= headOpen.index+ headOpen[0].length; return( html.slice(0,i)+ '\n'+ block+ html.slice(i) ); }
+  const htmlOpen= html.match( new RegExp( LT+'html[^>]*>', 'i' ) );
+  if(htmlOpen){ const i= htmlOpen.index+ htmlOpen[0].length; return( html.slice(0,i)+ '\n'+ HEAD_O+ '\n'+ block+ '\n'+ HEAD_C+ html.slice(i) ); }
+  return( HEAD_O+ '\n'+ block+ '\n'+ HEAD_C+ '\n'+ html );
+}
+
+/* ========================================================= BODY END ========================================================= */
+function insertBeforeBodyEnd(html, block){
+  const i= html.toLowerCase().lastIndexOf(BODY_C);
+  if(i===-1) return html+'\n'+block+'\n';
+  return( html.slice(0,i)+ block+ '\n'+ html.slice(i) );
+}
+
+/* ========================================================= BUILD PWA HTML ========================================================= */
+function buildPwaHtml(source){
+  let html=source;
+  const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
+  html= html.replace( oldBlock, '' );
+  const headTags=[];
+  if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
+  if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
+  if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="#050608">');
+  if(!/<meta[^>]+name=["']apple-mobile-web-app-capable["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-capable" content="yes">');
+  if(!/<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
+  if(!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html)) headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
+  if(headTags.length) html= insertInHead(html, headTags.join('\n'));
+  const blocks=[];
+  const custom= ( store.getItem(CUSTOM_SCRIPT_KEY)||'' ).trim();
+  if(custom){
+    const safeCustom= custom.replace(/<\/script/gi, '<\\/script');
+    blocks.push(`${MARK_START} ${TAG_S} ${safeCustom} ${TAG_E} ${MARK_END}`);
+  }
+  if(!/serviceWorker\.register/i.test(html)){
+    blocks.push( TAG_S+ '\n'+
+      "if ('serviceWorker' in navigator) {\n"+
+      "window.addEventListener('load',()=>{\n"+
+      "navigator.serviceWorker.register('./sw.js').catch(err=>console.error(err));\n"+
+      "});\n"+
+      "}\n"+ TAG_E );
+  }
+  if(blocks.length) html= insertBeforeBodyEnd(html, blocks.join('\n'));
+  if(!/^\s*<!doctype/i.test(html)) html= DOCTYPE+ '\n'+ html;
+  return{ html, hasCustom:!!custom };
+}
+
+/* ========================================================= MANIFEST ========================================================= */
+function buildManifest(appName){
+  return JSON.stringify({
+    name:appName, short_name:appName, start_url:'./', scope:'./',
+    display:'standalone', background_color:'#050608', theme_color:'#667eea',
+    icons:[
+      { src:'icon-192.png', sizes:'192x192', type:'image/png', purpose:'any' },
+      { src:'icon.png', sizes:'512x512', type:'image/png', purpose:'any' },
+      { src:'icon.png', sizes:'512x512', type:'image/png', purpose:'maskable' }
+    ]
+  },null,2);
+}
+
+/* ========================================================= SERVICE WORKER ========================================================= */
+function buildServiceWorker(appName){
+  const prefix=appName+'-';
+  const cacheName= prefix+ 'v'+ Date.now();
+  return[
+    `const PREFIX=${JSON.stringify(prefix)};`,
+    `const CACHE=${JSON.stringify(cacheName)};`,
+    `const ASSETS=['./','./index.html','./manifest.json','./icon.png','./icon-192.png'];`,
+    `self.addEventListener('install',e=>{`,
+    `self.skipWaiting();`,
+    `e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));`,
+    `});`,
+    `self.addEventListener('activate',e=>{`,
+    `e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));`,
+    `});`,
+    `self.addEventListener('fetch',e=>{`,
+    `const req=e.request;`,
+    `if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;`,
+    `e.respondWith(fetch(req).then(res=>{const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));return res;}).catch(()=>caches.match(req).then(r=>r||caches.match('./index.html'))));`,
+    `});`
+  ].join('\n');
+}
+
+/* ========================================================= LED + PROGRESS ========================================================= */
+function setLed(state){
+  const el=byId('liveOrb'); if(!el) return;
+  el.className='led '+ ( state==='yellow' ?'yellow' :state==='green' ?'green' :state==='red' ?'red' :'' );
+}
+
+function resetProgress(){
+  stopProgress();
+  const bar=byId('progressBar');
+  const pct=byId('progressPercent');
+  const wrap=byId('progressWrap');
+  const label=byId('progressLabel');
+  bar.classList.remove('done','error');
+  bar.style.width='0%';
+  pct.textContent='0%';
+  wrap.classList.remove('active');
+  label.classList.remove('done','error');
+}
+
+function stopProgress(){
+  if(progressInterval){ clearInterval(progressInterval); progressInterval=null; }
+}
+
+function startProgress(){
+  resetProgress();
+  const start=Date.now();
+  const bar=byId('progressBar');
+  const pct=byId('progressPercent');
+  const wrap=byId('progressWrap');
+  wrap.classList.add('active');
+
+  progressInterval=setInterval(()=>{
+    const elapsed=Date.now()-start;
+    const ratio= Math.min(elapsed/PROGRESS_DURATION, 1);
+    const eased= 1 - Math.pow(1-ratio, 2.2);
+    const percent= Math.min(95, Math.round(eased*95));
+    bar.style.width= percent+'%';
+    pct.textContent= percent+'%';
+    setTitleSuffix(percent+'%');
+    if(ratio>=1){
+      clearInterval(progressInterval);
+      progressInterval=null;
     }
+  }, 250);
+}
 
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('button')) playTom(140, 0.4);
-    });
+function finishProgress(success=true){
+  stopProgress();
+  const bar=byId('progressBar');
+  const pct=byId('progressPercent');
+  const wrap=byId('progressWrap');
+  const label=byId('progressLabel');
+  wrap.classList.remove('active');
+  if(success){
+    bar.classList.remove('error');
+    bar.classList.add('done');
+    bar.style.width='100%';
+    pct.textContent='100%';
+    label.classList.remove('error');
+    label.classList.add('done');
+    setTitleSuffix('100%');
+  }else{
+    bar.classList.remove('done');
+    bar.classList.add('error');
+    bar.style.width='100%';
+    pct.textContent='ERR';
+    label.classList.remove('done');
+    label.classList.add('error');
+    setTitleSuffix('ERR');
+  }
+  setTimeout(()=>{ setTitleSuffix(''); }, 4000);
+}
 
-    // =====================================================================
-    //  SCRIPT PERSONNALISÉ (SW)
-    // =====================================================================
-    function loadCustomScriptFromStorage() {
-        byId('customScript').value = store.getItem(CUSTOM_SCRIPT_KEY) || '';
+/* ========================================================= LIVE BADGE ========================================================= */
+function showLiveBadge(show){
+  const b = byId('liveBadge');
+  if(!b) return;
+  if(show) b.classList.add('show');
+  else b.classList.remove('show');
+}
+
+/* ========================================================= LIVE PANEL ========================================================= */
+function showLiveButton(owner,repo){
+  liveOwner=owner; liveRepo=repo;
+  byId('liveBtn').classList.remove('hidden');
+  setLed('yellow');
+  startProgress();
+  showLiveBadge(true);
+}
+
+function stopDeploymentWatch(){
+  if(deploymentInterval) clearInterval(deploymentInterval);
+  deploymentInterval=null;
+  showLiveBadge(false);
+}
+
+/* ========================================================= WATCH DEPLOYMENT ========================================================= */
+function watchDeployment(token, since){
+  stopDeploymentWatch();
+  showLiveBadge(true);
+  const startedAt=Date.now();
+  const maxMs= 4*60*1000;
+  const tick=async()=>{
+    if(Date.now()-startedAt> maxMs){
+      stopDeploymentWatch();
+      setLed('green');
+      finishProgress(true);
+      byId('liveStatusTitle').textContent='Application en ligne';
+      byId('liveStatusText').textContent='Délai dépassé · site probablement disponible';
+      updateStatus('⚠️ Délai dépassé : le site devrait être disponible.');
+      return;
     }
-
-    function saveCustomScript() {
-        store.setItem(CUSTOM_SCRIPT_KEY, byId('customScript').value);
-        showToast('✅ Script personnalisé sauvegardé !');
-        closeSwModal();
-    }
-
-    function resetCustomScript() {
-        if (confirm('Supprimer définitivement votre script personnalisé ?')) {
-            store.removeItem(CUSTOM_SCRIPT_KEY);
-            byId('customScript').value = '';
-            showToast('Script personnalisé réinitialisé.');
-            closeSwModal();
-        }
-    }
-
-    function openSwModal() {
-        loadCustomScriptFromStorage();
-        byId('sw-modal').style.display = 'block';
-        byId('sw-overlay').style.display = 'block';
-    }
-
-    function closeSwModal() {
-        byId('sw-modal').style.display = 'none';
-        byId('sw-overlay').style.display = 'none';
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeSwModal();
-    });
-
-    // =====================================================================
-    //  UTILITAIRES
-    // =====================================================================
-    function utf8ToBase64(str) {
-        const bytes = new TextEncoder().encode(str);
-        let binary = '';
-        const chunk = 0x8000;
-        for (let i = 0; i < bytes.length; i += chunk) {
-            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
-        }
-        return btoa(binary);
-    }
-
-    function sanitizeRepoName(name) {
-        return name.trim()
-            .replace(/\s+/g, '-')
-            .replace(/[^A-Za-z0-9._-]/g, '')
-            .replace(/^\.+/, '');
-    }
-
-    function showToast(msg, isError = false) {
-        const t = byId('toast');
-        t.innerText = msg;
-        t.style.color = isError ? 'var(--danger)' : 'var(--success)';
-        t.style.borderColor = isError ? 'var(--danger)' : 'var(--success)';
-        t.style.top = '30px';
-        clearTimeout(showToast._timer);
-        showToast._timer = setTimeout(() => { t.style.top = '-100px'; }, 4000);
-    }
-
-    function updateStatus(msg, clear = false) {
-        const s = byId('status');
-        s.style.display = 'block';
-        byId('copyBtn').style.display = 'flex';
-        // textContent : jamais d'HTML interprété (messages d'erreur inclus)
-        s.textContent = clear ? msg : s.textContent + '\n> ' + msg;
-    }
-
-    async function copyReport() {
-        const text = byId('status').innerText;
-        try {
-            await navigator.clipboard.writeText(text);
-            showToast('Rapport copié !');
-        } catch (err) {
-            showToast('⚠️ Copie impossible', true);
-        }
-    }
-
-    function toggleView(id, btn) {
-        const el = $(id);
-        if (el.type === 'password') { el.type = 'text'; btn.innerText = 'CACHER'; }
-        else { el.type = 'password'; btn.innerText = 'VOIR'; }
-    }
-
-    async function pasteToken() {
-        try {
-            const text = (await navigator.clipboard.readText()).trim();
-            byId('ghToken').value = text;
-            saveKey('ghToken', text);
-            showToast('📋 Token collé !');
-        } catch (err) {
-            showToast('⚠️ Accès au presse-papiers refusé', true);
-        }
-    }
-
-    function clearAllData() {
-        if (confirm('Supprimer le token GitHub enregistré ?\n(Votre script personnalisé est conservé.)')) {
-            store.removeItem('ghToken');
-            byId('ghToken').value = '';
-            showToast('Clé effacée.');
-        }
-    }
-
-    // =====================================================================
-    //  ICÔNE (512 + 192, recadrage carré centré)
-    // =====================================================================
-    function renderIcon(img, size) {
-        const canvas = byId('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = size;
-        canvas.height = size;
-
-        const side = Math.min(img.width, img.height);
-        const sx = (img.width - side) / 2;
-        const sy = (img.height - side) / 2;
-
-        ctx.clearRect(0, 0, size, size);
-        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-        return canvas.toDataURL('image/png');
-    }
-
-    function previewIcon(input) {
-        const file = input.files && input.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const url512 = renderIcon(img, 512);
-                const url192 = renderIcon(img, 192);
-                icon512 = url512.split(',')[1];
-                icon192 = url192.split(',')[1];
-
-                const preview = byId('iconPreview');
-                preview.src = url512;
-                preview.style.display = 'block';
-            };
-            img.onerror = () => showToast('⚠️ Image illisible', true);
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // =====================================================================
-    //  GITHUB : HELPERS
-    // =====================================================================
-    function ghHeaders(token) {
-        return {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json'
-        };
-    }
-
-    async function ghErrorMessage(resp) {
-        try {
-            const data = await resp.json();
-            return data.message || `HTTP ${resp.status}`;
-        } catch (e) {
-            return `HTTP ${resp.status}`;
-        }
-    }
-
-    async function getOwner(token) {
-        const resp = await fetch(`${GH_API}/user`, { headers: ghHeaders(token) });
-        if (!resp.ok) throw new Error('Accès GitHub refusé (token invalide ou expiré)');
-        return (await resp.json()).login;
-    }
-
-    async function ensureRepo(token, owner, repo) {
-        const check = await fetch(`${GH_API}/repos/${owner}/${repo}`, { headers: ghHeaders(token) });
-        if (check.status === 200) return;
-        if (check.status !== 404) throw new Error(`Dépôt inaccessible : ${await ghErrorMessage(check)}`);
-
-        updateStatus('Création du dépôt...');
-        const create = await fetch(`${GH_API}/user/repos`, {
-            method: 'POST',
-            headers: ghHeaders(token),
-            body: JSON.stringify({ name: repo, auto_init: true })
-        });
-        if (!create.ok) throw new Error(`Création du dépôt échouée : ${await ghErrorMessage(create)}`);
-    }
-
-    async function getFileSha(token, owner, repo, path) {
-        const resp = await fetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`, { headers: ghHeaders(token) });
-        if (resp.status === 200) return (await resp.json()).sha;
-        if (resp.status === 404) return null;
-        throw new Error(`Lecture de ${path} impossible : ${await ghErrorMessage(resp)}`);
-    }
-
-    async function putFile(token, owner, repo, path, contentB64, message) {
-        const sha = await getFileSha(token, owner, repo, path);
-        const body = { message, content: contentB64 };
-        if (sha) body.sha = sha;
-
-        const resp = await fetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`, {
-            method: 'PUT',
-            headers: ghHeaders(token),
-            body: JSON.stringify(body)
-        });
-        if (!resp.ok) throw new Error(`Upload de ${path} échoué : ${await ghErrorMessage(resp)}`);
-    }
-
-    async function ensurePages(token, owner, repo) {
-        const resp = await fetch(`${GH_API}/repos/${owner}/${repo}/pages`, {
-            method: 'POST',
-            headers: ghHeaders(token),
-            body: JSON.stringify({ source: { branch: 'main', path: '/' } })
-        });
-        // 201 = activé, 409 = déjà activé : les deux sont OK
-        if (resp.ok || resp.status === 409) return;
-        throw new Error(`Activation de GitHub Pages échouée : ${await ghErrorMessage(resp)}`);
-    }
-
-    // =====================================================================
-    //  INJECTION PWA DANS UN HTML (idempotente, sans re-sérialiser le DOM)
-    // =====================================================================
-    function insertInHead(html, block) {
-        const close = html.search(new RegExp(LT + '/head>', 'i'));
-        if (close !== -1) return html.slice(0, close) + block + '\n' + html.slice(close);
-
-        const headOpen = html.match(new RegExp(LT + 'head[^>]*>', 'i'));
-        if (headOpen) {
-            const i = headOpen.index + headOpen[0].length;
-            return html.slice(0, i) + '\n' + block + html.slice(i);
-        }
-
-        const htmlOpen = html.match(new RegExp(LT + 'html[^>]*>', 'i'));
-        if (htmlOpen) {
-            const i = htmlOpen.index + htmlOpen[0].length;
-            return html.slice(0, i) + '\n' + HEAD_O + '\n' + block + '\n' + HEAD_C + html.slice(i);
-        }
-
-        const doctype = html.match(/^\s*<!doctype[^>]*>/i);
-        if (doctype) {
-            const i = doctype.index + doctype[0].length;
-            return html.slice(0, i) + '\n' + HEAD_O + '\n' + block + '\n' + HEAD_C + '\n' + html.slice(i);
-        }
-
-        return HEAD_O + '\n' + block + '\n' + HEAD_C + '\n' + html;
-    }
-
-    function insertBeforeBodyEnd(html, block) {
-        const i = html.toLowerCase().lastIndexOf(BODY_C);
-        if (i === -1) return html + '\n' + block + '\n';
-        return html.slice(0, i) + block + '\n' + html.slice(i);
-    }
-
-    function buildPwaHtml(source) {
-        let html = source;
-
-        // 1. Supprimer un ancien bloc de script personnalisé (évite les doublons à chaque envoi)
-        const oldBlock = new RegExp(MARK_START + '[\\s\\S]*?' + MARK_END + '\\n?', 'g');
-        html = html.replace(oldBlock, '');
-
-        // 2. Balises de l'en-tête : uniquement celles qui manquent
-        const headTags = [];
-        if (!/<link[^>]+rel=["']manifest["']/i.test(html))
-            headTags.push('<link rel="manifest" href="./manifest.json">');
-        if (!/<meta[^>]+name=["']viewport["']/i.test(html))
-            headTags.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
-        if (!/<meta[^>]+name=["']theme-color["']/i.test(html))
-            headTags.push('<meta name="theme-color" content="#4b6cb7">');
-        if (!/<meta[^>]+name=["']apple-mobile-web-app-capable["']/i.test(html))
-            headTags.push('<meta name="apple-mobile-web-app-capable" content="yes">');
-        if (!/<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["']/i.test(html))
-            headTags.push('<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
-        if (!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html))
-            headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
-
-        if (headTags.length) html = insertInHead(html, headTags.join('\n'));
-
-        // 3. Scripts en fin de page : script perso + enregistrement du SW (si absent)
-        const blocks = [];
-
-        const custom = (store.getItem(CUSTOM_SCRIPT_KEY) || '').trim();
-        if (custom) {
-            const safeCustom = custom.replace(/<\/script/gi, '<\\/script');
-            blocks.push(`${MARK_START}\n${TAG_S}\n${safeCustom}\n${TAG_E}\n${MARK_END}`);
-        }
-
-        if (!/serviceWorker\.register/i.test(html)) {
-            blocks.push(
-                TAG_S + '\n' +
-                "if ('serviceWorker' in navigator) {\n" +
-                "    window.addEventListener('load', () => {\n" +
-                "        navigator.serviceWorker.register('./sw.js').catch(err => console.error('Erreur SW :', err));\n" +
-                "    });\n" +
-                '}\n' +
-                TAG_E
-            );
-        }
-
-        if (blocks.length) html = insertBeforeBodyEnd(html, blocks.join('\n'));
-
-        // 4. Doctype garanti
-        if (!/^\s*<!doctype/i.test(html)) html = DOCTYPE + '\n' + html;
-
-        return { html, hasCustom: !!custom };
-    }
-
-    function buildManifest(appName) {
-        return JSON.stringify({
-            name: appName,
-            short_name: appName,
-            start_url: './',
-            scope: './',
-            display: 'standalone',
-            background_color: '#1a1c20',
-            theme_color: '#4b6cb7',
-            icons: [
-                { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-                { src: 'icon.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-                { src: 'icon.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
-            ]
-        }, null, 2);
-    }
-
-    function buildServiceWorker(appName) {
-        // Version horodatée : chaque forge invalide l'ancien cache
-        const prefix = appName + '-';
-        const cacheName = prefix + 'v' + Date.now();
-        return [
-            `const PREFIX = ${JSON.stringify(prefix)};`,
-            `const CACHE = ${JSON.stringify(cacheName)};`,
-            `const ASSETS = ['./', './index.html', './manifest.json', './icon.png', './icon-192.png'];`,
-            ``,
-            `self.addEventListener('install', (e) => {`,
-            `    self.skipWaiting();`,
-            `    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));`,
-            `});`,
-            ``,
-            `self.addEventListener('activate', (e) => {`,
-            `    e.waitUntil(`,
-            `        caches.keys()`,
-            `            .then((keys) => Promise.all(`,
-            `                keys.filter((k) => k.startsWith(PREFIX) && k !== CACHE).map((k) => caches.delete(k))`,
-            `            ))`,
-            `            .then(() => self.clients.claim())`,
-            `    );`,
-            `});`,
-            ``,
-            `// Réseau d'abord (contenu toujours à jour), cache en secours hors-ligne`,
-            `self.addEventListener('fetch', (e) => {`,
-            `    const req = e.request;`,
-            `    if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;`,
-            `    e.respondWith(`,
-            `        fetch(req)`,
-            `            .then((res) => {`,
-            `                const copy = res.clone();`,
-            `                caches.open(CACHE).then((c) => c.put(req, copy));`,
-            `                return res;`,
-            `            })`,
-            `            .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))`,
-            `    );`,
-            `});`,
-            ``
-        ].join('\n');
-    }
-
-    // =====================================================================
-    //  SUIVI DU DÉPLOIEMENT (LED)
-    // =====================================================================
-    function setLeds(state) {
-        ['led1', 'led2'].forEach((id) => { $(id).className = 'led led-' + state; });
-    }
-
-    function showLiveButton(owner, repo) {
-        liveOwner = owner;
-        liveRepo = repo;
-        byId('liveBtn').style.display = 'flex';
-        setLeds('yellow');
-    }
-
-    function stopDeploymentWatch() {
-        if (deploymentInterval) clearInterval(deploymentInterval);
-        deploymentInterval = null;
-    }
-
-    // Surveille le workflow "pages build and deployment" lancé APRÈS `since`
-    function watchDeployment(token, since) {
+    try{
+      const res= await fetch(`${GH_API}/repos/${liveOwner}/${liveRepo}/actions/runs?per_page=5`,{ headers: ghHeaders(token) });
+      if(!res.ok) return;
+      const data= await res.json();
+      const run= (data.workflow_runs||[]).find( r=> new Date(r.created_at).getTime()>= since-15000 );
+      if(!run) return;
+      if(run.status==='completed'){
         stopDeploymentWatch();
-        const startedAt = Date.now();
-        const maxMs = 3 * 60 * 1000;
-
-        const tick = async () => {
-            if (Date.now() - startedAt > maxMs) {
-                stopDeploymentWatch();
-                setLeds('green');
-                updateStatus('⚠️ Délai dépassé : le site devrait être disponible dans un instant.');
-                return;
-            }
-            try {
-                const res = await fetch(
-                    `${GH_API}/repos/${liveOwner}/${liveRepo}/actions/runs?per_page=5`,
-                    { headers: ghHeaders(token) }
-                );
-                if (!res.ok) return;
-                const data = await res.json();
-                const run = (data.workflow_runs || []).find(
-                    (r) => new Date(r.created_at).getTime() >= since - 15000
-                );
-                if (!run) return; // le déploiement n'a pas encore démarré
-
-                if (run.status === 'completed') {
-                    stopDeploymentWatch();
-                    if (run.conclusion === 'success') {
-                        setLeds('green');
-                        updateStatus('✅ Site déployé et accessible !');
-                        showToast('🌍 Site disponible !');
-                    } else {
-                        setLeds('red');
-                        updateStatus(`❌ Déploiement terminé avec le statut : ${run.conclusion}`);
-                    }
-                } else {
-                    setLeds('yellow');
-                }
-            } catch (err) {
-                console.error('Erreur statut Live :', err);
-            }
-        };
-
-        tick();
-        deploymentInterval = setInterval(tick, 4000);
-    }
-
-    function openLiveSite() {
-        if (liveOwner && liveRepo) {
-            window.open(`https://${liveOwner.toLowerCase()}.github.io/${liveRepo}/`, '_blank', 'noopener');
+        if(run.conclusion==='success'){
+          setLed('green');
+          finishProgress(true);
+          byId('liveStatusTitle').textContent='Application en ligne';
+          byId('liveStatusText').textContent='Déploiement terminé';
+          updateStatus('✅ Site déployé et accessible !');
+          toast('Site disponible');
+        }else{
+          setLed('red');
+          finishProgress(false);
+          byId('liveStatusTitle').textContent='Erreur de déploiement';
+          byId('liveStatusText').textContent='Consultez le rapport';
+          updateStatus(`❌ Déploiement : ${run.conclusion}`);
         }
+      }else{
+        setLed('yellow');
+        byId('liveStatusTitle').textContent='Déploiement en cours';
+        byId('liveStatusText').textContent='GitHub Pages prépare votre application';
+        if(!progressInterval) startProgress();
+      }
+    }catch(e){ console.error(e); }
+  };
+  tick();
+  deploymentInterval= setInterval(tick, 4000);
+}
+
+/* ========================================================= OPEN LIVE ========================================================= */
+function openLiveSite(){
+  if(liveOwner && liveRepo){
+    window.open(`https://${liveOwner.toLowerCase()}.github.io/${liveRepo}/`, '_blank', 'noopener');
+  }
+}
+
+/* ========================================================= INJECT PWA ========================================================= */
+async function injectPwaToGitHub(){
+  const token= byId('ghToken').value.trim();
+  const appName= sanitizeRepoName( byId('appName').value );
+  const source= byId('htmlInput').value.trim();
+  const btn= byId('injectBtn');
+  if(!token){ toast('Token GitHub manquant', true); return; }
+  if(!appName){ toast('Nom du projet manquant', true); return; }
+  if(!source){ toast('Code HTML vide', true); return; }
+  haptic(12);
+  btn.disabled=true; stopDeploymentWatch();
+  updateStatus('--- INJECTION PWA ---', true);
+  try{
+    const owner= await getOwner(token);
+    showLiveButton(owner, appName);
+    await ensureRepo(token, owner, appName);
+    updateStatus('Injection PWA dans index.html...');
+    const{ html, hasCustom }= buildPwaHtml(source);
+    if(hasCustom) updateStatus('Script personnalisé inclus.');
+    const since= Date.now();
+    await putFile(token, owner, appName, 'index.html', utf8ToBase64(html), 'feat(pwa): injection Mastercode');
+    const[ manifestSha, swSha ]= await Promise.all([
+      getFileSha(token, owner, appName, 'manifest.json'),
+      getFileSha(token, owner, appName, 'sw.js')
+    ]);
+    if(!manifestSha || !swSha){ updateStatus('⚠️ manifest.json ou sw.js absent : utilisez FORGER.'); }
+    await ensurePages(token, owner, appName);
+    updateStatus('✅ index.html mis à jour.');
+    toast('Injection PWA terminée');
+    watchDeployment(token, since);
+  }catch(err){
+    console.error(err);
+    updateStatus('❌ ERREUR : '+ err.message);
+    toast(err.message, true);
+    setLed('red'); finishProgress(false);
+    stopDeploymentWatch(); stopProgress();
+  }finally{ btn.disabled=false; }
+}
+
+/* ========================================================= FORGE ========================================================= */
+async function generatePWA(){
+  const token= byId('ghToken').value.trim();
+  const appName= sanitizeRepoName( byId('appName').value );
+  const source= byId('htmlInput').value.trim();
+  const btn= byId('mainBtn');
+  if(!token || !appName || !source || !icon512){
+    toast('Token, projet, HTML et icône sont nécessaires', true); return;
+  }
+  haptic(12);
+  btn.disabled=true;
+  byId('forgeIcon').classList.add('hidden');
+  byId('loader').classList.remove('hidden');
+  byId('liveBtn').classList.add('hidden');
+  stopDeploymentWatch(); stopProgress(); showLiveBadge(false);
+  updateStatus('--- SEQUENCE MASTERCODE ACTIVÉE ---', true);
+  try{
+    const owner= await getOwner(token);
+    updateStatus('Authentification GitHub réussie.');
+    await ensureRepo(token, owner, appName);
+    const{ html, hasCustom }= buildPwaHtml(source);
+    if(hasCustom) updateStatus('Script personnalisé injecté.');
+    const files=[
+      { path:'index.html', content: utf8ToBase64(html) },
+      { path:'manifest.json', content: utf8ToBase64( buildManifest(appName) ) },
+      { path:'sw.js', content: utf8ToBase64( buildServiceWorker(appName) ) },
+      { path:'icon.png', content:icon512 },
+      { path:'icon-192.png', content:icon192 }
+    ];
+    const since= Date.now();
+    for(const file of files){
+      updateStatus(`Upload : ${file.path}...`);
+      await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
     }
+    updateStatus('Activation de GitHub Pages...');
+    await ensurePages(token, owner, appName);
+    updateStatus('Fichiers envoyés. Déploiement...');
+    toast('Mastercode : application forgée');
+    showLiveButton(owner, appName);
+    watchDeployment(token, since);
+  }catch(err){
+    console.error(err);
+    updateStatus('❌ ERREUR : '+ err.message);
+    toast('Échec de la forge', true);
+    setLed('red'); finishProgress(false);
+  }finally{
+    btn.disabled=false;
+    byId('forgeIcon').classList.remove('hidden');
+    byId('loader').classList.add('hidden');
+  }
+}
 
-    // =====================================================================
-    //  ACTION 1 : INJECTER LA PWA DANS index.html ("Yes, WE Can.")
-    // =====================================================================
-    async function injectPwaToGitHub() {
-        const token = byId('ghToken').value.trim();
-        const appName = sanitizeRepoName(byId('appName').value);
-        const source = byId('htmlInput').value.trim();
-        const btn = byId('injectBtn');
+/* ========================================================= FORGE BUTTON CURSOR GLOW ========================================================= */
+document.addEventListener('mousemove', e=>{
+  const btn = byId('mainBtn');
+  if(!btn) return;
+  const r = btn.getBoundingClientRect();
+  if(e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom){
+    btn.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+    btn.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+  }
+});
 
-        if (!token) return showToast('❌ Token GitHub manquant', true);
-        if (!appName) return showToast('❌ Nom du projet manquant', true);
-        if (!source) return showToast("❌ Code HTML source vide. Collez d'abord votre HTML.", true);
+/* ========================================================= INIT ========================================================= */
+updateEditorMeta();
 
-        btn.disabled = true;
-        stopDeploymentWatch();
-        updateStatus('--- INJECTION PWA ---', true);
-
-        try {
-            const owner = await getOwner(token);
-            showLiveButton(owner, appName);
-
-            await ensureRepo(token, owner, appName);
-
-            updateStatus('Injection des balises PWA dans le HTML...');
-            const { html, hasCustom } = buildPwaHtml(source);
-            if (hasCustom) updateStatus('Script personnalisé inclus.');
-
-            const since = Date.now();
-            updateStatus('Envoi de index.html vers GitHub...');
-            await putFile(token, owner, appName, 'index.html', utf8ToBase64(html),
-                'feat(pwa): injection des balises manifest + service worker via Mastercode');
-
-            // Avertir si manifest / sw absents du dépôt
-            const [manifestSha, swSha] = await Promise.all([
-                getFileSha(token, owner, appName, 'manifest.json'),
-                getFileSha(token, owner, appName, 'sw.js')
-            ]);
-            if (!manifestSha || !swSha) {
-                updateStatus('⚠️ manifest.json / sw.js absents du dépôt : utilisez « FORGER » pour les créer.');
-            }
-
-            await ensurePages(token, owner, appName);
-
-            updateStatus('✅ index.html mis à jour sur GitHub.');
-            showToast('✅ Injection PWA terminée !');
-            watchDeployment(token, since);
-        } catch (err) {
-            console.error(err);
-            updateStatus('❌ ERREUR : ' + err.message);
-            showToast('❌ ' + err.message, true);
-            setLeds('red');
-            stopDeploymentWatch();
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
-    // =====================================================================
-    //  ACTION 2 : FORGER L'APPLICATION COMPLÈTE
-    // =====================================================================
-    async function generatePWA() {
-        const token = byId('ghToken').value.trim();
-        const appName = sanitizeRepoName(byId('appName').value);
-        const source = byId('htmlInput').value.trim();
-        const btn = byId('mainBtn');
-        const loader = byId('loader');
-
-        if (!token || !appName || !source || !icon512) return showToast('⚠️ Données manquantes', true);
-
-        btn.disabled = true;
-        loader.style.display = 'block';
-        byId('liveBtn').style.display = 'none';
-        stopDeploymentWatch();
-
-        updateStatus('--- SEQUENCE MASTERCODE 3.0 ACTIVÉE ---', true);
-
-        try {
-            const owner = await getOwner(token);
-            await ensureRepo(token, owner, appName);
-
-            updateStatus('Injection du moteur PWA...');
-            const { html, hasCustom } = buildPwaHtml(source);
-            if (hasCustom) updateStatus('Script personnalisé détecté et injecté.');
-
-            const files = [
-                { path: 'index.html', content: utf8ToBase64(html) },
-                { path: 'manifest.json', content: utf8ToBase64(buildManifest(appName)) },
-                { path: 'sw.js', content: utf8ToBase64(buildServiceWorker(appName)) },
-                { path: 'icon.png', content: icon512 },
-                { path: 'icon-192.png', content: icon192 }
-            ];
-
-            const since = Date.now();
-            for (const file of files) {
-                updateStatus(`Upload : ${file.path}...`);
-                await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
-            }
-
-            updateStatus('Activation GitHub Pages...');
-            await ensurePages(token, owner, appName);
-
-            updateStatus('Fichiers envoyés. Déploiement en cours...');
-            showToast('✅ Mastercode : Forgé !');
-
-            showLiveButton(owner, appName);
-            watchDeployment(token, since);
-        } catch (err) {
-            console.error(err);
-            updateStatus('❌ ERREUR : ' + err.message);
-            showToast('Échec de la forge', true);
-        } finally {
-            btn.disabled = false;
-            loader.style.display = 'none';
-        }
-    }
-
-    // =====================================================================
-    //  SERVICE WORKER DE CETTE PAGE
-    // =====================================================================
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(() => { /* sw.js absent en local : ignoré */ });
-        });
-    }
+/* ========================================================= MASTERCODE SERVICE WORKER ========================================================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
+}
 </script>
 </body>
 </html>
