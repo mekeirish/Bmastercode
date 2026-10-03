@@ -60,10 +60,30 @@ button{ -webkit-user-select:none; user-select:none; }
 .brand-logo span{ font-size:17px; font-weight:800; position:relative; }
 .brand-name{ font-size:17px; line-height:18px; font-weight:800; letter-spacing:-.5px; }
 .brand-sub{ margin-top:2px; color:#64748b; font-size:7px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.header-right{ display:flex; align-items:center; gap:6px; }
 .sw-open{
   width:40px; height:40px; flex:0 0 40px; border-radius:13px;
   display:flex; align-items:center; justify-content:center; color:#a5b4fc; font-size:16px;
 }
+.header-icon-btn{
+  width:40px; height:40px; flex:0 0 40px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  color:#94a3b8; font-size:15px; cursor:pointer;
+  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06);
+  transition:.2s ease;
+}
+.header-icon-btn:hover{ color:#f8fafc; background:rgba(255,255,255,.06); }
+.header-icon-btn:active{ transform:scale(.94); }
+.header-icon-btn.danger{ color:#f87171; }
+.header-icon-btn.danger:hover{ color:#fca5a5; background:rgba(239,68,68,.08); }
+.save-indicator{
+  position:absolute; top:0; right:0;
+  width:8px; height:8px; border-radius:50%;
+  background:#22c55e; box-shadow: 0 0 6px #22c55e;
+  opacity:0; transition:.3s ease;
+}
+.save-indicator.show{ opacity:1; }
+
 /* ========================================================= MAIN LAYOUT ========================================================= */
 .main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:7px; overflow:hidden; }
 .card{ border-radius:19px; padding:11px; flex:0 0 auto; }
@@ -123,11 +143,16 @@ button{ -webkit-user-select:none; user-select:none; }
   display:flex; align-items:center; gap:4px;
 }
 .paste-html:active{ transform:scale(.96); }
+.editor-meta{
+  font-size:6px; color:#475569; font-weight:700;
+  font-variant-numeric:tabular-nums; letter-spacing:.05em;
+}
 /* ========================================================= ICON ========================================================= */
 .icon-zone{
   flex:1; min-height:105px; border-radius:12px; border:1px dashed rgba(255,255,255,.09);
   background:rgba(0,0,0,.18); display:flex; flex-direction:column;
   align-items:center; justify-content:center; overflow:hidden;
+  position:relative;
 }
 .icon-upload{ width:100%; padding:0 8px; }
 .icon-upload input{ width:100%; font-size:7px; color:#64748b; }
@@ -140,6 +165,16 @@ button{ -webkit-user-select:none; user-select:none; }
   border:1px solid rgba(255,255,255,.12); box-shadow:0 8px 25px rgba(0,0,0,.45);
   margin-bottom:5px;
 }
+.icon-clear{
+  position:absolute; top:5px; right:5px;
+  width:22px; height:22px; border-radius:7px;
+  background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.25);
+  color:#f87171; font-size:11px; cursor:pointer;
+  display:none; align-items:center; justify-content:center;
+  transition:.2s ease;
+}
+.icon-clear.show{ display:flex; }
+.icon-clear:active{ transform:scale(.9); }
 /* ========================================================= ACTIONS ========================================================= */
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
 .action-btn{
@@ -243,7 +278,6 @@ button{ -webkit-user-select:none; user-select:none; }
   padding-right:2px;
 }
 .status-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; flex:0 0 auto; }
-.status-head-left{ display:flex; align-items:center; gap:8px; }
 .copy-report{ border:0; background:none; color:#64748b; font-size:7px; font-weight:800; }
 .log-line{ display:block; }
 .log-line .cmd{ color:#6366f1; font-weight:700; }
@@ -277,13 +311,54 @@ button{ -webkit-user-select:none; user-select:none; }
   border:1px solid rgba(255,255,255,.07); color:#cbd5e1; outline:none;
   font-family:"Courier New",monospace; font-size:9px; line-height:1.5;
 }
+.modal-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.modal-head-left{ display:flex; align-items:center; gap:10px; }
+.modal-icon{
+  width:36px; height:36px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.15);
+  font-size:16px;
+}
+.modal-title{ font-size:11px; font-weight:800; color:#c7d2fe; }
+.modal-sub{ font-size:6.5px; text-transform:uppercase; letter-spacing:.17em; color:#6366f1; font-weight:700; margin-bottom:2px; }
+.modal-close{
+  width:30px; height:30px; border-radius:9px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+  color:#94a3b8; font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+}
+.modal-close:active{ background:rgba(255,255,255,.08); }
+
+/* Sessions */
+.session-list{ display:flex; flex-direction:column; gap:8px; max-height:50dvh; overflow-y:auto; }
+.session-item{
+  padding:10px 12px; border-radius:11px;
+  background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05);
+  cursor:pointer; transition:.15s ease;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.session-item:active{ background:rgba(99,102,241,.1); border-color:rgba(99,102,241,.2); }
+.session-info{ min-width:0; flex:1; }
+.session-name{ font-size:9px; font-weight:800; color:#e2e8f0; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.session-meta{ font-size:7px; color:#64748b; font-variant-numeric:tabular-nums; }
+.session-delete{
+  width:28px; height:28px; flex:0 0 28px; border-radius:8px;
+  background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.15);
+  color:#f87171; font-size:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.session-delete:active{ background:rgba(239,68,68,.2); }
+
 /* ========================================================= SMALL PHONES ========================================================= */
 @media(max-height:680px){
   .app-inner{ padding-top:max(6px,env(safe-area-inset-top)); }
   .header{ height:45px; min-height:45px; margin-bottom:5px; }
   .brand-logo{ width:34px; height:34px; flex-basis:34px; border-radius:10px; }
   .brand-name{ font-size:14px; }
-  .sw-open{ width:34px; height:34px; flex-basis:34px; }
+  .sw-open, .header-icon-btn{ width:34px; height:34px; flex-basis:34px; }
   .card{ padding:8px; border-radius:16px; }
   .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); }
   .html-editor textarea{ min-height:158px; }
@@ -315,7 +390,10 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="brand-sub">Premium PWA Factory</div>
         </div>
       </div>
-      <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
+      <div class="header-right">
+        <button id="sessionsBtn" class="header-icon-btn" onclick="openSessionsModal()" title="Mes projets" aria-label="Mes projets">📁</button>
+        <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
+      </div>
     </header>
 
     <!-- ===================================================== MAIN ===================================================== -->
@@ -330,7 +408,7 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="text-[8px] text-slate-600">SECURE</div>
         </div>
         <div class="token-row">
-          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="saveKey('ghToken',this.value.trim())">
+          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())">
           <button class="small-btn glass" onclick="toggleView('ghToken',this)">VOIR</button>
           <button class="small-btn glass" onclick="pasteToken()">📋 COLLER</button>
         </div>
@@ -350,9 +428,10 @@ button{ -webkit-user-select:none; user-select:none; }
           <!-- NAME + ICON -->
           <div class="project-col">
             <label class="field-label">Nom du projet</label>
-            <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false">
+            <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false" oninput="onAppNameInput(this.value)">
             <label class="field-label" style="margin-top:7px">Icône PWA</label>
             <div class="icon-zone">
+              <button class="icon-clear" id="iconClear" onclick="clearIcon()" title="Supprimer l'icône" aria-label="Supprimer l'icône">✕</button>
               <div id="iconPreviewWrap" class="hidden">
                 <img id="iconPreview" class="preview" alt="Aperçu">
               </div>
@@ -365,10 +444,10 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="project-col">
             <div class="flex items-center justify-between mb-1">
               <label class="field-label !mb-0">Code HTML</label>
-              <span class="text-[6px] text-slate-600">index.html</span>
+              <span class="editor-meta" id="htmlMeta">0 l · 0 Ko</span>
             </div>
             <div class="html-editor">
-              <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="detectDependencies()"></textarea>
+              <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="onHtmlInput()"></textarea>
               <button class="paste-html" onclick="pasteHTML()">📋 COLLER</button>
             </div>
           </div>
@@ -427,15 +506,15 @@ button{ -webkit-user-select:none; user-select:none; }
 <div id="swOverlay" class="overlay" onclick="closeSwModal()"></div>
 <div id="swModal" class="modal glass">
   <div class="modal-body">
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/10 flex items-center justify-center">🧠</div>
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="modal-icon" style="background:rgba(250,204,21,.1);border-color:rgba(250,204,21,.15);">🧠</div>
         <div>
-          <div class="text-[7px] uppercase tracking-[.17em] text-yellow-500/60 font-bold">Advanced</div>
-          <h2 class="text-sm font-bold text-yellow-100 mt-0.5">Script personnalisé</h2>
+          <div class="modal-sub" style="color:#a16207;">Advanced</div>
+          <div class="modal-title" style="color:#fde68a;">Script personnalisé</div>
         </div>
       </div>
-      <button onclick="closeSwModal()" class="w-8 h-8 rounded-xl glass text-slate-500">×</button>
+      <button class="modal-close" onclick="closeSwModal()">×</button>
     </div>
     <p class="text-[9px] leading-4 text-slate-500 mb-3">Le script sera injecté à la fin du body de l'application générée.</p>
     <textarea id="customScript" class="custom-script" spellcheck="false" placeholder="// Votre JavaScript personnalisé ici..."></textarea>
@@ -444,6 +523,30 @@ button{ -webkit-user-select:none; user-select:none; }
       <button onclick="saveCustomScript()" class="h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[7px] font-bold uppercase">💾 SAUVER</button>
       <button onclick="closeSwModal()" class="h-10 rounded-xl bg-white/5 border border-white/5 text-slate-300 text-[7px] font-bold uppercase">FERMER</button>
     </div>
+  </div>
+</div>
+
+<!-- ===================================================== SESSIONS MODAL ===================================================== -->
+<div id="sessionsOverlay" class="overlay" onclick="closeSessionsModal()"></div>
+<div id="sessionsModal" class="modal glass">
+  <div class="modal-body">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="modal-icon">📁</div>
+        <div>
+          <div class="modal-sub">Sessions</div>
+          <div class="modal-title">Mes projets sauvegardés</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeSessionsModal()">×</button>
+    </div>
+    <p class="text-[9px] leading-4 text-slate-500 mb-3">
+      Chaque projet est sauvegardé automatiquement avec son nom, son HTML et son icône.
+    </p>
+    <button onclick="saveCurrentAsSession()" class="w-full h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[8px] font-bold uppercase mb-3">
+      💾 SAUVEGARDER LE PROJET ACTUEL
+    </button>
+    <div class="session-list" id="sessionList"></div>
   </div>
 </div>
 
@@ -459,115 +562,46 @@ const GH_API='https://api.github.com';
 const CUSTOM_SCRIPT_KEY='mastercode_custom_script';
 const LT='<';
 const TAG_S=LT+'script>';
-const TAG_E=LT+'/script>';
+const TAG_E=LT+'/'+'script>';
 const HEAD_O=LT+'head>';
-const HEAD_C=LT+'/head>';
-const BODY_C=LT+'/body>';
+const HEAD_C=LT+'/'+'head>';
+const BODY_C=LT+'/'+'body>';
 const DOCTYPE=LT+'!DOCTYPE html>';
 const MARK_START=LT+'!-- mastercode:custom:start -->';
 const MARK_END=LT+'!-- mastercode:custom:end -->';
 const PROGRESS_DURATION = 45000;
 const MAX_LOG_LINES = 6;
 
-/* ========================================================= DÉPENDANCES CONNUES =========================================================
-   Détection automatique des variables globales utilisées sans être définies.
-   Si le code collé utilise `$` sans jQuery → injection automatique du CDN.
-   =============================================================================================================== */
-const KNOWN_DEPENDENCIES = {
-  /* jQuery */
-  '$': {
-    name: 'jQuery',
-    pattern: /(?:^|[^.\w])\$\s*\(/,
-    test: /jquery/i,
-    cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>'
-  },
-  'jQuery': {
-    name: 'jQuery',
-    pattern: /(?:^|[^.\w])jQuery\s*\(/,
-    test: /jquery/i,
-    cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>'
-  },
-  /* Lodash / Underscore */
-  '_': {
-    name: 'Lodash',
-    pattern: /(?:^|[^.\w])_\s*\./,
-    test: /lodash/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"><' + '/script>'
-  },
-  /* Vue.js */
-  'Vue': {
-    name: 'Vue.js',
-    pattern: /(?:^|[^.\w])Vue\s*\./,
-    test: /vue/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><' + '/script>'
-  },
-  /* React / ReactDOM */
-  'React': {
-    name: 'React',
-    pattern: /(?:^|[^.\w])React\s*\./,
-    test: /react/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"><' + '/script>' +
-         '\n<' + 'script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"><' + '/script>'
-  },
-  /* Alpine.js */
-  'Alpine': {
-    name: 'Alpine.js',
-    pattern: /(?:^|[^.\w])Alpine\s*\./,
-    test: /alpine/i,
-    cdn: '<' + 'script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"><' + '/script>'
-  },
-  /* Axios */
-  'axios': {
-    name: 'Axios',
-    pattern: /(?:^|[^.\w])axios\s*\./,
-    test: /axios/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"><' + '/script>'
-  },
-  /* Chart.js */
-  'Chart': {
-    name: 'Chart.js',
-    pattern: /(?:^|[^.\w])Chart\s*\(/,
-    test: /chart\.?js/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/chart.js"><' + '/script>'
-  },
-  /* GSAP */
-  'gsap': {
-    name: 'GSAP',
-    pattern: /(?:^|[^.\w])gsap\s*\./,
-    test: /gsap/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><' + '/script>'
-  },
-  /* Three.js */
-  'THREE': {
-    name: 'Three.js',
-    pattern: /(?:^|[^.\w])THREE\s*\./,
-    test: /three/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"><' + '/script>'
-  },
-  /* Anime.js */
-  'anime': {
-    name: 'Anime.js',
-    pattern: /(?:^|[^.\w])anime\s*\(/,
-    test: /anime/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"><' + '/script>'
-  },
-  /* Luxon */
-  'luxon': {
-    name: 'Luxon',
-    pattern: /(?:^|[^.\w])luxon\s*\./,
-    test: /luxon/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"><' + '/script>'
-  },
-  /* Day.js */
-  'dayjs': {
-    name: 'Day.js',
-    pattern: /(?:^|[^.\w])dayjs\s*\(/,
-    test: /dayjs/i,
-    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"><' + '/script>'
-  }
+/* ========================================================= CLÉS LOCALSTORAGE ========================================================= */
+const LS_KEYS = {
+  TOKEN: 'mastercode_token',
+  APP_NAME: 'mastercode_app_name',
+  HTML: 'mastercode_html',
+  ICON_512: 'mastercode_icon_512',
+  ICON_192: 'mastercode_icon_192',
+  ICON_PREVIEW: 'mastercode_icon_preview',
+  CUSTOM_SCRIPT: 'mastercode_custom_script',
+  SESSIONS: 'mastercode_sessions'
 };
 
-/* ========================================================= STORAGE ========================================================= */
+/* ========================================================= DÉPENDANCES ========================================================= */
+const KNOWN_DEPENDENCIES = {
+  '$': { name: 'jQuery', pattern: /(?:^|[^.\w])\$\s*\(/, test: /jquery/i, cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>' },
+  'jQuery': { name: 'jQuery', pattern: /(?:^|[^.\w])jQuery\s*\(/, test: /jquery/i, cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>' },
+  '_': { name: 'Lodash', pattern: /(?:^|[^.\w])_\s*\./, test: /lodash/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"><' + '/script>' },
+  'Vue': { name: 'Vue.js', pattern: /(?:^|[^.\w])Vue\s*\./, test: /vue/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><' + '/script>' },
+  'React': { name: 'React', pattern: /(?:^|[^.\w])React\s*\./, test: /react/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"><' + '/script>' + '\n<' + 'script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"><' + '/script>' },
+  'Alpine': { name: 'Alpine.js', pattern: /(?:^|[^.\w])Alpine\s*\./, test: /alpine/i, cdn: '<' + 'script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"><' + '/script>' },
+  'axios': { name: 'Axios', pattern: /(?:^|[^.\w])axios\s*\./, test: /axios/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"><' + '/script>' },
+  'Chart': { name: 'Chart.js', pattern: /(?:^|[^.\w])Chart\s*\(/, test: /chart\.?js/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/chart.js"><' + '/script>' },
+  'gsap': { name: 'GSAP', pattern: /(?:^|[^.\w])gsap\s*\./, test: /gsap/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><' + '/script>' },
+  'THREE': { name: 'Three.js', pattern: /(?:^|[^.\w])THREE\s*\./, test: /three/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"><' + '/script>' },
+  'anime': { name: 'Anime.js', pattern: /(?:^|[^.\w])anime\s*\(/, test: /anime/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"><' + '/script>' },
+  'luxon': { name: 'Luxon', pattern: /(?:^|[^.\w])luxon\s*\./, test: /luxon/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"><' + '/script>' },
+  'dayjs': { name: 'Day.js', pattern: /(?:^|[^.\w])dayjs\s*\(/, test: /dayjs/i, cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"><' + '/script>' }
+};
+
+/* ========================================================= STORAGE SÉCURISÉ ========================================================= */
 const store=(()=>{
   const mem={}; let ls=null;
   try{ ls=localStorage; ls.setItem('__mc_test','1'); ls.removeItem('__mc_test'); }catch(e){ ls=null; }
@@ -578,15 +612,110 @@ const store=(()=>{
   };
 })();
 
-/* ========================================================= STATE ========================================================= */
-let liveOwner='';
-let liveRepo='';
-let deploymentInterval=null;
-let progressInterval=null;
-let icon512='';
-let icon192='';
-byId('ghToken').value= store.getItem('ghToken')||'';
-function saveKey(id,val){ store.setItem(id,val); }
+/* ========================================================= PERSISTANCE ========================================================= */
+let saveIndicatorTimer = null;
+function showSaveIndicator(){
+  const ind = byId('saveIndicator');
+  if(!ind) return;
+  ind.classList.add('show');
+  clearTimeout(saveIndicatorTimer);
+  saveIndicatorTimer = setTimeout(()=>{ ind.classList.remove('show'); }, 800);
+}
+
+/* Débouncé pour ne pas écrire à chaque frappe */
+let htmlSaveTimer = null;
+function saveHtmlDebounced(){
+  clearTimeout(htmlSaveTimer);
+  htmlSaveTimer = setTimeout(()=>{
+    store.setItem(LS_KEYS.HTML, byId('htmlInput').value);
+    updateHtmlMeta();
+    showSaveIndicator();
+  }, 400);
+}
+
+function saveAppName(val){
+  store.setItem(LS_KEYS.APP_NAME, val);
+  showSaveIndicator();
+}
+
+function saveToken(val){
+  store.setItem(LS_KEYS.TOKEN, val);
+  showSaveIndicator();
+}
+
+function saveIcon(dataUrl512, dataUrl192){
+  if(dataUrl512){
+    store.setItem(LS_KEYS.ICON_512, dataUrl512.split(',')[1] || '');
+    store.setItem(LS_KEYS.ICON_PREVIEW, dataUrl512);
+  } else {
+    store.removeItem(LS_KEYS.ICON_512);
+    store.removeItem(LS_KEYS.ICON_PREVIEW);
+  }
+  if(dataUrl192){
+    store.setItem(LS_KEYS.ICON_192, dataUrl192.split(',')[1] || '');
+  } else {
+    store.removeItem(LS_KEYS.ICON_192);
+  }
+  showSaveIndicator();
+}
+
+/* ========================================================= RESTAURATION ========================================================= */
+function restoreState(){
+  /* Token */
+  const token = store.getItem(LS_KEYS.TOKEN);
+  if(token) byId('ghToken').value = token;
+
+  /* Nom du projet */
+  const appName = store.getItem(LS_KEYS.APP_NAME);
+  if(appName) byId('appName').value = appName;
+
+  /* HTML */
+  const html = store.getItem(LS_KEYS.HTML);
+  if(html) byId('htmlInput').value = html;
+
+  /* Icône */
+  const icon512 = store.getItem(LS_KEYS.ICON_512);
+  const icon192 = store.getItem(LS_KEYS.ICON_192);
+  const iconPreview = store.getItem(LS_KEYS.ICON_PREVIEW);
+  if(icon512 && icon192){
+    window.icon512 = icon512;
+    window.icon192 = icon192;
+    if(iconPreview){
+      byId('iconPreview').src = iconPreview;
+      byId('iconPreviewWrap').classList.remove('hidden');
+      byId('iconClear').classList.add('show');
+    }
+  }
+
+  /* Custom script */
+  const custom = store.getItem(LS_KEYS.CUSTOM_SCRIPT);
+  if(custom) byId('customScript').value = custom;
+
+  updateHtmlMeta();
+}
+
+/* ========================================================= HANDLERS ========================================================= */
+function onTokenInput(val){
+  saveToken(val);
+}
+function onAppNameInput(val){
+  saveAppName(val);
+}
+function onHtmlInput(){
+  saveHtmlDebounced();
+  const code = byId('htmlInput').value;
+  /* Détection silencieuse pour info dans le rapport */
+  if(code.trim().length > 20){
+    detectDependencies(true);
+  }
+}
+
+function updateHtmlMeta(){
+  const code = byId('htmlInput').value;
+  const lines = code ? code.split('\n').length : 0;
+  const size = (new Blob([code]).size / 1024).toFixed(1);
+  byId('htmlMeta').textContent = lines + ' l · ' + size + ' Ko';
+}
 
 /* ========================================================= TOAST ========================================================= */
 function toast(message,error=false){
@@ -611,7 +740,6 @@ function toast(message,error=false){
     setTimeout(()=>el.remove(),250);
   },3500);
 }
-const showToast=toast;
 
 /* ========================================================= STATUS ========================================================= */
 function escapeHtml(s){
@@ -619,7 +747,7 @@ function escapeHtml(s){
 }
 function classifyLog(msg){
   const m = msg.trim();
-  if(m.startsWith('✅') || /réussie|terminé|déployé|accessible|injecté|forgée/i.test(m)) return 'ok';
+  if(m.startsWith('✅') || /réussie|terminé|déployé|accessible|injecté|forgée|sauvegardé|chargé/i.test(m)) return 'ok';
   if(m.startsWith('⚠️')) return 'warn';
   if(m.startsWith('❌') || /erreur/i.test(m)) return 'err';
   if(m.startsWith('---')) return 'info';
@@ -630,9 +758,7 @@ function updateStatus(message,clear=false){
   const card=byId('statusCard');
   const status=byId('status');
   card.classList.remove('hidden');
-  if(clear){
-    status.innerHTML='';
-  }
+  if(clear){ status.innerHTML=''; }
   const cls = classifyLog(message);
   const line = document.createElement('span');
   line.className = 'log-line';
@@ -665,7 +791,9 @@ async function pasteToken(){
   try{
     const text= (await navigator.clipboard.readText()).trim();
     if(!text){ toast('Presse-papier vide',true); return; }
-    byId('ghToken').value=text; saveKey('ghToken',text); toast('Token collé');
+    byId('ghToken').value=text;
+    saveToken(text);
+    toast('Token collé');
   }catch(e){ toast('Autorisation presse-papier refusée',true); }
 }
 
@@ -675,6 +803,8 @@ async function pasteHTML(){
     const text= await navigator.clipboard.readText();
     if(!text){ toast('Presse-papier vide',true); return; }
     byId('htmlInput').value=text;
+    store.setItem(LS_KEYS.HTML, text);
+    updateHtmlMeta();
     detectDependencies();
     toast('Code HTML collé');
     byId('htmlInput').focus();
@@ -683,91 +813,12 @@ async function pasteHTML(){
 
 /* ========================================================= CLEAR TOKEN ========================================================= */
 function clearAllData(){
-  if(confirm('Supprimer le token GitHub enregistré ?\n\nVotre script personnalisé sera conservé.')){
-    store.removeItem('ghToken'); byId('ghToken').value=''; toast('Clé effacée');
+  if(confirm('Supprimer le token GitHub enregistré ?\n\nVotre code HTML, votre icône et votre script personnalisé seront conservés.')){
+    store.removeItem(LS_KEYS.TOKEN);
+    byId('ghToken').value='';
+    toast('Clé effacée');
   }
 }
-
-/* ========================================================= DÉTECTION DÉPENDANCES =========================================================
-   Analyse le code collé, détecte les variables globales utilisées sans être définies,
-   et affiche un avertissement dans la console + injecte automatiquement les CDN si nécessaire.
-   ============================================================================================================================ */
-function detectDependencies(silent=false){
-  const code = byId('htmlInput').value;
-  if(!code.trim()) return { missing: [], inject: [] };
-
-  const found = [];
-  const codeLower = code.toLowerCase();
-
-  Object.keys(KNOWN_DEPENDENCIES).forEach(varName => {
-    const dep = KNOWN_DEPENDENCIES[varName];
-
-    /* 1) Le code utilise-t-il la variable ? */
-    const isUsed = dep.pattern.test(code);
-    if(!isUsed) return;
-
-    /* 2) La lib est-elle déjà chargée via CDN ou un script inline ? */
-    const alreadyLoaded = dep.test.test(codeLower);
-
-    /* 3) Cas particulier jQuery : $ est aussi utilisé par d'autres libs, on skip si déjà chargé */
-    if(alreadyLoaded) return;
-
-    /* Ajoute à la liste des dépendances manquantes */
-    if(!found.find(x => x.name === dep.name)){
-      found.push({
-        varName,
-        name: dep.name,
-        cdn: dep.cdn
-      });
-    }
-  });
-
-  if(found.length && !silent){
-    if(confirm(
-      '⚠️ Dépendances manquantes détectées :\n\n' +
-      found.map(f => '• ' + f.name + ' (utilise ' + f.varName + ')').join('\n') +
-      '\n\nVoulez-vous injecter automatiquement les CDN dans le <head> ?'
-    )){
-      injectDependencies(found);
-    }
-  }
-
-  return { missing: found };
-}
-
-/* Injection auto des CDN dans le <head> du code collé */
-function injectDependencies(deps){
-  let code = byId('htmlInput').value;
-  const scripts = deps.map(d => d.cdn).join('\n');
-
-  /* Insère juste avant </head> */
-  if(/<\/head>/i.test(code)){
-    code = code.replace(/<\/head>/i, scripts + '\n</head>');
-  } else if(/<head[\s>]/i.test(code)){
-    code = code.replace(/(<head[^>]*>)/i, '$1\n' + scripts);
-  } else if(/<html[\s>]/i.test(code)){
-    code = code.replace(/(<html[^>]*>)/i, '$1\n<head>\n' + scripts + '\n</head>');
-  } else {
-    /* Pas de structure HTML → on enveloppe */
-    code = DOCTYPE + '\n<head>\n' + scripts + '\n</head>\n<body>\n' + code + '\n</body>';
-  }
-
-  byId('htmlInput').value = code;
-  toast(deps.length + ' CDN injecté(s)');
-  updateStatus('⚡ CDN injecté(s) : ' + deps.map(d => d.name).join(', '));
-}
-
-/* ========================================================= SW MODAL ========================================================= */
-function loadCustomScriptFromStorage(){ byId('customScript').value= store.getItem(CUSTOM_SCRIPT_KEY)||''; }
-function openSwModal(){ loadCustomScriptFromStorage(); byId('swModal').classList.add('open'); byId('swOverlay').classList.add('open'); }
-function closeSwModal(){ byId('swModal').classList.remove('open'); byId('swOverlay').classList.remove('open'); }
-function saveCustomScript(){ store.setItem(CUSTOM_SCRIPT_KEY, byId('customScript').value); toast('Script personnalisé sauvegardé'); closeSwModal(); }
-function resetCustomScript(){
-  if(confirm('Supprimer le script personnalisé ?')){
-    store.removeItem(CUSTOM_SCRIPT_KEY); byId('customScript').value=''; toast('Script réinitialisé'); closeSwModal();
-  }
-}
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSwModal(); });
 
 /* ========================================================= ICON ========================================================= */
 function renderIcon(img,size){
@@ -787,15 +838,228 @@ function previewIcon(input){
     img.onload=()=>{
       const url512= renderIcon(img,512);
       const url192= renderIcon(img,192);
-      icon512= url512.split(',')[1];
-      icon192= url192.split(',')[1];
+      window.icon512 = url512.split(',')[1];
+      window.icon192 = url192.split(',')[1];
       byId('iconPreview').src=url512;
       byId('iconPreviewWrap').classList.remove('hidden');
+      byId('iconClear').classList.add('show');
+      saveIcon(url512, url192);
+      toast('Icône enregistrée');
     };
     img.onerror=()=>{ toast('Image illisible',true); };
     img.src=e.target.result;
   };
   reader.readAsDataURL(file);
+}
+function clearIcon(){
+  if(!confirm('Supprimer l\'icône enregistrée ?')) return;
+  window.icon512 = '';
+  window.icon192 = '';
+  byId('iconInput').value = '';
+  byId('iconPreview').src = '';
+  byId('iconPreviewWrap').classList.add('hidden');
+  byId('iconClear').classList.remove('show');
+  store.removeItem(LS_KEYS.ICON_512);
+  store.removeItem(LS_KEYS.ICON_192);
+  store.removeItem(LS_KEYS.ICON_PREVIEW);
+  toast('Icône supprimée');
+}
+
+/* ========================================================= DÉTECTION DÉPENDANCES ========================================================= */
+function detectDependencies(silent=false){
+  const code = byId('htmlInput').value;
+  if(!code.trim()) return { missing: [] };
+
+  const found = [];
+  const codeLower = code.toLowerCase();
+
+  Object.keys(KNOWN_DEPENDENCIES).forEach(varName => {
+    const dep = KNOWN_DEPENDENCIES[varName];
+    const isUsed = dep.pattern.test(code);
+    if(!isUsed) return;
+    const alreadyLoaded = dep.test.test(codeLower);
+    if(alreadyLoaded) return;
+    if(!found.find(x => x.name === dep.name)){
+      found.push({ varName, name: dep.name, cdn: dep.cdn });
+    }
+  });
+
+  if(found.length && !silent){
+    if(confirm(
+      '⚠️ Dépendances manquantes détectées :\n\n' +
+      found.map(f => '• ' + f.name + ' (utilise ' + f.varName + ')').join('\n') +
+      '\n\nVoulez-vous injecter automatiquement les CDN dans le <head> ?'
+    )){
+      injectDependencies(found);
+    }
+  }
+
+  return { missing: found };
+}
+
+function injectDependencies(deps){
+  let code = byId('htmlInput').value;
+  const scripts = deps.map(d => d.cdn).join('\n');
+
+  if(/<\/head>/i.test(code)){
+    code = code.replace(/<\/head>/i, scripts + '\n</head>');
+  } else if(/<head[\s>]/i.test(code)){
+    code = code.replace(/(<head[^>]*>)/i, '$1\n' + scripts);
+  } else if(/<html[\s>]/i.test(code)){
+    code = code.replace(/(<html[^>]*>)/i, '$1\n<head>\n' + scripts + '\n</head>');
+  } else {
+    code = DOCTYPE + '\n<head>\n' + scripts + '\n</head>\n<body>\n' + code + '\n</body>';
+  }
+
+  byId('htmlInput').value = code;
+  store.setItem(LS_KEYS.HTML, code);
+  updateHtmlMeta();
+  toast(deps.length + ' CDN injecté(s)');
+  updateStatus('⚡ CDN injecté(s) : ' + deps.map(d => d.name).join(', '));
+}
+
+/* ========================================================= SW MODAL ========================================================= */
+function loadCustomScriptFromStorage(){ byId('customScript').value= store.getItem(LS_KEYS.CUSTOM_SCRIPT)||''; }
+function openSwModal(){ loadCustomScriptFromStorage(); byId('swModal').classList.add('open'); byId('swOverlay').classList.add('open'); }
+function closeSwModal(){ byId('swModal').classList.remove('open'); byId('swOverlay').classList.remove('open'); }
+function saveCustomScript(){
+  store.setItem(LS_KEYS.CUSTOM_SCRIPT, byId('customScript').value);
+  toast('Script personnalisé sauvegardé');
+  closeSwModal();
+}
+function resetCustomScript(){
+  if(confirm('Supprimer le script personnalisé ?')){
+    store.removeItem(LS_KEYS.CUSTOM_SCRIPT);
+    byId('customScript').value='';
+    toast('Script réinitialisé');
+    closeSwModal();
+  }
+}
+
+/* ========================================================= SESSIONS ========================================================= */
+function getSessions(){
+  try {
+    const raw = store.getItem(LS_KEYS.SESSIONS);
+    if(!raw) return [];
+    return JSON.parse(raw);
+  } catch(e){ return []; }
+}
+function setSessions(arr){
+  try { store.setItem(LS_KEYS.SESSIONS, JSON.stringify(arr)); } catch(e){}
+}
+
+function openSessionsModal(){
+  renderSessions();
+  byId('sessionsModal').classList.add('open');
+  byId('sessionsOverlay').classList.add('open');
+}
+function closeSessionsModal(){
+  byId('sessionsModal').classList.remove('open');
+  byId('sessionsOverlay').classList.remove('open');
+}
+
+function renderSessions(){
+  const list = byId('sessionList');
+  const sessions = getSessions();
+  list.innerHTML = '';
+
+  if(sessions.length === 0){
+    list.innerHTML = '<div style="text-align:center;color:#64748b;font-size:9px;padding:24px;">Aucun projet sauvegardé</div>';
+    return;
+  }
+
+  sessions.forEach((s, idx) => {
+    const item = document.createElement('div');
+    item.className = 'session-item';
+    const date = new Date(s.savedAt);
+    const dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const size = s.html ? (new Blob([s.html]).size / 1024).toFixed(1) : '0';
+    const hasIcon = s.icon512 ? ' · 🖼' : '';
+    item.innerHTML = `
+      <div class="session-info">
+        <div class="session-name">${escapeHtml(s.name || 'Sans nom')}</div>
+        <div class="session-meta">${dateStr} · ${size} Ko${hasIcon}</div>
+      </div>
+      <button class="session-delete" data-idx="${idx}" title="Supprimer">✕</button>
+    `;
+    item.onclick = (e) => {
+      if(e.target.closest('.session-delete')) return;
+      loadSession(idx);
+    };
+    item.querySelector('.session-delete').onclick = (e) => {
+      e.stopPropagation();
+      deleteSession(idx);
+    };
+    list.appendChild(item);
+  });
+}
+
+function saveCurrentAsSession(){
+  const name = byId('appName').value.trim();
+  if(!name){ toast('Nom du projet manquant', true); return; }
+  const html = byId('htmlInput').value;
+
+  const sessions = getSessions();
+  /* Si un projet du même nom existe, on le remplace */
+  const existingIdx = sessions.findIndex(s => s.name === name);
+  const entry = {
+    name,
+    html,
+    icon512: window.icon512 || '',
+    icon192: window.icon192 || '',
+    iconPreview: byId('iconPreview').src || '',
+    savedAt: Date.now()
+  };
+  if(existingIdx !== -1){
+    sessions[existingIdx] = entry;
+    toast('Projet "' + name + '" mis à jour');
+  } else {
+    sessions.unshift(entry);
+    toast('Projet "' + name + '" sauvegardé');
+  }
+  if(sessions.length > 20) sessions.length = 20;
+  setSessions(sessions);
+  renderSessions();
+}
+
+function loadSession(idx){
+  const sessions = getSessions();
+  const s = sessions[idx];
+  if(!s) return;
+
+  byId('appName').value = s.name || '';
+  byId('htmlInput').value = s.html || '';
+  store.setItem(LS_KEYS.APP_NAME, s.name || '');
+  store.setItem(LS_KEYS.HTML, s.html || '');
+
+  if(s.icon512 && s.icon192){
+    window.icon512 = s.icon512;
+    window.icon192 = s.icon192;
+    byId('iconPreview').src = s.iconPreview || ('data:image/png;base64,' + s.icon512);
+    byId('iconPreviewWrap').classList.remove('hidden');
+    byId('iconClear').classList.add('show');
+    saveIcon('data:image/png;base64,' + s.icon512, 'data:image/png;base64,' + s.icon192);
+  } else {
+    window.icon512 = '';
+    window.icon192 = '';
+    byId('iconPreviewWrap').classList.add('hidden');
+    byId('iconClear').classList.remove('show');
+  }
+
+  updateHtmlMeta();
+  closeSessionsModal();
+  toast('Projet "' + s.name + '" chargé');
+  updateStatus('✅ Projet "' + s.name + '" chargé');
+}
+
+function deleteSession(idx){
+  if(!confirm('Supprimer ce projet ?')) return;
+  const sessions = getSessions();
+  const name = sessions[idx]?.name || 'Projet';
+  sessions.splice(idx, 1);
+  setSessions(sessions);
+  renderSessions();
+  toast('Projet "' + name + '" supprimé');
 }
 
 /* ========================================================= UTF8 BASE64 ========================================================= */
@@ -827,14 +1091,13 @@ async function ghErrorMessage(resp){
   catch(e){ return `HTTP ${resp.status}`; }
 }
 
-/* ========================================================= GITHUB OWNER ========================================================= */
+/* ========================================================= GITHUB API ========================================================= */
 async function getOwner(token){
   const resp= await fetch(`${GH_API}/user`,{ headers: ghHeaders(token) });
   if(!resp.ok){ throw new Error('Accès GitHub refusé : token invalide ou expiré'); }
   return( await resp.json() ).login;
 }
 
-/* ========================================================= ENSURE REPO ========================================================= */
 async function ensureRepo(token, owner, repo){
   const check= await fetch(`${GH_API}/repos/${owner}/${repo}`,{ headers: ghHeaders(token) });
   if(check.status===200) return;
@@ -847,7 +1110,6 @@ async function ensureRepo(token, owner, repo){
   if(!create.ok){ throw new Error(`Création du dépôt échouée : ${ await ghErrorMessage(create) }`); }
 }
 
-/* ========================================================= FILE SHA ========================================================= */
 async function getFileSha(token, owner, repo, path){
   const resp= await fetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`,{ headers: ghHeaders(token) });
   if(resp.status===200) return( await resp.json() ).sha;
@@ -855,7 +1117,6 @@ async function getFileSha(token, owner, repo, path){
   throw new Error(`Lecture de ${path} impossible : ${ await ghErrorMessage(resp) }`);
 }
 
-/* ========================================================= PUT FILE ========================================================= */
 async function putFile(token, owner, repo, path, contentB64, message){
   const sha= await getFileSha(token, owner, repo, path);
   const body={ message, content:contentB64 };
@@ -866,7 +1127,6 @@ async function putFile(token, owner, repo, path, contentB64, message){
   if(!resp.ok){ throw new Error(`Upload de ${path} échoué : ${ await ghErrorMessage(resp) }`); }
 }
 
-/* ========================================================= GITHUB PAGES ========================================================= */
 async function ensurePages(token, owner, repo){
   const resp= await fetch(`${GH_API}/repos/${owner}/${repo}/pages`,{
     method:'POST', headers: ghHeaders(token),
@@ -876,7 +1136,7 @@ async function ensurePages(token, owner, repo){
   throw new Error(`Activation de GitHub Pages échouée : ${ await ghErrorMessage(resp) }`);
 }
 
-/* ========================================================= INSERT HEAD ========================================================= */
+/* ========================================================= HTML UTILS ========================================================= */
 function insertInHead(html, block){
   const close= html.search( new RegExp( LT+'/head>', 'i' ) );
   if(close!==-1){ return( html.slice(0,close)+ block+ '\n'+ html.slice(close) ); }
@@ -887,42 +1147,27 @@ function insertInHead(html, block){
   return( HEAD_O+ '\n'+ block+ '\n'+ HEAD_C+ '\n'+ html );
 }
 
-/* ========================================================= BODY END ========================================================= */
 function insertBeforeBodyEnd(html, block){
   const i= html.toLowerCase().lastIndexOf(BODY_C);
   if(i===-1) return html+'\n'+block+'\n';
   return( html.slice(0,i)+ block+ '\n'+ html.slice(i) );
 }
 
-/* ========================================================= CORRECTION TAILWIND CONFIG =========================================================
-   Sur GitHub Pages, `tailwind.config = {...}` peut échouer si le CDN n'est pas encore chargé.
-   On détecte et on corrige la syntaxe en amont.
-   ==================================================================================================================== */
 function fixTailwindConfig(html){
-  /* Remplace `tailwind.config={...}` par `window.tailwind = window.tailwind || {}; window.tailwind.config = {...}` */
-  const pattern = /(?:^|[^.\w])tailwind\.config\s*=\s*/g;
-  if(!pattern.test(html)) return html;
-
+  if(!/tailwind\.config\s*=/.test(html)) return html;
   return html.replace(
     /(?:^|[^.\w])tailwind\.config\s*=\s*(\{[\s\S]*?\})\s*;?/g,
-    (match, obj) => {
-      return `window.tailwind = window.tailwind || {}; window.tailwind.config = ${obj};`;
-    }
+    (match, obj) => `window.tailwind = window.tailwind || {}; window.tailwind.config = ${obj};`
   );
 }
 
-/* ========================================================= BUILD PWA HTML ========================================================= */
+/* ========================================================= BUILD PWA ========================================================= */
 function buildPwaHtml(source){
   let html=source;
-
-  /* 1) Corrige la config Tailwind si présente */
   html = fixTailwindConfig(html);
-
-  /* 2) Supprime l'ancien bloc mastercode */
   const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
   html= html.replace( oldBlock, '' );
 
-  /* 3) Ajoute les meta PWA manquantes */
   const headTags=[];
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
@@ -932,9 +1177,8 @@ function buildPwaHtml(source){
   if(!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html)) headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
   if(headTags.length) html= insertInHead(html, headTags.join('\n'));
 
-  /* 4) Injecte le script personnalisé + le Service Worker */
   const blocks=[];
-  const custom= ( store.getItem(CUSTOM_SCRIPT_KEY)||'' ).trim();
+  const custom= ( store.getItem(LS_KEYS.CUSTOM_SCRIPT)||'' ).trim();
   if(custom){
     const safeCustom= custom.replace(/<\/script/gi, '<\\/script');
     blocks.push(`${MARK_START} ${TAG_S} ${safeCustom} ${TAG_E} ${MARK_END}`);
@@ -948,10 +1192,7 @@ function buildPwaHtml(source){
       "}\n"+ TAG_E );
   }
   if(blocks.length) html= insertBeforeBodyEnd(html, blocks.join('\n'));
-
-  /* 5) Ajoute le DOCTYPE si manquant */
   if(!/^\s*<!doctype/i.test(html)) html= DOCTYPE+ '\n'+ html;
-
   return{ html, hasCustom:!!custom };
 }
 
@@ -996,7 +1237,6 @@ function setLed(state){
   const el=byId('liveOrb'); if(!el) return;
   el.className='led '+ ( state==='yellow' ?'yellow' :state==='green' ?'green' :state==='red' ?'red' :'' );
 }
-
 function resetProgress(){
   stopProgress();
   const bar=byId('progressBar');
@@ -1005,17 +1245,15 @@ function resetProgress(){
   bar.style.width='0%';
   pct.textContent='0%';
 }
-
 function stopProgress(){
   if(progressInterval){ clearInterval(progressInterval); progressInterval=null; }
 }
-
+let progressInterval = null;
 function startProgress(){
   resetProgress();
   const start=Date.now();
   const bar=byId('progressBar');
   const pct=byId('progressPercent');
-
   progressInterval=setInterval(()=>{
     const elapsed=Date.now()-start;
     const ratio= Math.min(elapsed/PROGRESS_DURATION, 1);
@@ -1023,14 +1261,9 @@ function startProgress(){
     const percent= Math.min(95, Math.round(eased*95));
     bar.style.width= percent+'%';
     pct.textContent= percent+'%';
-
-    if(ratio>=1){
-      clearInterval(progressInterval);
-      progressInterval=null;
-    }
+    if(ratio>=1){ clearInterval(progressInterval); progressInterval=null; }
   }, 250);
 }
-
 function finishProgress(success=true){
   stopProgress();
   const bar=byId('progressBar');
@@ -1048,20 +1281,17 @@ function finishProgress(success=true){
   }
 }
 
-/* ========================================================= LIVE PANEL ========================================================= */
 function showLiveButton(owner,repo){
   liveOwner=owner; liveRepo=repo;
   byId('liveBtn').classList.remove('hidden');
   setLed('yellow');
   startProgress();
 }
-
 function stopDeploymentWatch(){
   if(deploymentInterval) clearInterval(deploymentInterval);
   deploymentInterval=null;
 }
 
-/* ========================================================= WATCH DEPLOYMENT ========================================================= */
 function watchDeployment(token, since){
   stopDeploymentWatch();
   const startedAt=Date.now();
@@ -1110,7 +1340,6 @@ function watchDeployment(token, since){
   deploymentInterval= setInterval(tick, 4000);
 }
 
-/* ========================================================= OPEN LIVE ========================================================= */
 function openLiveSite(){
   if(liveOwner && liveRepo){
     window.open(`https://${liveOwner.toLowerCase()}.github.io/${liveRepo}/`, '_blank', 'noopener');
@@ -1127,7 +1356,6 @@ async function injectPwaToGitHub(){
   if(!appName){ toast('Nom du projet manquant', true); return; }
   if(!source){ toast('Code HTML vide', true); return; }
 
-  /* Détection avant injection */
   const deps = detectDependencies(true);
   if(deps.missing.length){
     updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
@@ -1169,11 +1397,10 @@ async function generatePWA(){
   const appName= sanitizeRepoName( byId('appName').value );
   const source= byId('htmlInput').value.trim();
   const btn= byId('mainBtn');
-  if(!token || !appName || !source || !icon512){
+  if(!token || !appName || !source || !window.icon512){
     toast('Token, projet, HTML et icône sont nécessaires', true); return;
   }
 
-  /* Détection avant forge */
   const deps = detectDependencies(true);
   if(deps.missing.length){
     updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
@@ -1196,8 +1423,8 @@ async function generatePWA(){
       { path:'index.html', content: utf8ToBase64(html) },
       { path:'manifest.json', content: utf8ToBase64( buildManifest(appName) ) },
       { path:'sw.js', content: utf8ToBase64( buildServiceWorker(appName) ) },
-      { path:'icon.png', content:icon512 },
-      { path:'icon-192.png', content:icon192 }
+      { path:'icon.png', content: window.icon512 },
+      { path:'icon-192.png', content: window.icon192 }
     ];
     const since= Date.now();
     for(const file of files){
@@ -1222,10 +1449,37 @@ async function generatePWA(){
   }
 }
 
-/* ========================================================= MASTERCODE SERVICE WORKER ========================================================= */
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-}
+/* ========================================================= ESCAPE KEY ========================================================= */
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    closeSwModal();
+    closeSessionsModal();
+  }
+});
+
+/* ========================================================= INIT ========================================================= */
+(function init(){
+  /* Restaure l'état sauvegardé */
+  restoreState();
+
+  /* Injecte l'indicateur de sauvegarde dans le header */
+  const brand = document.querySelector('.brand');
+  if(brand){
+    brand.style.position = 'relative';
+    const ind = document.createElement('div');
+    ind.id = 'saveIndicator';
+    ind.className = 'save-indicator';
+    brand.appendChild(ind);
+  }
+
+  updateStatus('--- MASTERCODE 3.0 PRÊT ---', true);
+  updateStatus('💾 Sauvegarde automatique activée');
+
+  /* Service Worker */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
+  }
+})();
 </script>
 </body>
 </html>
