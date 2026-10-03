@@ -14,66 +14,23 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
-tailwind.config={ theme:{ extend:{ fontFamily:{ inter:["Inter","sans-serif"] } } } }
+window.tailwind = window.tailwind || {};
+window.tailwind.config = { theme: { extend: { fontFamily: { inter: ["Inter", "sans-serif"] } } } };
 </script>
 <style>
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body{ width:100%; height:100%; margin:0; overflow:hidden; background:#050608; }
 body{
   font-family:Inter,sans-serif; color:#f8fafc;
-  background:#050608;
-  position:relative;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(79,70,229,.14),transparent 28%),
+    radial-gradient(circle at 90% 15%,rgba(124,58,237,.10),transparent 25%),
+    radial-gradient(circle at 50% 100%,rgba(37,99,235,.08),transparent 35%),
+    #050608;
 }
-
-/* ========================================================= AURORA BACKGROUND ========================================================= */
-.aurora{
-  position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
-}
-.aurora::before,
-.aurora::after,
-.aurora .orb{
-  content:""; position:absolute; border-radius:50%;
-  filter: blur(90px); opacity:.55;
-  will-change:transform;
-}
-.aurora::before{
-  width:60vmax; height:60vmax;
-  background: radial-gradient(circle, rgba(99,102,241,.35), transparent 65%);
-  top:-20vmax; left:-15vmax;
-  animation: auroraA 38s ease-in-out infinite;
-}
-.aurora::after{
-  width:55vmax; height:55vmax;
-  background: radial-gradient(circle, rgba(168,85,247,.28), transparent 65%);
-  bottom:-18vmax; right:-15vmax;
-  animation: auroraB 46s ease-in-out infinite;
-}
-.aurora .orb{
-  width:45vmax; height:45vmax;
-  background: radial-gradient(circle, rgba(37,99,235,.22), transparent 70%);
-  top:35%; left:30%;
-  animation: auroraC 52s ease-in-out infinite;
-}
-@keyframes auroraA{
-  0%,100%{ transform: translate(0,0) scale(1); }
-  50%{ transform: translate(6vmax,4vmax) scale(1.12); }
-}
-@keyframes auroraB{
-  0%,100%{ transform: translate(0,0) scale(1); }
-  50%{ transform: translate(-5vmax,-3vmax) scale(1.15); }
-}
-@keyframes auroraC{
-  0%,100%{ transform: translate(-3vmax,2vmax) scale(1); }
-  50%{ transform: translate(4vmax,-4vmax) scale(1.08); }
-}
-.noise{
-  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.035;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 button, input, textarea{ font-family:inherit; }
 button{ -webkit-user-select:none; user-select:none; }
-.app{ position:relative; z-index:2; width:100%; height:100dvh; min-height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+.app{ width:100%; height:100dvh; min-height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
 .app-inner{
   width:100%; max-width:680px; height:100%; margin:auto;
   padding: max(10px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));
@@ -83,16 +40,8 @@ button{ -webkit-user-select:none; user-select:none; }
 .glass{
   background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
   border:1px solid rgba(255,255,255,.075);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 18px 50px rgba(0,0,0,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045), 0 18px 50px rgba(0,0,0,.28);
   backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
-}
-.glass-accent{
-  border:1px solid rgba(99,102,241,.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 0 0 1px rgba(99,102,241,.04),
-    0 18px 50px rgba(0,0,0,.28),
-    0 0 40px rgba(99,102,241,.06);
 }
 .glass-dark{
   background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.065);
@@ -108,59 +57,20 @@ button{ -webkit-user-select:none; user-select:none; }
   border:1px solid rgba(255,255,255,.09);
   box-shadow: 0 0 25px rgba(99,102,241,.13), inset 0 1px rgba(255,255,255,.08);
 }
-.brand-logo::after{
-  content:""; position:absolute; inset:-50%;
-  background: conic-gradient(from 0deg, transparent 0deg, rgba(168,85,247,.35) 90deg, transparent 180deg, rgba(99,102,241,.35) 270deg, transparent 360deg);
-  animation: logoSpin 12s linear infinite;
-  opacity:.5;
-}
-.brand-logo span{ font-size:17px; font-weight:800; position:relative; z-index:2; }
-@keyframes logoSpin{ to{ transform: rotate(360deg); } }
+.brand-logo span{ font-size:17px; font-weight:800; position:relative; }
 .brand-name{ font-size:17px; line-height:18px; font-weight:800; letter-spacing:-.5px; }
 .brand-sub{ margin-top:2px; color:#64748b; font-size:7px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
-.header-right{ display:flex; align-items:center; gap:8px; }
-.token-status{
-  display:flex; align-items:center; gap:5px;
-  height:24px; padding:0 8px; border-radius:8px;
-  background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06);
-  font-size:6.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
-  color:#64748b;
-}
-.token-status .dot{
-  width:6px; height:6px; border-radius:50%;
-  background:#475569; box-shadow: 0 0 0 rgba(0,0,0,0);
-  transition:.3s ease;
-}
-.token-status.ok .dot{
-  background:#22c55e;
-  box-shadow: 0 0 4px #22c55e, 0 0 10px rgba(34,197,94,.6);
-}
-.token-status.ok{ color:#86efac; border-color:rgba(34,197,94,.2); }
-.token-status.bad .dot{
-  background:#ef4444;
-  box-shadow: 0 0 4px #ef4444, 0 0 10px rgba(239,68,68,.6);
-}
-.token-status.bad{ color:#fca5a5; border-color:rgba(239,68,68,.2); }
 .sw-open{
   width:40px; height:40px; flex:0 0 40px; border-radius:13px;
   display:flex; align-items:center; justify-content:center; color:#a5b4fc; font-size:16px;
-  transition:.2s ease;
 }
-.sw-open:hover{ color:#c4b5fd; box-shadow: 0 0 20px rgba(168,85,247,.15); }
 /* ========================================================= MAIN LAYOUT ========================================================= */
 .main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:7px; overflow:hidden; }
-.card{ border-radius:19px; padding:11px; flex:0 0 auto; transition:.3s ease; }
+.card{ border-radius:19px; padding:11px; flex:0 0 auto; }
 /* ========================================================= SECTION TITLES ========================================================= */
 .section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
 .section-title{ font-size:8px; line-height:10px; text-transform:uppercase; letter-spacing:.17em; color:#64748b; font-weight:800; }
 .section-name{ font-size:12px; line-height:14px; font-weight:700; margin-top:1px; }
-.section-badge{
-  font-size:6px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
-  padding:3px 7px; border-radius:6px;
-  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
-  color:#64748b;
-}
-.section-badge.accent{ color:#a5b4fc; border-color:rgba(99,102,241,.2); background:rgba(99,102,241,.08); }
 /* ========================================================= TOKEN ========================================================= */
 .token-row{ display:grid; grid-template-columns:minmax(0,1fr) 50px 58px; gap:5px; width:100%; }
 .field{
@@ -170,22 +80,18 @@ button{ -webkit-user-select:none; user-select:none; }
   transition:.2s ease; overflow:hidden; text-overflow:ellipsis;
 }
 .field::placeholder{ color:#475569; }
-.field:focus{ border-color:rgba(99,102,241,.65); box-shadow:0 0 0 2px rgba(99,102,241,.1), 0 0 20px rgba(99,102,241,.08); }
+.field:focus{ border-color:rgba(99,102,241,.65); box-shadow:0 0 0 2px rgba(99,102,241,.08); }
 .small-btn{
   height:38px; min-width:0; padding:0 7px; border-radius:11px;
   display:flex; align-items:center; justify-content:center;
   white-space:nowrap; overflow:hidden; text-overflow:clip;
   font-size:7px; font-weight:800; letter-spacing:.04em; color:#94a3b8;
-  transition:.18s ease;
 }
 .small-btn:active{ transform:scale(.97); }
-.small-btn:hover{ color:#cbd5e1; border-color:rgba(255,255,255,.12); }
 .clear-key{
   display:block; margin-top:5px; border:0; padding:0; background:none;
   color:#475569; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
-  transition:.2s ease;
 }
-.clear-key:hover{ color:#f87171; }
 .clear-key:active{ color:#f87171; }
 /* ========================================================= PROJECT ========================================================= */
 .project-grid{
@@ -199,109 +105,57 @@ button{ -webkit-user-select:none; user-select:none; }
   text-transform:uppercase; letter-spacing:.13em; font-weight:800;
   margin:0 0 4px 2px;
 }
-.field-label-row{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:6px; margin-bottom:4px;
-}
-.field-label-row .field-label{ margin:0; }
-.editor-meta{
-  display:flex; align-items:center; gap:6px;
-  font-size:6px; color:#475569; font-weight:700;
-  font-variant-numeric:tabular-nums; letter-spacing:.05em;
-}
-.editor-meta .dot-live{
-  width:5px; height:5px; border-radius:50%;
-  background:#475569; transition:.3s ease;
-}
-.editor-meta.has-content .dot-live{
-  background:#22c55e;
-  box-shadow: 0 0 4px #22c55e, 0 0 8px rgba(34,197,94,.5);
-}
-.editor-meta.has-content{ color:#86efac; }
 /* ========================================================= HTML EDITOR ========================================================= */
 .html-editor{ position:relative; min-width:0; width:100%; flex:1; display:flex; overflow:hidden; }
 .html-editor textarea{
   width:100%; height:100%; min-height:196px;
   resize:none; padding:10px 10px 28px; border-radius:12px;
-  background:rgba(0,0,0,.36); border:1px solid rgba(255,255,255,.075);
+  background:rgba(0,0,0,.30); border:1px solid rgba(255,255,255,.075);
   color:#cbd5e1; outline:none; font-family:"Courier New",monospace;
   font-size:8px; line-height:1.45;
   box-sizing:border-box;
-  transition:.2s ease;
 }
-.html-editor textarea:focus{
-  border-color:rgba(99,102,241,.7);
-  box-shadow: 0 0 0 2px rgba(99,102,241,.1), 0 0 25px rgba(99,102,241,.12);
-  background:rgba(0,0,0,.42);
-}
+.html-editor textarea:focus{ border-color:rgba(99,102,241,.6); box-shadow:0 0 0 2px rgba(99,102,241,.07); }
 .paste-html{
   position:absolute; right:5px; bottom:5px; height:22px; padding:0 8px; border-radius:7px;
   background:rgba(99,102,241,.13); border:1px solid rgba(99,102,241,.2);
   color:#a5b4fc; font-size:7px; font-weight:800; white-space:nowrap;
   display:flex; align-items:center; gap:4px;
-  transition:.18s ease;
 }
 .paste-html:active{ transform:scale(.96); }
-.paste-html:hover{ background:rgba(99,102,241,.2); }
 /* ========================================================= ICON ========================================================= */
 .icon-zone{
-  position:relative;
   flex:1; min-height:105px; border-radius:12px; border:1px dashed rgba(255,255,255,.09);
   background:rgba(0,0,0,.18); display:flex; flex-direction:column;
   align-items:center; justify-content:center; overflow:hidden;
-  transition:.3s ease;
 }
-.icon-zone.loaded{ border-style:solid; border-color:rgba(99,102,241,.2); background:rgba(99,102,241,.04); }
 .icon-upload{ width:100%; padding:0 8px; }
 .icon-upload input{ width:100%; font-size:7px; color:#64748b; }
 .icon-upload input::file-selector-button{
   border:0; border-radius:7px; padding:6px 8px; margin-right:5px;
   background:rgba(255,255,255,.07); color:#cbd5e1; font-size:7px;
-  cursor:pointer; transition:.18s ease;
 }
-.icon-upload input::file-selector-button:hover{ background:rgba(255,255,255,.11); }
 .preview{
   width:48px; height:48px; object-fit:cover; border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow: 0 8px 25px rgba(0,0,0,.45), 0 0 20px rgba(99,102,241,.15);
+  border:1px solid rgba(255,255,255,.12); box-shadow:0 8px 25px rgba(0,0,0,.45);
   margin-bottom:5px;
 }
 /* ========================================================= ACTIONS ========================================================= */
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
 .action-btn{
-  position:relative;
   height:43px; border-radius:13px; display:flex; align-items:center; justify-content:center;
   gap:7px; font-size:9px; font-weight:800; letter-spacing:.02em;
-  white-space:nowrap; overflow:hidden; cursor:pointer;
-  transition: transform .18s ease, box-shadow .3s ease, filter .3s ease;
+  white-space:nowrap; overflow:hidden;
 }
-.action-btn:active{ transform:scale(.985); }
 .forge{
   color:white;
   background: linear-gradient(135deg, #5967e8, #7147d8);
-  border:1px solid rgba(167,139,250,.28);
-  box-shadow: 0 10px 28px rgba(79,70,229,.25), inset 0 1px 0 rgba(255,255,255,.15);
+  border:1px solid rgba(167,139,250,.25);
+  box-shadow: 0 10px 28px rgba(79,70,229,.22);
 }
-.forge::before{
-  content:""; position:absolute; inset:0;
-  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.25), transparent 55%);
-  opacity:0; transition:opacity .3s ease; pointer-events:none;
-}
-.forge:hover::before{ opacity:1; }
-.forge:hover{ box-shadow: 0 14px 40px rgba(79,70,229,.4), inset 0 1px 0 rgba(255,255,255,.2); }
-.forge:disabled{ opacity:.5; cursor:not-allowed; }
-.forge:disabled:hover::before{ opacity:0; }
-.inject{
-  color:#a5b4fc; background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.075);
-  transition: all .25s ease;
-}
-.inject:hover{ color:#c4b5fd; border-color:rgba(99,102,241,.35); background:rgba(99,102,241,.06); box-shadow: 0 0 25px rgba(99,102,241,.12); }
-.inject .bolt{
-  display:inline-block; transition: transform .3s ease;
-}
-.inject:hover .bolt{ transform: scale(1.25) rotate(-8deg); filter: drop-shadow(0 0 6px #facc15); }
-.action-btn:disabled{ opacity:.45; cursor:not-allowed; }
+.inject{ color:#a5b4fc; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.075); }
+.action-btn:active{ transform:scale(.985); }
+.action-btn:disabled{ opacity:.45; }
 /* ========================================================= LIVE PANEL ========================================================= */
 .live{
   min-height:53px; padding:8px 10px; border-radius:16px;
@@ -309,54 +163,42 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .live-left{ min-width:0; display:flex; align-items:center; gap:9px; flex:1; }
 .live-icon{
-  width:38px; height:38px; flex:0 0 38px; border-radius:12px;
+  width:34px; height:34px; flex:0 0 34px; border-radius:11px;
   display:flex; align-items:center; justify-content:center;
   background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.07);
 }
-.live-center{ min-width:0; flex:1; display:flex; flex-direction:column; gap:5px; }
+.live-center{ min-width:0; flex:1; display:flex; flex-direction:column; gap:4px; }
 .live-title{ font-size:9px; font-weight:800; white-space:nowrap; }
+.live-text{
+  font-size:7px; color:#64748b; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:180px;
+}
 .live-open{
   height:31px; padding:0 10px; flex:0 0 auto; border-radius:9px;
   background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.07);
   color:#cbd5e1; font-size:7px; font-weight:800; text-transform:uppercase;
-  transition:.2s ease;
 }
-.live-open:hover{ background:rgba(255,255,255,.08); color:#f8fafc; border-color:rgba(255,255,255,.15); }
-/* ========================================================= LED (gauche) ========================================================= */
+/* ========================================================= LED ========================================================= */
 .led{
-  position:relative; width:14px; height:14px; flex:0 0 14px; border-radius:50%;
+  position:relative; width:10px; height:10px; flex:0 0 10px; border-radius:50%;
   background:#334155; box-shadow: inset 0 1px 2px rgba(255,255,255,.12);
   transition:.35s ease;
 }
 .led::before{
-  content:""; position:absolute; width:4px; height:4px; top:3px; left:3px;
-  border-radius:50%; background:rgba(255,255,255,.5);
+  content:""; position:absolute; width:3px; height:3px; top:2px; left:2px;
+  border-radius:50%; background:rgba(255,255,255,.45);
 }
-.led.yellow{
-  background:#facc15;
-  box-shadow: 0 0 6px #facc15, 0 0 16px #facc15, 0 0 32px rgba(250,204,21,.6);
-  animation:ledPulse 1.35s infinite;
-}
-.led.green{
-  background:#22c55e;
-  box-shadow: 0 0 6px #22c55e, 0 0 16px #22c55e, 0 0 32px rgba(34,197,94,.55);
-}
-.led.red{
-  background:#ef4444;
-  box-shadow: 0 0 6px #ef4444, 0 0 16px #ef4444, 0 0 32px rgba(239,68,68,.55);
-}
-@keyframes ledPulse{ 0%,100%{ transform:scale(.88); } 50%{ transform:scale(1.18); } }
+.led.yellow{ background:#facc15; box-shadow: 0 0 4px #facc15, 0 0 11px #facc15, 0 0 25px rgba(250,204,21,.5); animation:ledPulse 1.35s infinite; }
+.led.green{ background:#22c55e; box-shadow: 0 0 4px #22c55e, 0 0 12px #22c55e, 0 0 25px rgba(34,197,94,.45); }
+.led.red{ background:#ef4444; box-shadow: 0 0 4px #ef4444, 0 0 12px #ef4444, 0 0 25px rgba(239,68,68,.45); }
+@keyframes ledPulse{ 0%,100%{ transform:scale(.9); } 50%{ transform:scale(1.12); } }
 
 /* ========================================================= PROGRESS BAR ========================================================= */
 .progress-wrap{
-  width:100%; height:8px; border-radius:999px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.05);
+  width:100%; height:6px; border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.04);
   overflow:hidden; position:relative;
-  transition: box-shadow .4s ease;
-}
-.progress-wrap.active{
-  box-shadow: 0 0 14px rgba(99,102,241,.35), 0 0 30px rgba(99,102,241,.15);
 }
 .progress-bar{
   height:100%; width:0%;
@@ -364,35 +206,19 @@ button{ -webkit-user-select:none; user-select:none; }
   background-size:200% 100%;
   border-radius:999px;
   transition:width .35s ease;
-  animation:progressShimmer 2s linear infinite;
-  position:relative;
-}
-.progress-bar::after{
-  content:""; position:absolute; inset:0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
-  border-radius:999px;
-  animation: progressGlow 1.6s ease-in-out infinite;
+  animation:progressShimmer 2.2s linear infinite;
 }
 .progress-bar.done{
   background: linear-gradient(90deg, #22c55e, #4ade80);
   animation:none;
-  box-shadow: 0 0 12px rgba(34,197,94,.6), 0 0 24px rgba(34,197,94,.3);
 }
-.progress-bar.done::after{ display:none; }
 .progress-bar.error{
   background: linear-gradient(90deg, #ef4444, #f87171);
   animation:none;
-  box-shadow: 0 0 12px rgba(239,68,68,.6);
 }
-.progress-bar.error::after{ display:none; }
 @keyframes progressShimmer{
   0%{ background-position:0% 0; }
   100%{ background-position:200% 0; }
-}
-@keyframes progressGlow{
-  0%,100%{ transform: translateX(-100%); opacity:0; }
-  50%{ opacity:1; }
-  100%{ transform: translateX(100%); opacity:0; }
 }
 .progress-label{
   display:flex; align-items:center; justify-content:space-between;
@@ -402,10 +228,8 @@ button{ -webkit-user-select:none; user-select:none; }
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .progress-label span:last-child{
-  font-variant-numeric:tabular-nums; color:#a5b4fc; font-weight:800;
+  font-variant-numeric:tabular-nums; color:#a5b4fc;
 }
-.progress-label.done span:last-child{ color:#86efac; }
-.progress-label.error span:last-child{ color:#fca5a5; }
 
 /* ========================================================= STATUS ========================================================= */
 .status{
@@ -420,26 +244,7 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .status-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; flex:0 0 auto; }
 .status-head-left{ display:flex; align-items:center; gap:8px; }
-.live-badge{
-  display:none; align-items:center; gap:4px;
-  height:16px; padding:0 6px; border-radius:5px;
-  background:rgba(99,102,241,.15); border:1px solid rgba(99,102,241,.3);
-  color:#a5b4fc; font-size:5.5px; font-weight:800; letter-spacing:.16em;
-}
-.live-badge.show{ display:flex; animation: liveBlink 1.4s ease-in-out infinite; }
-.live-badge .dot-live-badge{
-  width:5px; height:5px; border-radius:50%; background:#a5b4fc;
-  box-shadow: 0 0 6px #a5b4fc;
-}
-@keyframes liveBlink{
-  0%,100%{ opacity:1; }
-  50%{ opacity:.5; }
-}
-.copy-report{
-  border:0; background:none; color:#64748b; font-size:7px; font-weight:800;
-  transition:.2s ease;
-}
-.copy-report:hover{ color:#a5b4fc; }
+.copy-report{ border:0; background:none; color:#64748b; font-size:7px; font-weight:800; }
 .log-line{ display:block; }
 .log-line .cmd{ color:#6366f1; font-weight:700; }
 .log-line .ok{ color:#4ade80; font-weight:700; }
@@ -471,9 +276,7 @@ button{ -webkit-user-select:none; user-select:none; }
   border-radius:13px; padding:10px; background:rgba(0,0,0,.32);
   border:1px solid rgba(255,255,255,.07); color:#cbd5e1; outline:none;
   font-family:"Courier New",monospace; font-size:9px; line-height:1.5;
-  transition:.2s ease;
 }
-.custom-script:focus{ border-color:rgba(99,102,241,.6); box-shadow:0 0 0 2px rgba(99,102,241,.1); }
 /* ========================================================= SMALL PHONES ========================================================= */
 @media(max-height:680px){
   .app-inner{ padding-top:max(6px,env(safe-area-inset-top)); }
@@ -488,7 +291,6 @@ button{ -webkit-user-select:none; user-select:none; }
   .action-btn{ height:39px; }
   .live{ min-height:47px; }
   .footer{ display:none; }
-  .token-status{ display:none; }
 }
 @media(max-width:360px){
   .app-inner{ padding-left:8px; padding-right:8px; }
@@ -497,17 +299,14 @@ button{ -webkit-user-select:none; user-select:none; }
   .field{ font-size:10px; }
   .small-btn{ font-size:6.5px; padding:0 5px; }
   .action-btn{ font-size:8px; }
+  .live-text{ max-width:120px; }
 }
 </style>
 </head>
 <body>
-
-<div class="aurora"><div class="orb"></div></div>
-<div class="noise"></div>
-
 <div class="app">
   <div class="app-inner">
-    <!-- HEADER -->
+    <!-- ===================================================== HEADER ===================================================== -->
     <header class="header">
       <div class="brand">
         <div class="brand-logo"><span>M</span></div>
@@ -516,16 +315,10 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="brand-sub">Premium PWA Factory</div>
         </div>
       </div>
-      <div class="header-right">
-        <div id="tokenStatus" class="token-status">
-          <span class="dot"></span>
-          <span id="tokenStatusText">OFF</span>
-        </div>
-        <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
-      </div>
+      <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
     </header>
 
-    <!-- MAIN -->
+    <!-- ===================================================== MAIN ===================================================== -->
     <main class="main">
       <!-- GITHUB -->
       <section class="card glass">
@@ -534,10 +327,10 @@ button{ -webkit-user-select:none; user-select:none; }
             <div class="section-title">Connexion</div>
             <div class="section-name">GitHub Access</div>
           </div>
-          <div class="section-badge">SECURE</div>
+          <div class="text-[8px] text-slate-600">SECURE</div>
         </div>
         <div class="token-row">
-          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())">
+          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="saveKey('ghToken',this.value.trim())">
           <button class="small-btn glass" onclick="toggleView('ghToken',this)">VOIR</button>
           <button class="small-btn glass" onclick="pasteToken()">📋 COLLER</button>
         </div>
@@ -545,20 +338,21 @@ button{ -webkit-user-select:none; user-select:none; }
       </section>
 
       <!-- PROJECT -->
-      <section class="card glass glass-accent">
+      <section class="card glass">
         <div class="section-head">
           <div>
             <div class="section-title">Configuration</div>
             <div class="section-name">Projet PWA</div>
           </div>
-          <div class="section-badge accent">BUILD</div>
+          <div class="text-[8px] text-slate-600">BUILD</div>
         </div>
         <div class="project-grid">
+          <!-- NAME + ICON -->
           <div class="project-col">
             <label class="field-label">Nom du projet</label>
             <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false">
             <label class="field-label" style="margin-top:7px">Icône PWA</label>
-            <div id="iconZone" class="icon-zone">
+            <div class="icon-zone">
               <div id="iconPreviewWrap" class="hidden">
                 <img id="iconPreview" class="preview" alt="Aperçu">
               </div>
@@ -567,16 +361,14 @@ button{ -webkit-user-select:none; user-select:none; }
               </div>
             </div>
           </div>
+          <!-- HTML -->
           <div class="project-col">
-            <div class="field-label-row">
-              <label class="field-label">Code HTML</label>
-              <div id="editorMeta" class="editor-meta">
-                <span class="dot-live"></span>
-                <span id="charCount">0</span> c · <span id="lineCount">0</span> l
-              </div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="field-label !mb-0">Code HTML</label>
+              <span class="text-[6px] text-slate-600">index.html</span>
             </div>
             <div class="html-editor">
-              <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="updateEditorMeta()"></textarea>
+              <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="detectDependencies()"></textarea>
               <button class="paste-html" onclick="pasteHTML()">📋 COLLER</button>
             </div>
           </div>
@@ -594,7 +386,7 @@ button{ -webkit-user-select:none; user-select:none; }
           <span>FORGER</span>
         </button>
         <button id="injectBtn" class="action-btn inject" onclick="injectPwaToGitHub()">
-          <span class="bolt">⚡</span>
+          <span>⚡</span>
           <span>INJECTER PWA</span>
         </button>
       </div>
@@ -605,10 +397,10 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="live-icon"><div id="liveOrb" class="led"></div></div>
           <div class="live-center">
             <div id="liveStatusTitle" class="live-title">Déploiement</div>
-            <div id="progressWrap" class="progress-wrap">
+            <div class="progress-wrap">
               <div id="progressBar" class="progress-bar"></div>
             </div>
-            <div id="progressLabel" class="progress-label">
+            <div class="progress-label">
               <span id="liveStatusText">Préparation...</span>
               <span id="progressPercent">0%</span>
             </div>
@@ -620,10 +412,7 @@ button{ -webkit-user-select:none; user-select:none; }
       <!-- STATUS -->
       <section id="statusCard" class="status glass hidden">
         <div class="status-head">
-          <div class="status-head-left">
-            <span class="text-[7px] uppercase tracking-[.15em] text-slate-600 font-bold">Rapport Mastercode</span>
-            <span id="liveBadge" class="live-badge"><span class="dot-live-badge"></span>LIVE</span>
-          </div>
+          <span class="text-[7px] uppercase tracking-[.15em] text-slate-600 font-bold">Rapport Mastercode</span>
           <button class="copy-report" onclick="copyReport()">📋 COPIER</button>
         </div>
         <div id="status" class="status-inner"></div>
@@ -634,7 +423,7 @@ button{ -webkit-user-select:none; user-select:none; }
   </div>
 </div>
 
-<!-- SW MODAL -->
+<!-- ===================================================== SW MODAL ===================================================== -->
 <div id="swOverlay" class="overlay" onclick="closeSwModal()"></div>
 <div id="swModal" class="modal glass">
   <div class="modal-body">
@@ -678,8 +467,105 @@ const DOCTYPE=LT+'!DOCTYPE html>';
 const MARK_START=LT+'!-- mastercode:custom:start -->';
 const MARK_END=LT+'!-- mastercode:custom:end -->';
 const PROGRESS_DURATION = 45000;
-const BASE_TITLE = 'Mastercode — PWA Factory';
 const MAX_LOG_LINES = 6;
+
+/* ========================================================= DÉPENDANCES CONNUES =========================================================
+   Détection automatique des variables globales utilisées sans être définies.
+   Si le code collé utilise `$` sans jQuery → injection automatique du CDN.
+   =============================================================================================================== */
+const KNOWN_DEPENDENCIES = {
+  /* jQuery */
+  '$': {
+    name: 'jQuery',
+    pattern: /(?:^|[^.\w])\$\s*\(/,
+    test: /jquery/i,
+    cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>'
+  },
+  'jQuery': {
+    name: 'jQuery',
+    pattern: /(?:^|[^.\w])jQuery\s*\(/,
+    test: /jquery/i,
+    cdn: '<' + 'script src="https://code.jquery.com/jquery-3.7.1.min.js"><' + '/script>'
+  },
+  /* Lodash / Underscore */
+  '_': {
+    name: 'Lodash',
+    pattern: /(?:^|[^.\w])_\s*\./,
+    test: /lodash/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"><' + '/script>'
+  },
+  /* Vue.js */
+  'Vue': {
+    name: 'Vue.js',
+    pattern: /(?:^|[^.\w])Vue\s*\./,
+    test: /vue/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><' + '/script>'
+  },
+  /* React / ReactDOM */
+  'React': {
+    name: 'React',
+    pattern: /(?:^|[^.\w])React\s*\./,
+    test: /react/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"><' + '/script>' +
+         '\n<' + 'script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"><' + '/script>'
+  },
+  /* Alpine.js */
+  'Alpine': {
+    name: 'Alpine.js',
+    pattern: /(?:^|[^.\w])Alpine\s*\./,
+    test: /alpine/i,
+    cdn: '<' + 'script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"><' + '/script>'
+  },
+  /* Axios */
+  'axios': {
+    name: 'Axios',
+    pattern: /(?:^|[^.\w])axios\s*\./,
+    test: /axios/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"><' + '/script>'
+  },
+  /* Chart.js */
+  'Chart': {
+    name: 'Chart.js',
+    pattern: /(?:^|[^.\w])Chart\s*\(/,
+    test: /chart\.?js/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/chart.js"><' + '/script>'
+  },
+  /* GSAP */
+  'gsap': {
+    name: 'GSAP',
+    pattern: /(?:^|[^.\w])gsap\s*\./,
+    test: /gsap/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><' + '/script>'
+  },
+  /* Three.js */
+  'THREE': {
+    name: 'Three.js',
+    pattern: /(?:^|[^.\w])THREE\s*\./,
+    test: /three/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"><' + '/script>'
+  },
+  /* Anime.js */
+  'anime': {
+    name: 'Anime.js',
+    pattern: /(?:^|[^.\w])anime\s*\(/,
+    test: /anime/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"><' + '/script>'
+  },
+  /* Luxon */
+  'luxon': {
+    name: 'Luxon',
+    pattern: /(?:^|[^.\w])luxon\s*\./,
+    test: /luxon/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"><' + '/script>'
+  },
+  /* Day.js */
+  'dayjs': {
+    name: 'Day.js',
+    pattern: /(?:^|[^.\w])dayjs\s*\(/,
+    test: /dayjs/i,
+    cdn: '<' + 'script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"><' + '/script>'
+  }
+};
 
 /* ========================================================= STORAGE ========================================================= */
 const store=(()=>{
@@ -699,62 +585,8 @@ let deploymentInterval=null;
 let progressInterval=null;
 let icon512='';
 let icon192='';
-let tokenValidated=false;
-let logCount=0;
-
-/* ========================================================= HAPTIC ========================================================= */
-function haptic(ms=10){
-  try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){}
-}
-
-/* ========================================================= TITLE ========================================================= */
-function setTitleSuffix(txt){
-  document.title = txt ? `Mastercode · ${txt}` : BASE_TITLE;
-}
-
-/* ========================================================= TOKEN STATUS ========================================================= */
-function updateTokenStatus(){
-  const val = byId('ghToken').value.trim();
-  const el = byId('tokenStatus');
-  const txt = byId('tokenStatusText');
-  el.classList.remove('ok','bad');
-  if(!val){
-    txt.textContent='OFF';
-    tokenValidated=false;
-    return;
-  }
-  if(!tokenValidated){
-    txt.textContent='…';
-  }else{
-    el.classList.add('ok');
-    txt.textContent='ON';
-  }
-}
-function markTokenInvalid(){
-  const el = byId('tokenStatus');
-  const txt = byId('tokenStatusText');
-  el.classList.remove('ok');
-  el.classList.add('bad');
-  txt.textContent='ERR';
-  tokenValidated=false;
-}
-function onTokenInput(val){
-  store.setItem('ghToken', val);
-  tokenValidated=false;
-  updateTokenStatus();
-}
 byId('ghToken').value= store.getItem('ghToken')||'';
-updateTokenStatus();
-
-/* ========================================================= EDITOR META ========================================================= */
-function updateEditorMeta(){
-  const v = byId('htmlInput').value;
-  byId('charCount').textContent = v.length;
-  byId('lineCount').textContent = v ? v.split('\n').length : 0;
-  const meta = byId('editorMeta');
-  if(v.trim().length>0) meta.classList.add('has-content');
-  else meta.classList.remove('has-content');
-}
+function saveKey(id,val){ store.setItem(id,val); }
 
 /* ========================================================= TOAST ========================================================= */
 function toast(message,error=false){
@@ -781,13 +613,13 @@ function toast(message,error=false){
 }
 const showToast=toast;
 
-/* ========================================================= STATUS LOG ========================================================= */
+/* ========================================================= STATUS ========================================================= */
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function classifyLog(msg){
   const m = msg.trim();
-  if(m.startsWith('✅') || /réussie|terminé|déployé|accessible/i.test(m)) return 'ok';
+  if(m.startsWith('✅') || /réussie|terminé|déployé|accessible|injecté|forgée/i.test(m)) return 'ok';
   if(m.startsWith('⚠️')) return 'warn';
   if(m.startsWith('❌') || /erreur/i.test(m)) return 'err';
   if(m.startsWith('---')) return 'info';
@@ -800,7 +632,6 @@ function updateStatus(message,clear=false){
   card.classList.remove('hidden');
   if(clear){
     status.innerHTML='';
-    logCount=0;
   }
   const cls = classifyLog(message);
   const line = document.createElement('span');
@@ -811,8 +642,6 @@ function updateStatus(message,clear=false){
   line.innerHTML = inner;
   status.appendChild(line);
   status.appendChild(document.createTextNode('\n'));
-  logCount++;
-  /* Limite : garde uniquement les N dernières lignes pour éviter le scroll */
   while(status.childNodes.length > MAX_LOG_LINES*2){
     status.removeChild(status.firstChild);
   }
@@ -836,11 +665,7 @@ async function pasteToken(){
   try{
     const text= (await navigator.clipboard.readText()).trim();
     if(!text){ toast('Presse-papier vide',true); return; }
-    byId('ghToken').value=text;
-    store.setItem('ghToken',text);
-    tokenValidated=false;
-    updateTokenStatus();
-    toast('Token collé');
+    byId('ghToken').value=text; saveKey('ghToken',text); toast('Token collé');
   }catch(e){ toast('Autorisation presse-papier refusée',true); }
 }
 
@@ -850,7 +675,7 @@ async function pasteHTML(){
     const text= await navigator.clipboard.readText();
     if(!text){ toast('Presse-papier vide',true); return; }
     byId('htmlInput').value=text;
-    updateEditorMeta();
+    detectDependencies();
     toast('Code HTML collé');
     byId('htmlInput').focus();
   }catch(e){ toast('Autorisation presse-papier refusée',true); }
@@ -859,12 +684,77 @@ async function pasteHTML(){
 /* ========================================================= CLEAR TOKEN ========================================================= */
 function clearAllData(){
   if(confirm('Supprimer le token GitHub enregistré ?\n\nVotre script personnalisé sera conservé.')){
-    store.removeItem('ghToken');
-    byId('ghToken').value='';
-    tokenValidated=false;
-    updateTokenStatus();
-    toast('Clé effacée');
+    store.removeItem('ghToken'); byId('ghToken').value=''; toast('Clé effacée');
   }
+}
+
+/* ========================================================= DÉTECTION DÉPENDANCES =========================================================
+   Analyse le code collé, détecte les variables globales utilisées sans être définies,
+   et affiche un avertissement dans la console + injecte automatiquement les CDN si nécessaire.
+   ============================================================================================================================ */
+function detectDependencies(silent=false){
+  const code = byId('htmlInput').value;
+  if(!code.trim()) return { missing: [], inject: [] };
+
+  const found = [];
+  const codeLower = code.toLowerCase();
+
+  Object.keys(KNOWN_DEPENDENCIES).forEach(varName => {
+    const dep = KNOWN_DEPENDENCIES[varName];
+
+    /* 1) Le code utilise-t-il la variable ? */
+    const isUsed = dep.pattern.test(code);
+    if(!isUsed) return;
+
+    /* 2) La lib est-elle déjà chargée via CDN ou un script inline ? */
+    const alreadyLoaded = dep.test.test(codeLower);
+
+    /* 3) Cas particulier jQuery : $ est aussi utilisé par d'autres libs, on skip si déjà chargé */
+    if(alreadyLoaded) return;
+
+    /* Ajoute à la liste des dépendances manquantes */
+    if(!found.find(x => x.name === dep.name)){
+      found.push({
+        varName,
+        name: dep.name,
+        cdn: dep.cdn
+      });
+    }
+  });
+
+  if(found.length && !silent){
+    if(confirm(
+      '⚠️ Dépendances manquantes détectées :\n\n' +
+      found.map(f => '• ' + f.name + ' (utilise ' + f.varName + ')').join('\n') +
+      '\n\nVoulez-vous injecter automatiquement les CDN dans le <head> ?'
+    )){
+      injectDependencies(found);
+    }
+  }
+
+  return { missing: found };
+}
+
+/* Injection auto des CDN dans le <head> du code collé */
+function injectDependencies(deps){
+  let code = byId('htmlInput').value;
+  const scripts = deps.map(d => d.cdn).join('\n');
+
+  /* Insère juste avant </head> */
+  if(/<\/head>/i.test(code)){
+    code = code.replace(/<\/head>/i, scripts + '\n</head>');
+  } else if(/<head[\s>]/i.test(code)){
+    code = code.replace(/(<head[^>]*>)/i, '$1\n' + scripts);
+  } else if(/<html[\s>]/i.test(code)){
+    code = code.replace(/(<html[^>]*>)/i, '$1\n<head>\n' + scripts + '\n</head>');
+  } else {
+    /* Pas de structure HTML → on enveloppe */
+    code = DOCTYPE + '\n<head>\n' + scripts + '\n</head>\n<body>\n' + code + '\n</body>';
+  }
+
+  byId('htmlInput').value = code;
+  toast(deps.length + ' CDN injecté(s)');
+  updateStatus('⚡ CDN injecté(s) : ' + deps.map(d => d.name).join(', '));
 }
 
 /* ========================================================= SW MODAL ========================================================= */
@@ -901,7 +791,6 @@ function previewIcon(input){
       icon192= url192.split(',')[1];
       byId('iconPreview').src=url512;
       byId('iconPreviewWrap').classList.remove('hidden');
-      byId('iconZone').classList.add('loaded');
     };
     img.onerror=()=>{ toast('Image illisible',true); };
     img.src=e.target.result;
@@ -941,9 +830,7 @@ async function ghErrorMessage(resp){
 /* ========================================================= GITHUB OWNER ========================================================= */
 async function getOwner(token){
   const resp= await fetch(`${GH_API}/user`,{ headers: ghHeaders(token) });
-  if(!resp.ok){ markTokenInvalid(); throw new Error('Accès GitHub refusé : token invalide ou expiré'); }
-  tokenValidated=true;
-  updateTokenStatus();
+  if(!resp.ok){ throw new Error('Accès GitHub refusé : token invalide ou expiré'); }
   return( await resp.json() ).login;
 }
 
@@ -1007,11 +894,35 @@ function insertBeforeBodyEnd(html, block){
   return( html.slice(0,i)+ block+ '\n'+ html.slice(i) );
 }
 
+/* ========================================================= CORRECTION TAILWIND CONFIG =========================================================
+   Sur GitHub Pages, `tailwind.config = {...}` peut échouer si le CDN n'est pas encore chargé.
+   On détecte et on corrige la syntaxe en amont.
+   ==================================================================================================================== */
+function fixTailwindConfig(html){
+  /* Remplace `tailwind.config={...}` par `window.tailwind = window.tailwind || {}; window.tailwind.config = {...}` */
+  const pattern = /(?:^|[^.\w])tailwind\.config\s*=\s*/g;
+  if(!pattern.test(html)) return html;
+
+  return html.replace(
+    /(?:^|[^.\w])tailwind\.config\s*=\s*(\{[\s\S]*?\})\s*;?/g,
+    (match, obj) => {
+      return `window.tailwind = window.tailwind || {}; window.tailwind.config = ${obj};`;
+    }
+  );
+}
+
 /* ========================================================= BUILD PWA HTML ========================================================= */
 function buildPwaHtml(source){
   let html=source;
+
+  /* 1) Corrige la config Tailwind si présente */
+  html = fixTailwindConfig(html);
+
+  /* 2) Supprime l'ancien bloc mastercode */
   const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
   html= html.replace( oldBlock, '' );
+
+  /* 3) Ajoute les meta PWA manquantes */
   const headTags=[];
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
@@ -1020,6 +931,8 @@ function buildPwaHtml(source){
   if(!/<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
   if(!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html)) headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
   if(headTags.length) html= insertInHead(html, headTags.join('\n'));
+
+  /* 4) Injecte le script personnalisé + le Service Worker */
   const blocks=[];
   const custom= ( store.getItem(CUSTOM_SCRIPT_KEY)||'' ).trim();
   if(custom){
@@ -1035,7 +948,10 @@ function buildPwaHtml(source){
       "}\n"+ TAG_E );
   }
   if(blocks.length) html= insertBeforeBodyEnd(html, blocks.join('\n'));
+
+  /* 5) Ajoute le DOCTYPE si manquant */
   if(!/^\s*<!doctype/i.test(html)) html= DOCTYPE+ '\n'+ html;
+
   return{ html, hasCustom:!!custom };
 }
 
@@ -1085,13 +1001,9 @@ function resetProgress(){
   stopProgress();
   const bar=byId('progressBar');
   const pct=byId('progressPercent');
-  const wrap=byId('progressWrap');
-  const label=byId('progressLabel');
   bar.classList.remove('done','error');
   bar.style.width='0%';
   pct.textContent='0%';
-  wrap.classList.remove('active');
-  label.classList.remove('done','error');
 }
 
 function stopProgress(){
@@ -1103,8 +1015,6 @@ function startProgress(){
   const start=Date.now();
   const bar=byId('progressBar');
   const pct=byId('progressPercent');
-  const wrap=byId('progressWrap');
-  wrap.classList.add('active');
 
   progressInterval=setInterval(()=>{
     const elapsed=Date.now()-start;
@@ -1113,7 +1023,7 @@ function startProgress(){
     const percent= Math.min(95, Math.round(eased*95));
     bar.style.width= percent+'%';
     pct.textContent= percent+'%';
-    setTitleSuffix(percent+'%');
+
     if(ratio>=1){
       clearInterval(progressInterval);
       progressInterval=null;
@@ -1125,35 +1035,17 @@ function finishProgress(success=true){
   stopProgress();
   const bar=byId('progressBar');
   const pct=byId('progressPercent');
-  const wrap=byId('progressWrap');
-  const label=byId('progressLabel');
-  wrap.classList.remove('active');
   if(success){
     bar.classList.remove('error');
     bar.classList.add('done');
     bar.style.width='100%';
     pct.textContent='100%';
-    label.classList.remove('error');
-    label.classList.add('done');
-    setTitleSuffix('100%');
   }else{
     bar.classList.remove('done');
     bar.classList.add('error');
     bar.style.width='100%';
     pct.textContent='ERR';
-    label.classList.remove('done');
-    label.classList.add('error');
-    setTitleSuffix('ERR');
   }
-  setTimeout(()=>{ setTitleSuffix(''); }, 4000);
-}
-
-/* ========================================================= LIVE BADGE ========================================================= */
-function showLiveBadge(show){
-  const b = byId('liveBadge');
-  if(!b) return;
-  if(show) b.classList.add('show');
-  else b.classList.remove('show');
 }
 
 /* ========================================================= LIVE PANEL ========================================================= */
@@ -1162,19 +1054,16 @@ function showLiveButton(owner,repo){
   byId('liveBtn').classList.remove('hidden');
   setLed('yellow');
   startProgress();
-  showLiveBadge(true);
 }
 
 function stopDeploymentWatch(){
   if(deploymentInterval) clearInterval(deploymentInterval);
   deploymentInterval=null;
-  showLiveBadge(false);
 }
 
 /* ========================================================= WATCH DEPLOYMENT ========================================================= */
 function watchDeployment(token, since){
   stopDeploymentWatch();
-  showLiveBadge(true);
   const startedAt=Date.now();
   const maxMs= 4*60*1000;
   const tick=async()=>{
@@ -1237,7 +1126,14 @@ async function injectPwaToGitHub(){
   if(!token){ toast('Token GitHub manquant', true); return; }
   if(!appName){ toast('Nom du projet manquant', true); return; }
   if(!source){ toast('Code HTML vide', true); return; }
-  haptic(12);
+
+  /* Détection avant injection */
+  const deps = detectDependencies(true);
+  if(deps.missing.length){
+    updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
+    injectDependencies(deps.missing);
+  }
+
   btn.disabled=true; stopDeploymentWatch();
   updateStatus('--- INJECTION PWA ---', true);
   try{
@@ -1245,7 +1141,7 @@ async function injectPwaToGitHub(){
     showLiveButton(owner, appName);
     await ensureRepo(token, owner, appName);
     updateStatus('Injection PWA dans index.html...');
-    const{ html, hasCustom }= buildPwaHtml(source);
+    const{ html, hasCustom }= buildPwaHtml( byId('htmlInput').value.trim() );
     if(hasCustom) updateStatus('Script personnalisé inclus.');
     const since= Date.now();
     await putFile(token, owner, appName, 'index.html', utf8ToBase64(html), 'feat(pwa): injection Mastercode');
@@ -1276,18 +1172,25 @@ async function generatePWA(){
   if(!token || !appName || !source || !icon512){
     toast('Token, projet, HTML et icône sont nécessaires', true); return;
   }
-  haptic(12);
+
+  /* Détection avant forge */
+  const deps = detectDependencies(true);
+  if(deps.missing.length){
+    updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
+    injectDependencies(deps.missing);
+  }
+
   btn.disabled=true;
   byId('forgeIcon').classList.add('hidden');
   byId('loader').classList.remove('hidden');
   byId('liveBtn').classList.add('hidden');
-  stopDeploymentWatch(); stopProgress(); showLiveBadge(false);
+  stopDeploymentWatch(); stopProgress();
   updateStatus('--- SEQUENCE MASTERCODE ACTIVÉE ---', true);
   try{
     const owner= await getOwner(token);
     updateStatus('Authentification GitHub réussie.');
     await ensureRepo(token, owner, appName);
-    const{ html, hasCustom }= buildPwaHtml(source);
+    const{ html, hasCustom }= buildPwaHtml( byId('htmlInput').value.trim() );
     if(hasCustom) updateStatus('Script personnalisé injecté.');
     const files=[
       { path:'index.html', content: utf8ToBase64(html) },
@@ -1318,20 +1221,6 @@ async function generatePWA(){
     byId('loader').classList.add('hidden');
   }
 }
-
-/* ========================================================= FORGE BUTTON CURSOR GLOW ========================================================= */
-document.addEventListener('mousemove', e=>{
-  const btn = byId('mainBtn');
-  if(!btn) return;
-  const r = btn.getBoundingClientRect();
-  if(e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom){
-    btn.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
-    btn.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
-  }
-});
-
-/* ========================================================= INIT ========================================================= */
-updateEditorMeta();
 
 /* ========================================================= MASTERCODE SERVICE WORKER ========================================================= */
 if('serviceWorker' in navigator){
