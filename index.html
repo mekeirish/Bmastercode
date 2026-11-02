@@ -172,6 +172,20 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .icon-clear.show{ display:flex; }
 .icon-clear:active{ transform:scale(.9); }
+/* Sélecteur de couleur de fond (lancement) */
+.bg-pick{
+  position:absolute; top:5px; left:5px; display:none; align-items:center; gap:4px;
+  font-size:6px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#64748b;
+}
+.bg-pick.show{ display:flex; }
+.bg-pick input{
+  -webkit-appearance:none; appearance:none;
+  width:22px; height:22px; padding:0; border:1px solid rgba(255,255,255,.2);
+  border-radius:7px; background:none; cursor:pointer; overflow:hidden;
+}
+.bg-pick input::-webkit-color-swatch-wrapper{ padding:0; }
+.bg-pick input::-webkit-color-swatch{ border:0; border-radius:6px; }
+.bg-pick input::-moz-color-swatch{ border:0; border-radius:6px; }
 /* ========================================================= ACTIONS ========================================================= */
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
 .action-btn{
@@ -424,6 +438,7 @@ button{ -webkit-user-select:none; user-select:none; }
             <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false" oninput="onAppNameInput(this.value)">
             <label class="field-label" style="margin-top:7px">Icône PWA</label>
             <div class="icon-zone">
+              <label class="bg-pick" id="bgPick" title="Couleur du fond de lancement (détectée depuis l'icône)">FOND<input type="color" id="iconBgInput" value="#050608" oninput="onIconBgInput(this.value)"></label>
               <button class="icon-clear" id="iconClear" onclick="clearIcon()" title="Supprimer l'icône">✕</button>
               <div id="iconPreviewWrap" class="hidden">
                 <img id="iconPreview" class="preview" alt="Aperçu">
@@ -562,6 +577,23 @@ const MARK_END=LT+'!-- mastercode:custom:end -->';
 const PROGRESS_DURATION = 45000;
 const MAX_LOG_LINES = 8;
 const FETCH_TIMEOUT_MS = 25000; /* Timeout sur les requêtes GitHub */
+const DEFAULT_BG = '#050608';   /* Fond par défaut si l'icône est transparente / non détectable */
+
+/* Écrans de lancement iOS : [px largeur, px hauteur, css largeur, css hauteur, ratio] */
+const SPLASH_SIZES = [
+  [1320,2868,440,956,3],
+  [1206,2622,402,874,3],
+  [1290,2796,430,932,3],
+  [1179,2556,393,852,3],
+  [1284,2778,428,926,3],
+  [1170,2532,390,844,3],
+  [1242,2688,414,896,3],
+  [828,1792,414,896,2],
+  [1125,2436,375,812,3],
+  [1242,2208,414,736,3],
+  [750,1334,375,667,2],
+  [640,1136,320,568,2]
+];
 
 /* ========================================================= CLÉS LOCALSTORAGE ========================================================= */
 const LS_KEYS = {
@@ -571,6 +603,7 @@ const LS_KEYS = {
   ICON_512: 'mastercode_icon_512',
   ICON_192: 'mastercode_icon_192',
   ICON_PREVIEW: 'mastercode_icon_preview',
+  ICON_BG: 'mastercode_icon_bg',
   CUSTOM_SCRIPT: 'mastercode_custom_script',
   SESSIONS: 'mastercode_sessions'
 };
@@ -610,6 +643,7 @@ let deploymentInterval=null;
 let progressInterval=null;
 let icon512='';
 let icon192='';
+let iconBg='';
 let isForgeRunning = false;
 let isInjectRunning = false;
 
@@ -660,7 +694,7 @@ function classifyLog(msg){
   if(m.startsWith('⚠️')) return 'warn';
   if(m.startsWith('❌') || /erreur/i.test(m)) return 'err';
   if(m.startsWith('---')) return 'info';
-  if(/Upload|Activation|Création|Authentification|Injection/i.test(m)) return 'info';
+  if(/Upload|Activation|Création|Authentification|Injection|Génération/i.test(m)) return 'info';
   return '';
 }
 function updateStatus(message,clear=false){
@@ -756,6 +790,53 @@ function updateHtmlMeta(){
   byId('htmlMeta').textContent = lines + ' l · ' + size + ' Ko';
 }
 
+/* ========================================================= COULEUR DE FOND (LANCEMENT) ========================================================= */
+function isHex(c){ return /^#[0-9a-f]{6}$/i.test(c || ''); }
+function getBg(){ return isHex(iconBg) ? iconBg.toLowerCase() : DEFAULT_BG; }
+function toHex(r,g,b){
+  return '#' + [r,g,b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0')).join('');
+}
+function updateBgPicker(){
+  byId('bgPick').classList.toggle('show', !!icon512);
+  byId('iconBgInput').value = getBg();
+}
+function onIconBgInput(val){
+  if(!isHex(val)) return;
+  iconBg = val.toLowerCase();
+  store.setItem(LS_KEYS.ICON_BG, iconBg);
+  showSaveIndicator();
+}
+/* Détecte la couleur dominante sur le pourtour de l'icône (canvas déjà dessiné).
+   Retourne null si les bords sont majoritairement transparents. */
+function detectIconBg(){
+  const canvas = byId('canvas');
+  const size = canvas.width;
+  let data;
+  try{ data = canvas.getContext('2d').getImageData(0,0,size,size).data; }
+  catch(e){ return null; }
+  const band = Math.max(2, Math.round(size*0.02));
+  const buckets = new Map();
+  let total = 0, transparent = 0;
+  const add = (x,y) => {
+    const i = (y*size + x)*4;
+    total++;
+    if(data[i+3] < 200){ transparent++; return; }
+    const key = ((data[i]>>3)<<10) | ((data[i+1]>>3)<<5) | (data[i+2]>>3);
+    let b = buckets.get(key);
+    if(!b){ b = { n:0, r:0, g:0, b:0 }; buckets.set(key,b); }
+    b.n++; b.r += data[i]; b.g += data[i+1]; b.b += data[i+2];
+  };
+  for(let t=0;t<size;t++){
+    for(let k=0;k<band;k++){
+      add(t,k); add(t,size-1-k); add(k,t); add(size-1-k,t);
+    }
+  }
+  if(!buckets.size || transparent > total*0.5) return null;
+  let best = null;
+  buckets.forEach(b => { if(!best || b.n > best.n) best = b; });
+  return toHex(best.r/best.n, best.g/best.n, best.b/best.n);
+}
+
 /* ========================================================= ICON ========================================================= */
 function renderIcon(img,size){
   const canvas=byId('canvas'); const ctx= canvas.getContext('2d');
@@ -773,16 +854,21 @@ function previewIcon(input){
     const img= new Image();
     img.onload=()=>{
       const url512= renderIcon(img,512);
+      /* Détection du fond AVANT de redessiner le canvas en 192 */
+      const detected= detectIconBg();
       const url192= renderIcon(img,192);
       icon512= url512.split(',')[1];
       icon192= url192.split(',')[1];
+      iconBg= detected || '';
       byId('iconPreview').src=url512;
       byId('iconPreviewWrap').classList.remove('hidden');
       byId('iconClear').classList.add('show');
       store.setItem(LS_KEYS.ICON_512, icon512);
       store.setItem(LS_KEYS.ICON_192, icon192);
       store.setItem(LS_KEYS.ICON_PREVIEW, url512);
-      toast('Icône enregistrée');
+      if(iconBg) store.setItem(LS_KEYS.ICON_BG, iconBg); else store.removeItem(LS_KEYS.ICON_BG);
+      updateBgPicker();
+      toast(detected ? 'Icône enregistrée · fond ' + detected : 'Icône enregistrée · fond par défaut');
     };
     img.onerror=()=>{ toast('Image illisible',true); };
     img.src=e.target.result;
@@ -791,7 +877,7 @@ function previewIcon(input){
 }
 function clearIcon(){
   if(!confirm('Supprimer l\'icône enregistrée ?')) return;
-  icon512 = ''; icon192 = '';
+  icon512 = ''; icon192 = ''; iconBg = '';
   byId('iconInput').value = '';
   byId('iconPreview').src = '';
   byId('iconPreviewWrap').classList.add('hidden');
@@ -799,6 +885,8 @@ function clearIcon(){
   store.removeItem(LS_KEYS.ICON_512);
   store.removeItem(LS_KEYS.ICON_192);
   store.removeItem(LS_KEYS.ICON_PREVIEW);
+  store.removeItem(LS_KEYS.ICON_BG);
+  updateBgPicker();
   toast('Icône supprimée');
 }
 
@@ -934,6 +1022,7 @@ function saveCurrentAsSession(){
     name, html,
     icon512: icon512 || '',
     icon192: icon192 || '',
+    iconBg: iconBg || '',
     iconPreview: byId('iconPreview').src || '',
     savedAt: Date.now()
   };
@@ -958,17 +1047,21 @@ function loadSession(idx){
   store.setItem(LS_KEYS.HTML, s.html || '');
   if(s.icon512 && s.icon192){
     icon512 = s.icon512; icon192 = s.icon192;
+    iconBg = isHex(s.iconBg) ? s.iconBg : '';
     byId('iconPreview').src = s.iconPreview || ('data:image/png;base64,' + s.icon512);
     byId('iconPreviewWrap').classList.remove('hidden');
     byId('iconClear').classList.add('show');
     store.setItem(LS_KEYS.ICON_512, s.icon512);
     store.setItem(LS_KEYS.ICON_192, s.icon192);
     store.setItem(LS_KEYS.ICON_PREVIEW, byId('iconPreview').src);
+    if(iconBg) store.setItem(LS_KEYS.ICON_BG, iconBg); else store.removeItem(LS_KEYS.ICON_BG);
   } else {
-    icon512 = ''; icon192 = '';
+    icon512 = ''; icon192 = ''; iconBg = '';
     byId('iconPreviewWrap').classList.add('hidden');
     byId('iconClear').classList.remove('show');
+    store.removeItem(LS_KEYS.ICON_BG);
   }
+  updateBgPicker();
   updateHtmlMeta();
   closeSessionsModal();
   toast('Projet "' + s.name + '" chargé');
@@ -1100,6 +1193,38 @@ function fixTailwindConfig(html){
   );
 }
 
+/* ========================================================= ÉCRANS DE LANCEMENT iOS ========================================================= */
+function splashLinks(){
+  return SPLASH_SIZES.map(([pw,ph,w,h,r]) =>
+    LT+'link rel="apple-touch-startup-image" media="(device-width: '+w+'px) and (device-height: '+h+'px) and (-webkit-device-pixel-ratio: '+r+') and (orientation: portrait)" href="./splash-'+pw+'x'+ph+'.png">'
+  ).join('\n');
+}
+function loadImage(src){
+  return new Promise((resolve, reject) => {
+    const im = new Image();
+    im.onload = () => resolve(im);
+    im.onerror = () => reject(new Error('Icône illisible pour le splash'));
+    im.src = src;
+  });
+}
+/* Fond uni (couleur de l'icône) + icône centrée : les bords de l'icône se fondent dans le fond */
+async function buildSplashImages(){
+  const img = await loadImage('data:image/png;base64,' + icon512);
+  const bg = getBg();
+  return SPLASH_SIZES.map(([pw,ph]) => {
+    const c = document.createElement('canvas');
+    c.width = pw; c.height = ph;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0,0,pw,ph);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    const s = Math.round(Math.min(pw,ph)*0.32);
+    ctx.drawImage(img, Math.round((pw-s)/2), Math.round((ph-s)/2), s, s);
+    return { path:'splash-'+pw+'x'+ph+'.png', content: c.toDataURL('image/png').split(',')[1] };
+  });
+}
+
 /* ========================================================= BUILD PWA ========================================================= */
 function buildPwaHtml(source){
   let html=source;
@@ -1107,13 +1232,15 @@ function buildPwaHtml(source){
   const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
   html= html.replace( oldBlock, '' );
 
+  const bg = getBg();
   const headTags=[];
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
-  if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="#050608">');
+  if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="'+bg+'">');
   if(!/<meta[^>]+name=["']apple-mobile-web-app-capable["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-capable" content="yes">');
   if(!/<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
   if(!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html)) headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
+  if(icon512 && !/apple-touch-startup-image/i.test(html)) headTags.push(splashLinks());
   if(headTags.length) html= insertInHead(html, headTags.join('\n'));
 
   const blocks=[];
@@ -1137,9 +1264,11 @@ function buildPwaHtml(source){
 
 /* ========================================================= MANIFEST ========================================================= */
 function buildManifest(appName){
+  /* background_color = écran de lancement Android/Chrome (icône centrée sur ce fond) */
+  const bg = getBg();
   return JSON.stringify({
     name:appName, short_name:appName, start_url:'./', scope:'./',
-    display:'standalone', background_color:'#050608', theme_color:'#667eea',
+    display:'standalone', background_color:bg, theme_color:bg,
     icons:[
       { src:'icon-192.png', sizes:'192x192', type:'image/png', purpose:'any' },
       { src:'icon.png', sizes:'512x512', type:'image/png', purpose:'any' },
@@ -1440,7 +1569,11 @@ async function generatePWA(){
     const{ html, hasCustom }= buildPwaHtml( byId('htmlInput').value.trim() );
     if(hasCustom) updateStatus('Script personnalisé injecté.');
 
-    /* 4. Upload des 5 fichiers */
+    /* 3b. Écrans de lancement (fond = couleur de l'icône) */
+    updateStatus('Génération des écrans de lancement (' + getBg() + ')...');
+    const splashFiles = await buildSplashImages();
+
+    /* 4. Upload des fichiers */
     const filesToUpload = [
       { path:'index.html', content: utf8ToBase64(html) },
       { path:'manifest.json', content: utf8ToBase64( buildManifest(appName) ) },
@@ -1456,6 +1589,12 @@ async function generatePWA(){
       await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
       updateStatus(`✅ ${file.path} envoyé.`);
     }
+
+    updateStatus('Upload : écrans de lancement (' + splashFiles.length + ')...');
+    for(const file of splashFiles){
+      await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
+    }
+    updateStatus('✅ Écrans de lancement envoyés.');
 
     /* 5. GitHub Pages */
     updateStatus('Activation de GitHub Pages...');
@@ -1510,15 +1649,18 @@ async function generatePWA(){
   const i512 = store.getItem(LS_KEYS.ICON_512);
   const i192 = store.getItem(LS_KEYS.ICON_192);
   const preview = store.getItem(LS_KEYS.ICON_PREVIEW);
+  const savedBg = store.getItem(LS_KEYS.ICON_BG);
   if(i512 && i192){
     icon512 = i512;
     icon192 = i192;
+    iconBg = isHex(savedBg) ? savedBg : '';
     if(preview){
       byId('iconPreview').src = preview;
       byId('iconPreviewWrap').classList.remove('hidden');
       byId('iconClear').classList.add('show');
     }
   }
+  updateBgPicker();
 
   /* Restaure le script perso */
   const custom = store.getItem(LS_KEYS.CUSTOM_SCRIPT);
