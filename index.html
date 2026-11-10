@@ -85,9 +85,9 @@ button{ -webkit-user-select:none; user-select:none; }
 /* ========================================================= MAIN LAYOUT ========================================================= */
 .main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:6px; overflow-y:auto; padding-bottom:4px; }
 .card{ border-radius:16px; padding:10px; flex:0 0 auto; }
-.section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
-.section-title{ font-size:9.5px; line-height:12px; text-transform:uppercase; letter-spacing:.15em; color:#94a3b8; font-weight:800; }
-.section-name{ font-size:13.5px; line-height:16px; font-weight:700; margin-top:2px; }
+.section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.section-title{ font-size:9px; line-height:11px; text-transform:uppercase; letter-spacing:.15em; color:#94a3b8; font-weight:800; }
+.section-name{ font-size:14px; line-height:17px; font-weight:700; letter-spacing:-.2px; }
 .token-row{ display:grid; grid-template-columns:minmax(0,1fr) 52px 64px; gap:4px; width:100%; }
 .field{
   width:100%; min-width:0; height:44px; border-radius:12px;
@@ -118,9 +118,9 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .project-col{ min-width:0; overflow:hidden; display:flex; flex-direction:column; }
 .field-label{
-  display:block; color:#94a3b8; font-size:9px; line-height:12px;
-  text-transform:uppercase; letter-spacing:.13em; font-weight:800;
-  margin:0 0 5px 2px;
+  display:block; color:#94a3b8; font-size:9px; line-height:11px;
+  text-transform:uppercase; letter-spacing:.12em; font-weight:800;
+  margin:0 0 4px 1px;
 }
 /* ========================================================= HTML EDITOR ========================================================= */
 .html-editor{ position:relative; min-width:0; width:100%; flex:1; display:flex; flex-direction:column; overflow:hidden; }
@@ -146,31 +146,44 @@ button{ -webkit-user-select:none; user-select:none; }
   font-size:9px; color:#94a3b8; font-weight:700;
   font-variant-numeric:tabular-nums; letter-spacing:.05em;
 }
+.meta-lines{
+  color:#facc15;
+  font-weight:800;
+}
 .icon-zone{
-  width:100%; height:68px; min-height:68px; border-radius:12px; border:1px dashed rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22); display:flex; flex-direction:column;
-  align-items:center; justify-content:center; padding:6px; overflow:hidden;
-  position:relative; gap:4px;
+  width:100%; height:74px; min-height:74px; border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.28);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:8px; overflow:hidden;
+  position:relative; gap:0;
+  transition: border-color .2s ease, background .2s ease;
 }
 .icon-zone.has-icon{
-  border-style:solid;
-  border-color:rgba(255,255,255,.1);
-  background:rgba(0,0,0,.3);
+  border-color:rgba(255,255,255,.12);
+  background:rgba(0,0,0,.36);
 }
 .color-zone{
   flex-direction:row;
-  gap:10px;
+  gap:12px;
   cursor:pointer;
+}
+.color-zone:active{
+  background:rgba(255,255,255,.03);
 }
 .color-swatch{
   -webkit-appearance:none; appearance:none;
-  width:28px; height:28px; padding:0; flex:0 0 28px;
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:8px; background:none; cursor:pointer; overflow:hidden;
+  width:34px; height:34px; padding:0; flex:0 0 34px;
+  border:2px solid rgba(255,255,255,.18);
+  border-radius:10px; background:none; cursor:pointer; overflow:hidden;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.4);
+  transition: transform .15s ease, border-color .2s ease;
 }
+.color-swatch:active{ transform:scale(.94); }
 .color-swatch::-webkit-color-swatch-wrapper{ padding:0; }
-.color-swatch::-webkit-color-swatch{ border:0; border-radius:7px; }
-.color-swatch::-moz-color-swatch{ border:0; border-radius:7px; }
+.color-swatch::-webkit-color-swatch{ border:0; border-radius:8px; }
+.color-swatch::-moz-color-swatch{ border:0; border-radius:8px; }
 .icon-upload{
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
@@ -180,30 +193,32 @@ button{ -webkit-user-select:none; user-select:none; }
   cursor:pointer; z-index:1;
 }
 .upload-placeholder{
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
   color:#64748b; font-size:9px; font-weight:700; pointer-events:none;
-  text-transform:uppercase; letter-spacing:.06em;
+  text-transform:uppercase; letter-spacing:.08em;
 }
-.upload-placeholder span:first-child{ font-size:16px; line-height:1; }
+.upload-placeholder span:first-child{
+  font-size:18px; line-height:1; opacity:.85;
+}
 .icon-upload input::file-selector-button{
   border:0; border-radius:8px; padding:6px 10px; margin-right:6px;
   background:rgba(255,255,255,.08); color:#e2e8f0; font-size:9px; font-weight:700;
 }
 .preview{
-  width:40px; height:40px; object-fit:cover; border-radius:10px;
-  border:1px solid rgba(255,255,255,.15); box-shadow: none;
-  margin-bottom:0;
+  width:44px; height:44px; object-fit:cover; border-radius:12px;
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
 }
 .icon-clear{
-  position:absolute; top:4px; right:4px;
-  width:20px; height:20px; border-radius:6px;
-  background:rgba(239,68,68,.2); border:1px solid rgba(239,68,68,.3);
-  color:#f87171; font-size:10px; cursor:pointer;
+  position:absolute; top:6px; right:6px;
+  width:22px; height:22px; border-radius:7px;
+  background:rgba(239,68,68,.18); border:1px solid rgba(239,68,68,.28);
+  color:#f87171; font-size:11px; cursor:pointer;
   display:none; align-items:center; justify-content:center;
-  transition:.2s ease; z-index:2;
+  transition:.15s ease; z-index:3;
 }
 .icon-clear.show{ display:flex; }
-.icon-clear:active{ transform:scale(.9); }
+.icon-clear:active{ transform:scale(.9); background:rgba(239,68,68,.28); }
 /* Sélecteur de couleur de fond (lancement) */
 .bg-pick{
   display:none; align-items:center; gap:4px;
@@ -308,30 +323,79 @@ button{ -webkit-user-select:none; user-select:none; }
   font-variant-numeric:tabular-nums; color:#a5b4fc;
 }
 
-/* ========================================================= STATUS ========================================================= */
 .status{
-  flex:1; min-height:100px; max-height:170px; overflow:hidden; border-radius:14px; padding:10px 12px;
-  background:linear-gradient(145deg, rgba(2,4,8,.9), rgba(5,8,16,.85));
-  border:1px solid rgba(99,102,241,.18);
-  box-shadow: none;
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  flex:1; min-height:120px; max-height:190px; overflow:hidden; border-radius:16px; padding:0;
+  background: linear-gradient(160deg, rgba(2,6,14,.95), rgba(8,12,24,.92));
+  border:1px solid rgba(99,102,241,.22);
+  box-shadow: 0 0 0 1px rgba(99,102,241,.06), inset 0 1px 0 rgba(255,255,255,.03);
   position:relative; display:flex; flex-direction:column;
+}
+.status::before{
+  content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.03) 2px,
+    rgba(0,0,0,.03) 4px
+  );
+  opacity:.6;
 }
 .status-inner{
   flex:1; min-height:0; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
-  font-family:"Courier New",monospace; font-size:11px; line-height:1.45; color:#e2e8f0;
-  padding-right:6px; -webkit-overflow-scrolling:touch;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  font-size:11px; line-height:1.55; color:#cbd5e1;
+  padding:8px 12px 10px; -webkit-overflow-scrolling:touch;
+  position:relative; z-index:1;
+  font-feature-settings: "liga" 0;
 }
-.status-inner::-webkit-scrollbar{ width:4px; }
-.status-inner::-webkit-scrollbar-thumb{ background:rgba(99,102,241,.4); border-radius:3px; }
-.status-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex:0 0 auto; border-bottom:1px solid rgba(255,255,255,.05); padding-bottom:4px; }
-.copy-report{ border:0; background:rgba(255,255,255,.04); padding:3px 8px; border-radius:6px; color:#94a3b8; font-size:9px; font-weight:800; cursor:pointer; }
-.log-line{ display:block; }
-.log-line .cmd{ color:#6366f1; font-weight:700; }
-.log-line .ok{ color:#4ade80; font-weight:700; }
-.log-line .warn{ color:#facc15; font-weight:700; }
-.log-line .err{ color:#f87171; font-weight:700; }
-.log-line .info{ color:#cbd5e1; }
+.status-inner::-webkit-scrollbar{ width:3px; }
+.status-inner::-webkit-scrollbar-thumb{ background:rgba(99,102,241,.45); border-radius:3px; }
+.status-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 12px 6px; flex:0 0 auto;
+  border-bottom:1px solid rgba(99,102,241,.12);
+  position:relative; z-index:1;
+}
+.status-head-left{
+  display:flex; align-items:center; gap:8px;
+}
+.status-led{
+  width:7px; height:7px; border-radius:50%;
+  background:#22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,.55);
+  animation: statusPulse 2.4s ease-in-out infinite;
+}
+.status-title{
+  font-size:9px; font-weight:800; letter-spacing:.18em;
+  color:#a5b4fc; text-transform:uppercase;
+}
+@keyframes statusPulse{
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%{ opacity:.55; transform:scale(.85); }
+}
+.copy-report{
+  border:0; background:rgba(255,255,255,.04);
+  padding:4px 9px; border-radius:7px;
+  color:#94a3b8; font-size:8px; font-weight:800;
+  letter-spacing:.06em; cursor:pointer;
+  transition:.15s ease;
+}
+.copy-report:active{ background:rgba(255,255,255,.08); color:#e2e8f0; }
+.log-line{
+  display:block;
+  padding:1px 0;
+  animation: logIn .28s ease-out;
+}
+@keyframes logIn{
+  from{ opacity:0; transform:translateY(4px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.log-line .cmd{ color:#6366f1; font-weight:700; margin-right:4px; }
+.log-line .ok{ color:#4ade80; font-weight:600; }
+.log-line .warn{ color:#facc15; font-weight:600; }
+.log-line .err{ color:#f87171; font-weight:600; }
+.log-line .info{ color:#94a3b8; }
 /* ========================================================= FOOTER ========================================================= */
 .footer{
   height:17px; min-height:17px; display:flex; align-items:center; justify-content:center;
@@ -442,11 +506,8 @@ button{ -webkit-user-select:none; user-select:none; }
       <!-- GITHUB -->
       <section class="card glass">
         <div class="section-head">
-          <div>
-            <div class="section-title">Connexion</div>
-            <div class="section-name">GitHub Access</div>
-          </div>
-          <div class="text-[8px] text-slate-600">SECURE</div>
+          <div class="section-name">GitHub Access</div>
+          <div class="text-[8px] text-slate-600 font-bold tracking-wider">SECURE</div>
         </div>
         <div class="token-row">
           <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())">
@@ -459,20 +520,17 @@ button{ -webkit-user-select:none; user-select:none; }
       <!-- PROJECT -->
       <section class="card glass">
         <div class="section-head">
-          <div>
-            <div class="section-title">Configuration</div>
-            <div class="section-name">Projet PWA</div>
-          </div>
-          <div class="text-[9px] text-slate-500 font-bold">BUILD</div>
+          <div class="section-name">Projet PWA</div>
+          <div class="text-[8px] text-slate-500 font-bold tracking-wider">BUILD</div>
         </div>
         <div class="project-grid">
-          <!-- Nom du projet en pleine largeur -->
+          <!-- Nom du projet -->
           <div class="project-col">
             <label class="field-label">Nom du projet</label>
             <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false" oninput="onAppNameInput(this.value)">
           </div>
 
-          <!-- Grille 2 colonnes parfaitement harmonisées -->
+          <!-- Fond + Icône -->
           <div class="grid grid-cols-2 gap-3 w-full items-stretch">
             <div class="project-col">
               <label class="field-label">Fond de lancement</label>
@@ -549,11 +607,14 @@ button{ -webkit-user-select:none; user-select:none; }
         <button class="live-open" onclick="openLiveSite()">OUVRIR</button>
       </section>
 
-      <!-- STATUS -->
+      <!-- STATUS / CYBER CONSOLE -->
       <section id="statusCard" class="status glass hidden">
         <div class="status-head">
-          <span class="text-[7px] uppercase tracking-[.15em] text-slate-600 font-bold">Rapport Mastercode</span>
-          <button class="copy-report" onclick="copyReport()">📋 COPIER</button>
+          <div class="status-head-left">
+            <div class="status-led" id="statusLed"></div>
+            <span class="status-title">CONSOLE</span>
+          </div>
+          <button class="copy-report" onclick="copyReport()">COPIER</button>
         </div>
         <div id="status" class="status-inner"></div>
       </section>
@@ -751,25 +812,42 @@ function classifyLog(msg){
   if(/Upload|Activation|Création|Authentification|Injection|Génération/i.test(m)) return 'info';
   return '';
 }
-function updateStatus(message,clear=false){
-  const card=byId('statusCard');
-  const status=byId('status');
+function updateStatus(message, clear = false) {
+  const card = byId('statusCard');
+  const status = byId('status');
+  if (!card || !status) return;
+
   card.classList.remove('hidden');
-  if(clear){ status.innerHTML=''; }
+
+  if (clear) {
+    status.innerHTML = '';
+  }
+
   const cls = classifyLog(message);
-  const line = document.createElement('span');
+  const line = document.createElement('div');
   line.className = 'log-line';
-  const inner = cls
-    ? `<span class="cmd">&gt;</span> <span class="${cls}">${escapeHtml(message)}</span>`
-    : `<span class="cmd">&gt;</span> <span class="info">${escapeHtml(message)}</span>`;
-  line.innerHTML = inner;
+
+  const cmd = document.createElement('span');
+  cmd.className = 'cmd';
+  cmd.textContent = '› ';
+
+  const text = document.createElement('span');
+  text.className = cls || 'info';
+  text.textContent = message;
+
+  line.appendChild(cmd);
+  line.appendChild(text);
   status.appendChild(line);
-  status.appendChild(document.createTextNode('\n'));
-  while(status.childNodes.length > MAX_LOG_LINES*2){
+
+  // Garde seulement les dernières lignes
+  while (status.children.length > MAX_LOG_LINES) {
     status.removeChild(status.firstChild);
   }
-  /* Auto-scroll vers le bas */
-  requestAnimationFrame(() => { status.scrollTop = status.scrollHeight; });
+
+  // Scroll fluide vers le bas
+  requestAnimationFrame(() => {
+    status.scrollTop = status.scrollHeight;
+  });
 }
 
 /* ========================================================= COPY REPORT ========================================================= */
@@ -841,7 +919,7 @@ function updateHtmlMeta(){
   const code = byId('htmlInput').value;
   const lines = code ? code.split('\n').length : 0;
   const size = (new Blob([code]).size / 1024).toFixed(1);
-  byId('htmlMeta').textContent = lines + ' l · ' + size + ' Ko';
+  byId('htmlMeta').innerHTML = `<span class="meta-lines">${lines}</span> l · ${size} Ko`;
 }
 
 /* ========================================================= COULEUR DE FOND (LANCEMENT) ========================================================= */
@@ -1405,9 +1483,11 @@ function finishProgress(success=true){
   }
 }
 
-function showLiveButton(owner,repo){
-  liveOwner=owner; liveRepo=repo;
+function showLiveButton(owner, repo) {
+  liveOwner = owner;
+  liveRepo = repo;
   byId('liveBtn').classList.remove('hidden');
+  byId('statusCard').classList.add('hidden'); // cache la console
   setLed('yellow');
   startProgress();
 }
@@ -1416,52 +1496,62 @@ function stopDeploymentWatch(){
   deploymentInterval=null;
 }
 
-async function watchDeployment(token, since){
+async function watchDeployment(token, since) {
   stopDeploymentWatch();
-  const startedAt=Date.now();
-  const maxMs= 4*60*1000;
-  const tick=async()=>{
-    if(Date.now()-startedAt> maxMs){
+  const startedAt = Date.now();
+  const maxMs = 4 * 60 * 1000;
+
+  const tick = async () => {
+    if (Date.now() - startedAt > maxMs) {
       stopDeploymentWatch();
       setLed('green');
       finishProgress(true);
-      byId('liveStatusTitle').textContent='Application en ligne';
-      byId('liveStatusText').textContent='Délai dépassé · site probablement disponible';
-      updateStatus('⚠️ Délai dépassé : le site devrait être disponible.');
+      byId('liveStatusTitle').textContent = 'Application en ligne';
+      byId('liveStatusText').textContent = 'Délai dépassé · site probablement disponible';
       return;
     }
-    try{
-      const res= await ghFetch(`${GH_API}/repos/${liveOwner}/${liveRepo}/actions/runs?per_page=5`,{ headers: ghHeaders(token) });
-      if(!res.ok) return;
-      const data= await res.json();
-      const run= (data.workflow_runs||[]).find( r=> new Date(r.created_at).getTime()>= since-15000 );
-      if(!run) return;
-      if(run.status==='completed'){
+
+    try {
+      const res = await ghFetch(`\( {GH_API}/repos/ \){liveOwner}/${liveRepo}/actions/runs?per_page=5`, {
+        headers: ghHeaders(token)
+      });
+      if (!res.ok) return;
+
+      const data = await res.json();
+      const run = (data.workflow_runs || []).find(r => new Date(r.created_at).getTime() >= since - 15000);
+      if (!run) return;
+
+      if (run.status === 'completed') {
         stopDeploymentWatch();
-        if(run.conclusion==='success'){
+
+        if (run.conclusion === 'success') {
           setLed('green');
           finishProgress(true);
-          byId('liveStatusTitle').textContent='Application en ligne';
-          byId('liveStatusText').textContent='Déploiement terminé';
-          updateStatus('✅ Site déployé et accessible !');
+          byId('liveStatusTitle').textContent = 'Application en ligne';
+          byId('liveStatusText').textContent = 'Déploiement terminé';
           toast('Site disponible');
-        }else{
+        } else {
+          // Erreur → on réaffiche la console
           setLed('red');
           finishProgress(false);
-          byId('liveStatusTitle').textContent='Erreur de déploiement';
-          byId('liveStatusText').textContent='Consultez le rapport';
+          byId('liveStatusTitle').textContent = 'Erreur de déploiement';
+          byId('liveStatusText').textContent = 'Consultez le rapport';
+          byId('statusCard').classList.remove('hidden');
           updateStatus(`❌ Déploiement : ${run.conclusion}`);
         }
-      }else{
+      } else {
         setLed('yellow');
-        byId('liveStatusTitle').textContent='Déploiement en cours';
-        byId('liveStatusText').textContent='GitHub Pages prépare votre application';
-        if(!progressInterval) startProgress();
+        byId('liveStatusTitle').textContent = 'Déploiement en cours';
+        byId('liveStatusText').textContent = 'GitHub Pages prépare votre application';
+        if (!progressInterval) startProgress();
       }
-    }catch(e){ console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   };
+
   tick();
-  deploymentInterval= setInterval(tick, 4000);
+  deploymentInterval = setInterval(tick, 4000);
 }
 
 function openLiveSite(){
@@ -1482,32 +1572,30 @@ function resetInjectButton(){
   isInjectRunning = false;
 }
 
-/* ========================================================= INJECT PWA ========================================================= */
-async function injectPwaToGitHub(){
+async function injectPwaToGitHub() {
   if (isInjectRunning) {
     toast('Injection déjà en cours', true);
     return;
   }
 
-  const token= byId('ghToken').value.trim();
-  const appName= sanitizeRepoName( byId('appName').value );
-  const source= byId('htmlInput').value.trim();
-  const btn= byId('injectBtn');
+  const token = byId('ghToken').value.trim();
+  const appName = sanitizeRepoName(byId('appName').value);
+  const source = byId('htmlInput').value.trim();
+  const btn = byId('injectBtn');
 
-  if(!token){ toast('Token GitHub manquant', true); return; }
-  if(!appName){ toast('Nom du projet manquant', true); return; }
-  if(!source){ toast('Code HTML vide', true); return; }
+  if (!token) { toast('Token GitHub manquant', true); return; }
+  if (!appName) { toast('Nom du projet manquant', true); return; }
+  if (!source) { toast('Code HTML vide', true); return; }
 
   isInjectRunning = true;
-  btn.disabled=true;
+  btn.disabled = true;
   stopDeploymentWatch();
 
   haptic(12);
   updateStatus('--- INJECTION PWA ---', true);
 
   try {
-    /* Détection de dépendances silencieuse */
-    try { detectDependencies(true); } catch(e) { console.warn(e); }
+    try { detectDependencies(true); } catch (e) { console.warn(e); }
 
     const owner = await getOwner(token);
     updateStatus('✅ Authentification GitHub réussie.');
@@ -1515,17 +1603,17 @@ async function injectPwaToGitHub(){
     await ensureRepo(token, owner, appName);
 
     updateStatus('Injection PWA dans index.html...');
-    const{ html, hasCustom }= buildPwaHtml( byId('htmlInput').value.trim() );
-    if(hasCustom) updateStatus('Script personnalisé inclus.');
+    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim());
+    if (hasCustom) updateStatus('Script personnalisé inclus.');
 
     const since = Date.now();
     await putFile(token, owner, appName, 'index.html', utf8ToBase64(html), 'feat(pwa): injection Mastercode');
 
-    const[ manifestSha, swSha ]= await Promise.all([
-      getFileSha(token, owner, appName, 'manifest.json').catch(()=>null),
-      getFileSha(token, owner, appName, 'sw.js').catch(()=>null)
+    const [manifestSha, swSha] = await Promise.all([
+      getFileSha(token, owner, appName, 'manifest.json').catch(() => null),
+      getFileSha(token, owner, appName, 'sw.js').catch(() => null)
     ]);
-    if(!manifestSha || !swSha){
+    if (!manifestSha || !swSha) {
       updateStatus('⚠️ manifest.json ou sw.js absent : utilisez FORGER.');
     }
 
@@ -1537,59 +1625,59 @@ async function injectPwaToGitHub(){
     showLiveButton(owner, appName);
     watchDeployment(token, since);
 
-  } catch(err) {
+  } catch (err) {
     console.error(err);
-    updateStatus('❌ ERREUR : '+ err.message);
+    updateStatus('❌ ERREUR : ' + err.message);
     toast(err.message, true);
-    setLed('red'); finishProgress(false);
-    stopDeploymentWatch(); stopProgress();
-    /* Affiche quand même le panneau live pour montrer l'erreur */
+    setLed('red');
+    finishProgress(false);
+    stopDeploymentWatch();
+    stopProgress();
+
+    byId('statusCard').classList.remove('hidden'); // réaffiche la console en cas d'erreur
+
     if (!liveOwner) {
       byId('liveBtn').classList.remove('hidden');
-      byId('liveStatusTitle').textContent='Erreur';
-      byId('liveStatusText').textContent= err.message.slice(0, 60);
+      byId('liveStatusTitle').textContent = 'Erreur';
+      byId('liveStatusText').textContent = err.message.slice(0, 60);
     }
   } finally {
     resetInjectButton();
   }
 }
 
-/* ========================================================= FORGE (CORRIGÉE) ========================================================= */
-async function generatePWA(){
-  /* Anti double-clic */
+async function generatePWA() {
   if (isForgeRunning) {
     toast('Forge déjà en cours', true);
     return;
   }
 
-  const token= byId('ghToken').value.trim();
-  const appName= sanitizeRepoName( byId('appName').value );
-  const source= byId('htmlInput').value.trim();
-  const btn= byId('mainBtn');
+  const token = byId('ghToken').value.trim();
+  const appName = sanitizeRepoName(byId('appName').value);
+  const source = byId('htmlInput').value.trim();
+  const btn = byId('mainBtn');
 
-  /* Validations AVANT de toucher au bouton */
-  if(!token){
+  if (!token) {
     toast('Token GitHub manquant', true);
     updateStatus('❌ Token GitHub manquant', true);
     return;
   }
-  if(!appName){
+  if (!appName) {
     toast('Nom du projet manquant', true);
     updateStatus('❌ Nom du projet manquant', true);
     return;
   }
-  if(!source){
+  if (!source) {
     toast('Code HTML vide', true);
     updateStatus('❌ Code HTML vide', true);
     return;
   }
-  if(!icon512 || !icon192){
+  if (!icon512 || !icon192) {
     toast('Icône PWA manquante', true);
     updateStatus('❌ Icône PWA manquante', true);
     return;
   }
 
-  /* Active le bouton AVANT tout */
   isForgeRunning = true;
   btn.disabled = true;
   byId('forgeIcon').classList.add('hidden');
@@ -1602,77 +1690,68 @@ async function generatePWA(){
   updateStatus('--- SEQUENCE MASTERCODE ACTIVÉE ---', true);
 
   try {
-    /* Détection de dépendances (silencieuse, safe) */
     try {
       const deps = detectDependencies(true);
       if (deps && deps.missing && deps.missing.length) {
         updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
         injectDependencies(deps.missing);
       }
-    } catch(e) {
+    } catch (e) {
       console.warn('Dep detection failed:', e);
     }
 
-    /* 1. Auth GitHub */
     updateStatus('Authentification GitHub...');
     const owner = await getOwner(token);
     updateStatus('✅ Authentification GitHub réussie.');
 
-    /* 2. Dépôt */
     await ensureRepo(token, owner, appName);
 
-    /* 3. Build HTML final */
     updateStatus('Compilation PWA...');
-    const{ html, hasCustom }= buildPwaHtml( byId('htmlInput').value.trim() );
-    if(hasCustom) updateStatus('Script personnalisé injecté.');
+    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim());
+    if (hasCustom) updateStatus('Script personnalisé injecté.');
 
-    /* 3b. Écrans de lancement (fond = couleur de l'icône) */
     updateStatus('Génération des écrans de lancement (' + getBg() + ')...');
     const splashFiles = await buildSplashImages();
 
-    /* 4. Upload des fichiers */
     const filesToUpload = [
-      { path:'index.html', content: utf8ToBase64(html) },
-      { path:'manifest.json', content: utf8ToBase64( buildManifest(appName) ) },
-      { path:'sw.js', content: utf8ToBase64( buildServiceWorker(appName) ) },
-      { path:'icon.png', content: icon512 },
-      { path:'icon-192.png', content: icon192 }
+      { path: 'index.html', content: utf8ToBase64(html) },
+      { path: 'manifest.json', content: utf8ToBase64(buildManifest(appName)) },
+      { path: 'sw.js', content: utf8ToBase64(buildServiceWorker(appName)) },
+      { path: 'icon.png', content: icon512 },
+      { path: 'icon-192.png', content: icon192 }
     ];
 
     const since = Date.now();
 
-    for(const file of filesToUpload){
+    for (const file of filesToUpload) {
       updateStatus(`Upload : ${file.path}...`);
       await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
       updateStatus(`✅ ${file.path} envoyé.`);
     }
 
     updateStatus('Upload : écrans de lancement (' + splashFiles.length + ')...');
-    for(const file of splashFiles){
+    for (const file of splashFiles) {
       await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
     }
     updateStatus('✅ Écrans de lancement envoyés.');
 
-    /* 5. GitHub Pages */
     updateStatus('Activation de GitHub Pages...');
     await ensurePages(token, owner, appName);
 
-    /* 6. Succès */
     updateStatus('✅ Fichiers envoyés. Déploiement en cours...');
     toast('Mastercode : application forgée');
 
-    /* Affiche le panneau live */
     showLiveButton(owner, appName);
     watchDeployment(token, since);
 
-  } catch(err) {
+  } catch (err) {
     console.error('FORGE ERROR:', err);
     const msg = err.message || 'Erreur inconnue';
     updateStatus('❌ ERREUR : ' + msg);
     toast(msg, true);
 
-    /* Affiche le panneau live en mode erreur */
     byId('liveBtn').classList.remove('hidden');
+    byId('statusCard').classList.remove('hidden'); // réaffiche la console en cas d'erreur
     setLed('red');
     finishProgress(false);
     byId('liveStatusTitle').textContent = 'Erreur de forge';
@@ -1682,7 +1761,6 @@ async function generatePWA(){
     stopProgress();
 
   } finally {
-    /* TOUJOURS remettre le bouton en état */
     resetForgeButton();
   }
 }
@@ -1724,9 +1802,6 @@ async function generatePWA(){
   /* Restaure le script perso */
   const custom = store.getItem(LS_KEYS.CUSTOM_SCRIPT);
   if(custom) byId('customScript').value = custom;
-
-  updateStatus('--- MASTERCODE 3.0 PRÊT ---', true);
-  updateStatus('💾 Sauvegarde automatique activée');
 
   /* Service Worker */
   if('serviceWorker' in navigator){
