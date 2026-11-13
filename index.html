@@ -48,28 +48,27 @@ button{ -webkit-user-select:none; user-select:none; }
   backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
   box-shadow: none;
 }
-/* ========================================================= HEADER ========================================================= */
-.header{ height:44px; min-height:44px; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.header{ height:48px; min-height:48px; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
 .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
 .brand-logo{
-  width:36px; height:36px; flex:0 0 36px; border-radius:11px;
+  width:40px; height:40px; flex:0 0 40px; border-radius:12px;
   display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
   background: linear-gradient(145deg, rgba(99,102,241,.18), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
   box-shadow: none;
 }
-.brand-logo span{ font-size:17px; font-weight:800; position:relative; }
-.brand-name{ font-size:15px; line-height:16px; font-weight:800; letter-spacing:-.5px; }
-.brand-sub{ margin-top:1px; color:#94a3b8; font-size:6.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+.brand-logo span{ font-size:19px; font-weight:800; position:relative; }
+.brand-name{ font-size:16px; line-height:17px; font-weight:800; letter-spacing:-.5px; }
+.brand-sub{ margin-top:1px; color:#94a3b8; font-size:8px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
 .header-right{ display:flex; align-items:center; gap:6px; }
 .sw-open{
-  width:36px; height:36px; flex:0 0 36px; border-radius:11px;
-  display:flex; align-items:center; justify-content:center; color:#a5b4fc; font-size:15px;
+  width:40px; height:40px; flex:0 0 40px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; color:#a5b4fc; font-size:16px;
 }
 .header-icon-btn{
-  width:36px; height:36px; flex:0 0 36px; border-radius:11px;
+  width:40px; height:40px; flex:0 0 40px; border-radius:12px;
   display:flex; align-items:center; justify-content:center;
-  color:#94a3b8; font-size:14px; cursor:pointer;
+  color:#94a3b8; font-size:15px; cursor:pointer;
   background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06);
   transition:.2s ease;
 }
@@ -86,28 +85,28 @@ button{ -webkit-user-select:none; user-select:none; }
 .main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:6px; overflow-y:auto; padding-bottom:4px; }
 .card{ border-radius:16px; padding:10px; flex:0 0 auto; }
 .section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.section-title{ font-size:9px; line-height:11px; text-transform:uppercase; letter-spacing:.15em; color:#94a3b8; font-weight:800; }
-.section-name{ font-size:14px; line-height:17px; font-weight:700; letter-spacing:-.2px; }
-.token-row{ display:grid; grid-template-columns:minmax(0,1fr) 52px 64px; gap:4px; width:100%; }
+.section-title{ font-size:10px; line-height:12px; text-transform:uppercase; letter-spacing:.15em; color:#94a3b8; font-weight:800; }
+.section-name{ font-size:15px; line-height:18px; font-weight:700; letter-spacing:-.2px; }
+.token-row{ display:grid; grid-template-columns:minmax(0,1fr) 58px 72px; gap:4px; width:100%; }
 .field{
-  width:100%; min-width:0; height:44px; border-radius:12px;
+  width:100%; min-width:0; height:46px; border-radius:12px;
   background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.08);
-  color:#f8fafc; outline:none; padding:0 12px; font-size:12px;
+  color:#f8fafc; outline:none; padding:0 12px; font-size:14px;
   transition:.2s ease; overflow:hidden; text-overflow:ellipsis;
   box-shadow: none;
 }
 .field::placeholder{ color:#475569; }
 .field:focus{ border-color:rgba(99,102,241,.55); box-shadow: none; }
 .small-btn{
-  height:44px; min-width:0; padding:0 10px; border-radius:12px;
+  height:46px; min-width:0; padding:0 8px; border-radius:12px;
   display:flex; align-items:center; justify-content:center;
   white-space:nowrap; overflow:hidden; text-overflow:clip;
-  font-size:9px; font-weight:800; letter-spacing:.04em; color:#e2e8f0;
+  font-size:10px; font-weight:800; letter-spacing:.03em; color:#e2e8f0;
 }
 .small-btn:active{ transform:scale(.97); }
 .clear-key{
-  display:block; margin-top:7px; border:0; padding:0; background:none;
-  color:#94a3b8; font-size:8.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  display:block; margin-top:8px; border:0; padding:0; background:none;
+  color:#94a3b8; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
 }
 .clear-key:active{ color:#f87171; }
 /* ========================================================= PROJECT ========================================================= */
@@ -118,32 +117,32 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .project-col{ min-width:0; overflow:hidden; display:flex; flex-direction:column; }
 .field-label{
-  display:block; color:#94a3b8; font-size:9px; line-height:11px;
+  display:block; color:#94a3b8; font-size:10px; line-height:12px;
   text-transform:uppercase; letter-spacing:.12em; font-weight:800;
   margin:0 0 4px 1px;
 }
 /* ========================================================= HTML EDITOR ========================================================= */
 .html-editor{ position:relative; min-width:0; width:100%; flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .html-editor textarea{
-  width:100%; height:100%; min-height:150px;
+  width:100%; height:100%; min-height:160px;
   resize:vertical; padding:10px 10px 24px; border-radius:12px;
   background:rgba(0,0,0,.26); border:1px solid rgba(255,255,255,.07);
   color:#e2e8f0; outline:none; font-family:"Courier New",monospace;
-  font-size:11px; line-height:1.45;
+  font-size:13px; line-height:1.45;
   box-sizing:border-box;
   box-shadow: none;
 }
 .html-editor textarea:focus{ border-color:rgba(99,102,241,.55); box-shadow: none; }
 .paste-html{
-  height:26px; padding:0 10px; border-radius:8px;
+  height:28px; padding:0 10px; border-radius:8px;
   background:rgba(99,102,241,.18); border:1px solid rgba(99,102,241,.3);
-  color:#c7d2fe; font-size:9px; font-weight:800; white-space:nowrap;
+  color:#c7d2fe; font-size:10px; font-weight:800; white-space:nowrap;
   display:inline-flex; align-items:center; gap:4px; cursor:pointer;
   transition:.15s ease;
 }
 .paste-html:active{ transform:scale(.96); }
 .editor-meta{
-  font-size:9px; color:#94a3b8; font-weight:700;
+  font-size:10px; color:#94a3b8; font-weight:700;
   font-variant-numeric:tabular-nums; letter-spacing:.05em;
 }
 .meta-lines{
@@ -151,7 +150,7 @@ button{ -webkit-user-select:none; user-select:none; }
   font-weight:800;
 }
 .icon-zone{
-  width:100%; height:74px; min-height:74px; border-radius:14px;
+  width:100%; height:80px; min-height:80px; border-radius:14px;
   border:1px solid rgba(255,255,255,.08);
   background:rgba(0,0,0,.28);
   display:flex; flex-direction:column;
@@ -194,11 +193,11 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .upload-placeholder{
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-  color:#64748b; font-size:9px; font-weight:700; pointer-events:none;
+  color:#64748b; font-size:10px; font-weight:700; pointer-events:none;
   text-transform:uppercase; letter-spacing:.08em;
 }
 .upload-placeholder span:first-child{
-  font-size:18px; line-height:1; opacity:.85;
+  font-size:20px; line-height:1; opacity:.85;
 }
 .icon-upload input::file-selector-button{
   border:0; border-radius:8px; padding:6px 10px; margin-right:6px;
@@ -235,8 +234,8 @@ button{ -webkit-user-select:none; user-select:none; }
 .bg-pick input::-moz-color-swatch{ border:0; border-radius:6px; }
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:0 0 auto; margin-top:4px; z-index:10; }
 .action-btn{
-  height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-  gap:8px; font-size:11px; font-weight:800; letter-spacing:.02em;
+  height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  gap:8px; font-size:12.5px; font-weight:800; letter-spacing:.02em;
   white-space:nowrap; overflow:hidden;
 }
 .forge{
@@ -248,9 +247,8 @@ button{ -webkit-user-select:none; user-select:none; }
 .inject{ color:#a5b4fc; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.075); }
 .action-btn:active{ transform:scale(.985); }
 .action-btn:disabled{ opacity:.45; cursor:not-allowed; }
-/* ========================================================= LIVE PANEL ========================================================= */
 .live{
-  min-height:46px; padding:6px 10px; border-radius:14px;
+  min-height:52px; padding:8px 12px; border-radius:14px;
   display:flex; align-items:center; justify-content:space-between; gap:8px; flex:0 0 auto;
 }
 .live-left{ min-width:0; display:flex; align-items:center; gap:9px; flex:1; }
@@ -260,15 +258,18 @@ button{ -webkit-user-select:none; user-select:none; }
   background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.07);
 }
 .live-center{ min-width:0; flex:1; display:flex; flex-direction:column; gap:4px; }
-.live-title{ font-size:10.5px; font-weight:800; white-space:nowrap; }
+.live-title{ font-size:12px; font-weight:800; white-space:nowrap; }
 .live-text{
-  font-size:8.5px; color:#94a3b8; white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis; max-width:180px;
+  font-size:9.5px; color:#94a3b8; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:190px;
 }
 .live-open{
-  height:34px; padding:0 12px; flex:0 0 auto; border-radius:10px;
+  height:38px; padding:0 12px; flex:0 0 auto; border-radius:10px;
   background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09);
-  color:#e2e8f0; font-size:8.5px; font-weight:800; text-transform:uppercase;
+  color:#e2e8f0; font-size:10px; font-weight:800; text-transform:uppercase;
+}
+.live-open:disabled{
+  opacity:.4; cursor:not-allowed;
 }
 /* ========================================================= LED ========================================================= */
 .led{
@@ -344,7 +345,7 @@ button{ -webkit-user-select:none; user-select:none; }
 .status-inner{
   flex:1; min-height:0; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
-  font-size:11px; line-height:1.55; color:#cbd5e1;
+  font-size:12px; line-height:1.6; color:#cbd5e1;
   padding:8px 12px 10px; -webkit-overflow-scrolling:touch;
   position:relative; z-index:1;
   font-feature-settings: "liga" 0;
@@ -367,7 +368,7 @@ button{ -webkit-user-select:none; user-select:none; }
   animation: statusPulse 2.4s ease-in-out infinite;
 }
 .status-title{
-  font-size:9px; font-weight:800; letter-spacing:.18em;
+  font-size:10px; font-weight:800; letter-spacing:.18em;
   color:#a5b4fc; text-transform:uppercase;
 }
 @keyframes statusPulse{
@@ -376,8 +377,8 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .copy-report{
   border:0; background:rgba(255,255,255,.04);
-  padding:4px 9px; border-radius:7px;
-  color:#94a3b8; font-size:8px; font-weight:800;
+  padding:5px 10px; border-radius:7px;
+  color:#94a3b8; font-size:9px; font-weight:800;
   letter-spacing:.06em; cursor:pointer;
   transition:.15s ease;
 }
@@ -396,10 +397,9 @@ button{ -webkit-user-select:none; user-select:none; }
 .log-line .warn{ color:#facc15; font-weight:600; }
 .log-line .err{ color:#f87171; font-weight:600; }
 .log-line .info{ color:#94a3b8; }
-/* ========================================================= FOOTER ========================================================= */
 .footer{
-  height:17px; min-height:17px; display:flex; align-items:center; justify-content:center;
-  color:#334155; font-size:6px; letter-spacing:.16em; text-transform:uppercase;
+  height:18px; min-height:18px; display:flex; align-items:center; justify-content:center;
+  color:#334155; font-size:8px; letter-spacing:.16em; text-transform:uppercase;
 }
 .overlay{
   position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,.68);
@@ -419,7 +419,7 @@ button{ -webkit-user-select:none; user-select:none; }
   width:100%; height:48dvh; min-height:200px; max-height:500px; resize:none;
   border-radius:13px; padding:10px; background:rgba(0,0,0,.32);
   border:1px solid rgba(255,255,255,.07); color:#cbd5e1; outline:none;
-  font-family:"Courier New",monospace; font-size:9px; line-height:1.5;
+  font-family:"Courier New",monospace; font-size:11px; line-height:1.5;
 }
 .modal-head{
   display:flex; align-items:center; justify-content:space-between;
@@ -432,8 +432,8 @@ button{ -webkit-user-select:none; user-select:none; }
   background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.15);
   font-size:16px;
 }
-.modal-title{ font-size:12.5px; font-weight:800; color:#e0e7ff; }
-.modal-sub{ font-size:8px; text-transform:uppercase; letter-spacing:.17em; color:#818cf8; font-weight:700; margin-bottom:2px; }
+.modal-title{ font-size:14px; font-weight:800; color:#e0e7ff; }
+.modal-sub{ font-size:9px; text-transform:uppercase; letter-spacing:.17em; color:#818cf8; font-weight:700; margin-bottom:2px; }
 .modal-close{
   width:30px; height:30px; border-radius:9px;
   background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
@@ -449,8 +449,8 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .session-item:active{ background:rgba(99,102,241,.1); border-color:rgba(99,102,241,.2); }
 .session-info{ min-width:0; flex:1; }
-.session-name{ font-size:10.5px; font-weight:800; color:#f1f5f9; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.session-meta{ font-size:8.5px; color:#94a3b8; font-variant-numeric:tabular-nums; }
+.session-name{ font-size:12px; font-weight:800; color:#f1f5f9; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.session-meta{ font-size:9.5px; color:#94a3b8; font-variant-numeric:tabular-nums; }
 .session-delete{
   width:28px; height:28px; flex:0 0 28px; border-radius:8px;
   background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.15);
@@ -460,26 +460,26 @@ button{ -webkit-user-select:none; user-select:none; }
 /* ========================================================= SMALL PHONES ========================================================= */
 @media(max-height:680px){
   .app-inner{ padding-top:max(4px,env(safe-area-inset-top)); gap:4px; }
-  .header{ height:42px; min-height:42px; margin-bottom:2px; }
-  .brand-logo{ width:34px; height:34px; flex-basis:34px; border-radius:10px; }
-  .brand-name{ font-size:14px; }
-  .sw-open, .header-icon-btn{ width:34px; height:34px; flex-basis:34px; }
-  .card{ padding:7px; border-radius:14px; }
+  .header{ height:46px; min-height:46px; margin-bottom:2px; }
+  .brand-logo{ width:38px; height:38px; flex-basis:38px; border-radius:11px; }
+  .brand-name{ font-size:15px; }
+  .sw-open, .header-icon-btn{ width:38px; height:38px; flex-basis:38px; }
+  .card{ padding:8px; border-radius:14px; }
   .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); }
-  .html-editor textarea{ min-height:120px; }
-  .icon-zone{ min-height:78px; }
-  .action-btn{ height:42px; }
-  .live{ min-height:42px; }
+  .html-editor textarea{ min-height:130px; }
+  .icon-zone{ min-height:82px; }
+  .action-btn{ height:46px; }
+  .live{ min-height:46px; }
   .footer{ display:none; }
 }
 @media(max-width:360px){
   .app-inner{ padding-left:6px; padding-right:6px; }
-  .token-row{ grid-template-columns:minmax(0,1fr) 46px 56px; }
+  .token-row{ grid-template-columns:minmax(0,1fr) 52px 64px; }
   .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:4px; }
-  .field{ font-size:10px; }
-  .small-btn{ font-size:6.5px; padding:0 5px; }
-  .action-btn{ font-size:8px; }
-  .live-text{ max-width:120px; }
+  .field{ font-size:12px; }
+  .small-btn{ font-size:8.5px; padding:0 5px; }
+  .action-btn{ font-size:11px; }
+  .live-text{ max-width:140px; }
 }
 </style>
 </head>
@@ -496,6 +496,7 @@ button{ -webkit-user-select:none; user-select:none; }
         </div>
       </div>
       <div class="header-right">
+        <button id="ghKeyBtn" class="header-icon-btn hidden" onclick="toggleGithubAccess()" title="Accès GitHub">🔑</button>
         <button id="sessionsBtn" class="header-icon-btn" onclick="openSessionsModal()" title="Mes projets">📁</button>
         <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
       </div>
@@ -504,13 +505,13 @@ button{ -webkit-user-select:none; user-select:none; }
     <!-- MAIN -->
     <main class="main">
       <!-- GITHUB -->
-      <section class="card glass">
+      <section id="ghCard" class="card glass">
         <div class="section-head">
           <div class="section-name">GitHub Access</div>
           <div class="text-[8px] text-slate-600 font-bold tracking-wider">SECURE</div>
         </div>
         <div class="token-row">
-          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())">
+          <input id="ghToken" class="field" type="password" placeholder="ghp_..." autocomplete="off" spellcheck="false" oninput="onTokenInput(this.value.trim())" onchange="updateGithubAccessUI()">
           <button class="small-btn glass" onclick="toggleView('ghToken',this)">VOIR</button>
           <button class="small-btn glass" onclick="pasteToken()">📋 COLLER</button>
         </div>
@@ -528,6 +529,12 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="project-col">
             <label class="field-label">Nom du projet</label>
             <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false" oninput="onAppNameInput(this.value)">
+          </div>
+
+          <!-- Description -->
+          <div class="project-col">
+            <label class="field-label">Description</label>
+            <input id="appDescription" class="field" type="text" placeholder="Meta description · SEO · partage" autocomplete="off" spellcheck="false" oninput="onDescriptionInput(this.value)">
           </div>
 
           <!-- Fond + Icône -->
@@ -604,7 +611,7 @@ button{ -webkit-user-select:none; user-select:none; }
             </div>
           </div>
         </div>
-        <button class="live-open" onclick="openLiveSite()">OUVRIR</button>
+        <button id="liveOpenBtn" class="live-open" onclick="openLiveSite()" disabled>OUVRIR</button>
       </section>
 
       <!-- STATUS / CYBER CONSOLE -->
@@ -691,7 +698,9 @@ const MARK_START=LT+'!-- mastercode:custom:start -->';
 const MARK_END=LT+'!-- mastercode:custom:end -->';
 const PROGRESS_DURATION = 45000;
 const MAX_LOG_LINES = 8;
-const FETCH_TIMEOUT_MS = 25000; /* Timeout sur les requêtes GitHub */
+const FETCH_TIMEOUT_MS = 25000; /* Timeout sur les requêtes GitHub (GET) */
+const FETCH_TIMEOUT_UPLOAD_MS = 60000; /* Timeout sur les uploads (PUT) */
+const UPLOAD_CONCURRENCY = 3; /* Fichiers envoyés en parallèle */
 const DEFAULT_BG = '#050608';   /* Fond par défaut si l'icône est transparente / non détectable */
 
 /* Écrans de lancement iOS : [px largeur, px hauteur, css largeur, css hauteur, ratio] */
@@ -714,6 +723,7 @@ const SPLASH_SIZES = [
 const LS_KEYS = {
   TOKEN: 'mastercode_token',
   APP_NAME: 'mastercode_app_name',
+  DESCRIPTION: 'mastercode_description',
   HTML: 'mastercode_html',
   ICON_512: 'mastercode_icon_512',
   ICON_192: 'mastercode_icon_192',
@@ -870,6 +880,7 @@ async function pasteToken(){
     if(!text){ toast('Presse-papier vide',true); return; }
     byId('ghToken').value=text;
     store.setItem(LS_KEYS.TOKEN, text);
+    updateGithubAccessUI();
     showSaveIndicator();
     toast('Token collé');
   }catch(e){ toast('Autorisation presse-papier refusée',true); }
@@ -893,6 +904,7 @@ function clearAllData(){
   if(confirm('Supprimer le token GitHub enregistré ?\n\nVotre code HTML, votre icône et votre script personnalisé seront conservés.')){
     store.removeItem(LS_KEYS.TOKEN);
     byId('ghToken').value='';
+    updateGithubAccessUI();
     toast('Clé effacée');
   }
 }
@@ -902,8 +914,27 @@ function onTokenInput(val){
   store.setItem(LS_KEYS.TOKEN, val);
   showSaveIndicator();
 }
+let ghCardOpen = false;
+function updateGithubAccessUI(){
+  const card = byId('ghCard');
+  const btn = byId('ghKeyBtn');
+  if(!card || !btn) return;
+  const hasToken = byId('ghToken').value.trim().length > 0;
+  btn.classList.toggle('hidden', !hasToken);
+  if(!hasToken) ghCardOpen = false;
+  card.classList.toggle('hidden', hasToken && !ghCardOpen);
+}
+function toggleGithubAccess(){
+  ghCardOpen = !ghCardOpen;
+  updateGithubAccessUI();
+  haptic(8);
+}
 function onAppNameInput(val){
   store.setItem(LS_KEYS.APP_NAME, val);
+  showSaveIndicator();
+}
+function onDescriptionInput(val){
+  store.setItem(LS_KEYS.DESCRIPTION, val);
   showSaveIndicator();
 }
 function onHtmlInput(){
@@ -1155,6 +1186,7 @@ function saveCurrentAsSession(){
   const existingIdx = sessions.findIndex(s => s.name === name);
   const entry = {
     name, html,
+    description: (store.getItem(LS_KEYS.DESCRIPTION) || '').trim(),
     icon512: icon512 || '',
     icon192: icon192 || '',
     iconBg: iconBg || '',
@@ -1177,8 +1209,10 @@ function loadSession(idx){
   const s = sessions[idx];
   if(!s) return;
   byId('appName').value = s.name || '';
+  byId('appDescription').value = s.description || '';
   byId('htmlInput').value = s.html || '';
   store.setItem(LS_KEYS.APP_NAME, s.name || '');
+  store.setItem(LS_KEYS.DESCRIPTION, s.description || '');
   store.setItem(LS_KEYS.HTML, s.html || '');
   if(s.icon512 && s.icon192){
     icon512 = s.icon512; icon192 = s.icon192;
@@ -1238,16 +1272,16 @@ function ghHeaders(token){
 }
 
 /* Fetch avec timeout pour éviter les blocages */
-async function ghFetch(url, options = {}) {
+async function ghFetch(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const resp = await fetch(url, { ...options, signal: controller.signal });
     clearTimeout(timeout);
     return resp;
   } catch (e) {
     clearTimeout(timeout);
-    if (e.name === 'AbortError') throw new Error('Timeout : GitHub n\'a pas répondu');
+    if (e.name === 'AbortError') throw new Error(`Timeout (${Math.round(timeoutMs/1000)}s) : GitHub n'a pas répondu`);
     throw e;
   }
 }
@@ -1287,13 +1321,41 @@ async function getFileSha(token, owner, repo, path){
 }
 
 async function putFile(token, owner, repo, path, contentB64, message){
-  const sha= await getFileSha(token, owner, repo, path);
-  const body={ message, content:contentB64 };
-  if(sha) body.sha=sha;
-  const resp= await ghFetch(`${GH_API}/repos/${owner}/${repo}/contents/${path}`,{
-    method:'PUT', headers: ghHeaders(token), body: JSON.stringify(body)
-  });
-  if(!resp.ok){ throw new Error(`Upload de ${path} échoué : ${ await ghErrorMessage(resp) }`); }
+  const url = `${GH_API}/repos/${owner}/${repo}/contents/${path}`;
+  const maxAttempts = 3;
+  let lastErr = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let permanent = false;
+    try {
+      // Re-fetch du SHA à chaque tentative : le PUT précédent a pu réussir
+      // côté serveur malgré un timeout côté client (commit fantôme).
+      const sha = await getFileSha(token, owner, repo, path);
+      const body = { message, content: contentB64 };
+      if (sha) body.sha = sha;
+      const resp = await ghFetch(url, {
+        method: 'PUT',
+        headers: ghHeaders(token),
+        body: JSON.stringify(body)
+      }, FETCH_TIMEOUT_UPLOAD_MS);
+      if (resp.ok) {
+        return;
+      }
+      const errMsg = await ghErrorMessage(resp);
+      lastErr = new Error(`Upload de ${path} échoué : ${errMsg}`);
+      // Erreurs définitives : inutile de retenter (auth / repo / path)
+      if (resp.status === 400 || resp.status === 401 || resp.status === 403 || resp.status === 404) {
+        permanent = true;
+      }
+    } catch (e) {
+      lastErr = e;
+    }
+    if (permanent) throw lastErr;
+    if (attempt < maxAttempts) {
+      updateStatus(`⚠️ Nouvelle tentative ${attempt}/${maxAttempts} pour ${path}...`);
+      await new Promise(r => setTimeout(r, 2000 * attempt));
+    }
+  }
+  throw lastErr || new Error(`Upload de ${path} échoué après ${maxAttempts} tentatives`);
 }
 
 async function ensurePages(token, owner, repo){
@@ -1361,7 +1423,7 @@ async function buildSplashImages(){
 }
 
 /* ========================================================= BUILD PWA ========================================================= */
-function buildPwaHtml(source){
+function buildPwaHtml(source, owner, repo){
   let html=source;
   html = fixTailwindConfig(html);
   const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
@@ -1369,6 +1431,53 @@ function buildPwaHtml(source){
 
   const bg = getBg();
   const headTags=[];
+  const baseUrl = (owner && repo) ? `https://${owner.toLowerCase()}.github.io/${repo}/` : '';
+
+  /* Titre (nom du projet) + description + lang */
+  const title = byId('appName').value.trim();
+  const description = (store.getItem(LS_KEYS.DESCRIPTION) || '').trim();
+  const lang = ((navigator.language || 'fr').toLowerCase().split('-')[0]) || 'fr';
+
+  if(title){
+    const safeTitle = escapeHtml(title);
+    if(/<title[^>]*>[\s\S]*?<\/title>/i.test(html)){
+      html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, '<title>' + safeTitle + '</title>');
+    } else {
+      headTags.unshift('<title>' + safeTitle + '</title>');
+    }
+    if(!/<meta[^>]+property=["']og:title["']/i.test(html)) headTags.push('<meta property="og:title" content="' + safeTitle + '">');
+    if(!/<meta[^>]+name=["']twitter:title["']/i.test(html)) headTags.push('<meta name="twitter:title" content="' + safeTitle + '">');
+    if(!/<meta[^>]+name=["']application-name["']/i.test(html)) headTags.push('<meta name="application-name" content="' + safeTitle + '">');
+    if(!/<meta[^>]+name=["']apple-mobile-web-app-title["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-title" content="' + safeTitle + '">');
+  }
+
+  if(description){
+    const safeDesc = escapeHtml(description);
+    if(!/<meta[^>]+name=["']description["']/i.test(html)) headTags.push('<meta name="description" content="' + safeDesc + '">');
+    if(!/<meta[^>]+property=["']og:description["']/i.test(html)) headTags.push('<meta property="og:description" content="' + safeDesc + '">');
+    if(!/<meta[^>]+name=["']twitter:description["']/i.test(html)) headTags.push('<meta name="twitter:description" content="' + safeDesc + '">');
+  }
+
+  if(/<html(\s[^>]*)?>/i.test(html)){
+    html = html.replace(/<html(\s[^>]*)?>/i, (m, attrs) => {
+      if(attrs && /\blang\s*=/i.test(attrs)) return m;
+      return '<html' + (attrs || '') + ' lang="' + lang + '">';
+    });
+  }
+
+  /* Favicon + og:image + twitter:image dérivés de l'icône uploadée */
+  if(icon512){
+    if(!/<link[^>]+rel=["'](?:shortcut\s+)?icon["']/i.test(html)){
+      headTags.push('<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">');
+      headTags.push('<link rel="icon" type="image/png" sizes="512x512" href="./icon.png">');
+    }
+    const ogImage = baseUrl ? baseUrl + 'icon.png' : './icon.png';
+    if(!/<meta[^>]+property=["']og:image["']/i.test(html)) headTags.push('<meta property="og:image" content="' + ogImage + '">');
+    if(!/<meta[^>]+name=["']twitter:image["']/i.test(html)) headTags.push('<meta name="twitter:image" content="' + ogImage + '">');
+    if(!/<meta[^>]+name=["']twitter:card["']/i.test(html)) headTags.push('<meta name="twitter:card" content="summary">');
+    if(baseUrl && !/<meta[^>]+property=["']og:url["']/i.test(html)) headTags.push('<meta property="og:url" content="' + baseUrl + '">');
+  }
+
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
   if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="'+bg+'">');
@@ -1401,15 +1510,20 @@ function buildPwaHtml(source){
 function buildManifest(appName){
   /* background_color = écran de lancement Android/Chrome (icône centrée sur ce fond) */
   const bg = getBg();
-  return JSON.stringify({
-    name:appName, short_name:appName, start_url:'./', scope:'./',
+  const title = appName;
+  const shortName = title.length > 12 ? title.slice(0, 12) : title;
+  const description = (store.getItem(LS_KEYS.DESCRIPTION) || '').trim();
+  const manifest = {
+    name:title, short_name:shortName, start_url:'./', scope:'./',
     display:'standalone', background_color:bg, theme_color:bg,
     icons:[
       { src:'icon-192.png', sizes:'192x192', type:'image/png', purpose:'any' },
       { src:'icon.png', sizes:'512x512', type:'image/png', purpose:'any' },
       { src:'icon.png', sizes:'512x512', type:'image/png', purpose:'maskable' }
     ]
-  },null,2);
+  };
+  if(description) manifest.description = description;
+  return JSON.stringify(manifest,null,2);
 }
 
 /* ========================================================= SERVICE WORKER ========================================================= */
@@ -1488,8 +1602,11 @@ function showLiveButton(owner, repo) {
   liveRepo = repo;
   byId('liveBtn').classList.remove('hidden');
   byId('statusCard').classList.add('hidden'); // cache la console
+  byId('liveOpenBtn').disabled = true;
   setLed('yellow');
   startProgress();
+  byId('liveStatusTitle').textContent = 'Déploiement en cours';
+  byId('liveStatusText').textContent = 'Vérification du site...';
 }
 function stopDeploymentWatch(){
   if(deploymentInterval) clearInterval(deploymentInterval);
@@ -1500,18 +1617,51 @@ async function watchDeployment(token, since) {
   stopDeploymentWatch();
   const startedAt = Date.now();
   const maxMs = 4 * 60 * 1000;
+  const siteUrl = `https://${liveOwner.toLowerCase()}.github.io/${liveRepo}/`;
+  let siteLive = false;
+
+  const checkSiteLive = async () => {
+    try {
+      const res = await fetch(siteUrl + '?t=' + Date.now(), {
+        method: 'GET',
+        cache: 'no-store',
+        redirect: 'follow'
+      });
+      return res.ok;
+    } catch (e) {
+      return false;
+    }
+  };
 
   const tick = async () => {
     if (Date.now() - startedAt > maxMs) {
       stopDeploymentWatch();
       setLed('green');
       finishProgress(true);
+      byId('liveOpenBtn').disabled = false;
       byId('liveStatusTitle').textContent = 'Application en ligne';
       byId('liveStatusText').textContent = 'Délai dépassé · site probablement disponible';
+      toast('Site disponible');
       return;
     }
 
+    // 1. Vérification directe du site (source de vérité)
+    if (!siteLive) {
+      siteLive = await checkSiteLive();
+      if (siteLive) {
+        stopDeploymentWatch();
+        setLed('green');
+        finishProgress(true);
+        byId('liveOpenBtn').disabled = false;
+        byId('liveStatusTitle').textContent = 'Application en ligne';
+        byId('liveStatusText').textContent = 'Site accessible';
+        toast('Site disponible');
+        return;
+      }
+    }
+
     try {
+      // 2. Vérification de secours via l'API Actions (pour les erreurs)
       const res = await ghFetch(`\( {GH_API}/repos/ \){liveOwner}/${liveRepo}/actions/runs?per_page=5`, {
         headers: ghHeaders(token)
       });
@@ -1519,27 +1669,23 @@ async function watchDeployment(token, since) {
 
       const data = await res.json();
       const run = (data.workflow_runs || []).find(r => new Date(r.created_at).getTime() >= since - 15000);
-      if (!run) return;
-
-      if (run.status === 'completed') {
+      
+      if (run && run.status === 'completed' && run.conclusion !== 'success') {
+        // Le workflow a échoué, mais le site pourrait quand même être en ligne (cache)
+        if (siteLive) return;
+        
         stopDeploymentWatch();
+        setLed('red');
+        finishProgress(false);
+        byId('liveStatusTitle').textContent = 'Erreur de déploiement';
+        byId('liveStatusText').textContent = 'Consultez le rapport';
+        byId('statusCard').classList.remove('hidden');
+        updateStatus(`❌ Déploiement : ${run.conclusion}`);
+        return;
+      }
 
-        if (run.conclusion === 'success') {
-          setLed('green');
-          finishProgress(true);
-          byId('liveStatusTitle').textContent = 'Application en ligne';
-          byId('liveStatusText').textContent = 'Déploiement terminé';
-          toast('Site disponible');
-        } else {
-          // Erreur → on réaffiche la console
-          setLed('red');
-          finishProgress(false);
-          byId('liveStatusTitle').textContent = 'Erreur de déploiement';
-          byId('liveStatusText').textContent = 'Consultez le rapport';
-          byId('statusCard').classList.remove('hidden');
-          updateStatus(`❌ Déploiement : ${run.conclusion}`);
-        }
-      } else {
+      // Mise à jour visuelle pendant l'attente
+      if (!siteLive) {
         setLed('yellow');
         byId('liveStatusTitle').textContent = 'Déploiement en cours';
         byId('liveStatusText').textContent = 'GitHub Pages prépare votre application';
@@ -1551,7 +1697,7 @@ async function watchDeployment(token, since) {
   };
 
   tick();
-  deploymentInterval = setInterval(tick, 4000);
+  deploymentInterval = setInterval(tick, 5000);
 }
 
 function openLiveSite(){
@@ -1603,7 +1749,7 @@ async function injectPwaToGitHub() {
     await ensureRepo(token, owner, appName);
 
     updateStatus('Injection PWA dans index.html...');
-    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim());
+    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim(), owner, appName);
     if (hasCustom) updateStatus('Script personnalisé inclus.');
 
     const since = Date.now();
@@ -1683,6 +1829,7 @@ async function generatePWA() {
   byId('forgeIcon').classList.add('hidden');
   byId('loader').classList.remove('hidden');
   byId('liveBtn').classList.add('hidden');
+  byId('liveOpenBtn').disabled = true;
 
   stopDeploymentWatch();
   stopProgress();
@@ -1707,7 +1854,7 @@ async function generatePWA() {
     await ensureRepo(token, owner, appName);
 
     updateStatus('Compilation PWA...');
-    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim());
+    const { html, hasCustom } = buildPwaHtml(byId('htmlInput').value.trim(), owner, appName);
     if (hasCustom) updateStatus('Script personnalisé injecté.');
 
     updateStatus('Génération des écrans de lancement (' + getBg() + ')...');
@@ -1723,15 +1870,18 @@ async function generatePWA() {
 
     const since = Date.now();
 
-    for (const file of filesToUpload) {
-      updateStatus(`Upload : ${file.path}...`);
-      await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
-      updateStatus(`✅ ${file.path} envoyé.`);
+    updateStatus('Upload des fichiers principaux...');
+    for (let i = 0; i < filesToUpload.length; i += UPLOAD_CONCURRENCY) {
+      const batch = filesToUpload.slice(i, i + UPLOAD_CONCURRENCY);
+      await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
+      batch.forEach(f => updateStatus(`✅ ${f.path} envoyé.`));
     }
 
     updateStatus('Upload : écrans de lancement (' + splashFiles.length + ')...');
-    for (const file of splashFiles) {
-      await putFile(token, owner, appName, file.path, file.content, 'Mastercode Sync');
+    for (let i = 0; i < splashFiles.length; i += UPLOAD_CONCURRENCY) {
+      const batch = splashFiles.slice(i, i + UPLOAD_CONCURRENCY);
+      await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
+      updateStatus(`✅ ${Math.min(i + UPLOAD_CONCURRENCY, splashFiles.length)}/${splashFiles.length} écrans envoyés.`);
     }
     updateStatus('✅ Écrans de lancement envoyés.');
 
@@ -1770,10 +1920,13 @@ async function generatePWA() {
   /* Restaure le token */
   const token = store.getItem(LS_KEYS.TOKEN);
   if(token) byId('ghToken').value = token;
+  updateGithubAccessUI();
 
   /* Restaure le nom du projet */
   const appName = store.getItem(LS_KEYS.APP_NAME);
   if(appName) byId('appName').value = appName;
+const initDescription = store.getItem(LS_KEYS.DESCRIPTION);
+if(initDescription) byId('appDescription').value = initDescription;
 
   /* Restaure le HTML */
   const html = store.getItem(LS_KEYS.HTML);
