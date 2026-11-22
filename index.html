@@ -194,6 +194,59 @@ button{ -webkit-user-select:none; user-select:none; }
 .install-toggle input:checked ~ .install-toggle-text{
   color:#e8b84c;
 }
+.toggle-group{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:2px 12px;
+  min-width:0;
+}
+/* ========================================================= PRÉFÉRENCES ========================================================= */
+.pref-btn{ position:relative; }
+.pref-badge{
+  position:absolute; top:-5px; right:-5px;
+  min-width:16px; height:16px; padding:0 4px; border-radius:999px;
+  display:none; align-items:center; justify-content:center;
+  background:#6366f1; color:#fff; font-size:9px; font-weight:800; line-height:1;
+  border:1px solid #050608; font-variant-numeric:tabular-nums;
+}
+.pref-badge.show{ display:flex; }
+.pref-list{ display:flex; flex-direction:column; gap:6px; }
+.pref-row{
+  position:relative; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:10px 12px; border-radius:11px;
+  background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05);
+  cursor:pointer; transition:.15s ease;
+  -webkit-user-select:none; user-select:none;
+}
+.pref-row:active{ background:rgba(99,102,241,.08); border-color:rgba(99,102,241,.18); }
+.pref-info{ min-width:0; flex:1; }
+.pref-name{ font-size:12px; font-weight:800; color:#f1f5f9; margin-bottom:2px; }
+.pref-desc{ font-size:9.5px; line-height:1.4; color:#94a3b8; }
+.pref-row input{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.pref-track{
+  position:relative; width:38px; height:22px; flex:0 0 38px; border-radius:20px;
+  background:#272b35; border:1px solid rgba(255,255,255,.12);
+  transition:background .2s ease,border-color .2s ease;
+}
+.pref-track::after{
+  content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%;
+  background:#94a3b8; transition:transform .2s ease,background .2s ease;
+}
+.pref-row input:checked + .pref-track{ background:rgba(232,184,76,.22); border-color:rgba(232,184,76,.65); }
+.pref-row input:checked + .pref-track::after{
+  transform:translateX(16px); background:#e8b84c; box-shadow:0 0 8px rgba(232,184,76,.5);
+}
+.pref-row input:focus-visible + .pref-track{ outline:2px solid #e8b84c; outline-offset:3px; }
+.pref-extra{ margin-top:12px; }
+.pref-extra select{ color-scheme:dark; }
+.pref-textarea{
+  width:100%; min-height:80px; resize:none; border-radius:12px; padding:10px;
+  background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.08);
+  color:#e2e8f0; outline:none; font-family:"Courier New",monospace; font-size:11px; line-height:1.5;
+}
+.pref-textarea:focus{ border-color:rgba(99,102,241,.55); }
 /* ========================================================= HTML EDITOR ========================================================= */
 .html-editor{ position:relative; min-width:0; width:100%; flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .html-editor textarea{
@@ -571,6 +624,14 @@ button{ -webkit-user-select:none; user-select:none; }
       <div class="header-right">
         <button id="ghKeyBtn" class="header-icon-btn hidden" onclick="toggleGithubAccess()" title="Accès GitHub">🔑</button>
         <button id="sessionsBtn" class="header-icon-btn" onclick="openSessionsModal()" title="Mes projets">📁</button>
+        <button id="prefBtn" class="header-icon-btn pref-btn" onclick="openPrefModal()" title="Préférences" aria-label="Préférences">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 7h9M17 7h3M4 17h3M11 17h9"/>
+            <circle cx="15" cy="7" r="2"/>
+            <circle cx="9" cy="17" r="2"/>
+          </svg>
+          <span id="prefBadge" class="pref-badge">0</span>
+        </button>
         <button id="swOpen" class="sw-open glass" onclick="openSwModal()" aria-label="Script personnalisé" title="Script personnalisé">🧠</button>
       </div>
     </header>
@@ -602,16 +663,6 @@ button{ -webkit-user-select:none; user-select:none; }
           <div class="project-col">
             <div class="project-name-head">
               <label class="field-label" for="appName">Nom du projet</label>
-              <label class="install-toggle" title="Ajouter le module d'installation à la PWA générée">
-                <input
-                  type="checkbox"
-                  id="installModuleToggle"
-                  onchange="toggleInstallModule(this.checked)"
-                  aria-label="Activer le bouton d'installation de la PWA"
-                >
-                <span class="install-toggle-track"></span>
-                <span class="install-toggle-text">INSTALLER PWA</span>
-              </label>
             </div>
             <input id="appName" class="field" type="text" placeholder="ex: master-factory" autocomplete="off" spellcheck="false" oninput="onAppNameInput(this.value)">
           </div>
@@ -763,6 +814,40 @@ button{ -webkit-user-select:none; user-select:none; }
     <div class="session-list" id="sessionList"></div>
   </div>
 </div>
+<div id="prefOverlay" class="overlay" onclick="closePrefModal()"></div>
+<div id="prefModal" class="modal glass">
+  <div class="modal-body">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="modal-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 7h9M17 7h3M4 17h3M11 17h9"/>
+            <circle cx="15" cy="7" r="2"/>
+            <circle cx="9" cy="17" r="2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="modal-sub">PWA générée</div>
+          <div class="modal-title">Préférences</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closePrefModal()">×</button>
+    </div>
+    <div class="pref-list" id="prefList"></div>
+    <div class="pref-extra">
+      <label class="field-label" for="prefOrientation">Orientation (Android)</label>
+      <select id="prefOrientation" class="field" onchange="onOrientationChange(this.value)">
+        <option value="auto">Automatique</option>
+        <option value="portrait">Portrait</option>
+        <option value="landscape">Paysage</option>
+      </select>
+    </div>
+    <div class="pref-extra hidden" id="prefShortcutsBox">
+      <label class="field-label" for="prefShortcuts">Raccourcis · un par ligne : Nom | lien</label>
+      <textarea id="prefShortcuts" class="pref-textarea" spellcheck="false" placeholder="Accueil | ./&#10;Réglages | ./#reglages" oninput="onShortcutsInput(this.value)"></textarea>
+    </div>
+  </div>
+</div>
 
 <canvas id="canvas" class="hidden"></canvas>
 
@@ -817,6 +902,19 @@ const LS_KEYS = {
   CUSTOM_SCRIPT: 'mastercode_custom_script',
   SESSIONS: 'mastercode_sessions'
 };
+/* ========================================================= PRÉFÉRENCES ========================================================= */
+const PREFS = [
+  { id:'installModuleToggle', key:'mastercode_install_module', name:'Bouton d\'installation', desc:'Ajoute un bouton « Installer l\'application » (iPhone : guide Safari).' },
+  { id:'signatureModuleToggle', key:'mastercode_signature_module', name:'Signature', desc:'« Made by Laiche Brahim » discret en bas de l\'écran.' },
+  { id:'fullscreenModuleToggle', key:'mastercode_fullscreen_module', name:'Plein écran', desc:'Sous la barre d\'état (iPhone) · barres masquées (Android).' },
+  { id:'nativeModuleToggle', key:'mastercode_native_module', name:'Style natif', desc:'Bloque zoom, pull-to-refresh, rebond et sélection de texte.' },
+  { id:'wakelockModuleToggle', key:'mastercode_wakelock_module', name:'Écran toujours allumé', desc:'Empêche la mise en veille tant que la PWA est ouverte.' },
+  { id:'offlineModuleToggle', key:'mastercode_offline_module', name:'Bandeau hors ligne', desc:'Affiche une pastille « Hors ligne » quand le réseau est coupé.' },
+  { id:'updateModuleToggle', key:'mastercode_update_module', name:'Notification de mise à jour', desc:'Bandeau « Nouvelle version » avec bouton Recharger.' },
+  { id:'hapticModuleToggle', key:'mastercode_haptic_module', name:'Retour haptique', desc:'Vibration légère sur les boutons (Android uniquement).' },
+  { id:'themeModuleToggle', key:'mastercode_theme_module', name:'Thème automatique', desc:'La couleur de la barre suit le mode clair ou sombre du téléphone.' },
+  { id:'shortcutsModuleToggle', key:'mastercode_shortcuts_module', name:'Raccourcis d\'icône', desc:'Appui long sur l\'icône (Android) : entrées personnalisées.' }
+];
 
 /* ========================================================= DÉPENDANCES ========================================================= */
 const KNOWN_DEPENDENCIES = {
@@ -1021,6 +1119,12 @@ function onAppNameInput(val){
 function toggleInstallModule(enabled){
   store.setItem('mastercode_install_module', enabled ? '1' : '0');
 }
+function toggleSignature(enabled){
+  store.setItem('mastercode_signature_module', enabled ? '1' : '0');
+}
+function toggleFullscreen(enabled){
+  store.setItem('mastercode_fullscreen_module', enabled ? '1' : '0');
+}
 function onDescriptionInput(val){
   store.setItem(LS_KEYS.DESCRIPTION, val);
   showSaveIndicator();
@@ -1224,6 +1328,57 @@ function resetCustomScript(){
     toast('Script réinitialisé');
     closeSwModal();
   }
+}
+/* ========================================================= PRÉFÉRENCES (MODAL) ========================================================= */
+function openPrefModal(){
+  renderPrefs();
+  byId('prefModal').classList.add('open');
+  byId('prefOverlay').classList.add('open');
+  haptic(8);
+}
+function closePrefModal(){ byId('prefModal').classList.remove('open'); byId('prefOverlay').classList.remove('open'); }
+function renderPrefs(){
+  const list = byId('prefList');
+  list.innerHTML = '';
+  PREFS.forEach(p => {
+    const row = document.createElement('label');
+    row.className = 'pref-row';
+    row.innerHTML = `
+      <div class="pref-info">
+        <div class="pref-name">${escapeHtml(p.name)}</div>
+        <div class="pref-desc">${escapeHtml(p.desc)}</div>
+      </div>
+      <input type="checkbox" id="${p.id}" ${store.getItem(p.key) === '1' ? 'checked' : ''}>
+      <span class="pref-track"></span>
+    `;
+    row.querySelector('input').onchange = (e) => onPrefChange(p.key, e.target.checked);
+    list.appendChild(row);
+  });
+  byId('prefOrientation').value = store.getItem('mastercode_orientation') || 'auto';
+  byId('prefShortcuts').value = store.getItem('mastercode_shortcuts_list') || '';
+  byId('prefShortcutsBox').classList.toggle('hidden', store.getItem('mastercode_shortcuts_module') !== '1');
+}
+function onPrefChange(key, enabled){
+  store.setItem(key, enabled ? '1' : '0');
+  if(key === 'mastercode_shortcuts_module') byId('prefShortcutsBox').classList.toggle('hidden', !enabled);
+  updatePrefBadge();
+  haptic(6);
+}
+function onOrientationChange(val){
+  store.setItem('mastercode_orientation', val);
+  updatePrefBadge();
+}
+function onShortcutsInput(val){
+  store.setItem('mastercode_shortcuts_list', val);
+}
+function updatePrefBadge(){
+  const badge = byId('prefBadge');
+  if(!badge) return;
+  let n = PREFS.filter(p => store.getItem(p.key) === '1').length;
+  const o = store.getItem('mastercode_orientation');
+  if(o === 'portrait' || o === 'landscape') n++;
+  badge.textContent = n;
+  badge.classList.toggle('show', n > 0);
 }
 
 /* ========================================================= SESSIONS ========================================================= */
@@ -1566,6 +1721,22 @@ function buildPwaHtml(source, owner, repo){
     if(baseUrl && !/<meta[^>]+property=["']og:url["']/i.test(html)) headTags.push('<meta property="og:url" content="' + baseUrl + '">');
   }
 
+  /* Plein écran optionnel : viewport-fit=cover + barre d'état translucide (iOS) */
+  if(store.getItem('mastercode_fullscreen_module') === '1'){
+    const vpMeta = /<meta[^>]+name=["']viewport["'][^>]*>/i;
+    if(vpMeta.test(html)){
+      html = html.replace(vpMeta, m => {
+        if(/viewport-fit\s*=/i.test(m)) return m;
+        return m.replace(/content=(["'])([^"']*)\1/i, (mm, q, c) => 'content=' + q + c + ',viewport-fit=cover' + q);
+      });
+    } else {
+      html = insertInHead(html, '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">');
+    }
+    const sbMeta = /<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["'][^>]*>/i;
+    if(sbMeta.test(html)){
+      html = html.replace(sbMeta, '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
+    }
+  }
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
   if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="'+bg+'">');
@@ -1588,6 +1759,220 @@ function buildPwaHtml(source, owner, repo){
       "navigator.serviceWorker.register('./sw.js').catch(err=>console.error(err));\n"+
       "});\n"+
       "}\n"+ TAG_E );
+  }
+  /* Module signature optionnel */
+  if(store.getItem('mastercode_signature_module') === '1'){
+    blocks.push(`
+<style id="mastercode-signature-style">
+#mastercode-signature{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:calc(3px + env(safe-area-inset-bottom, 0px));
+  z-index:2147482000;
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.06em;
+  color:rgba(148,163,184,.55);
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+</style>
+<div id="mastercode-signature">Made by Laiche Brahim</div>
+    `);
+  }
+  /* Style natif optionnel */
+  if(store.getItem('mastercode_native_module') === '1'){
+    blocks.push(`
+<style id="mastercode-native-style">
+html{
+  touch-action:manipulation;
+  overscroll-behavior:none;
+}
+body{
+  overscroll-behavior:none;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+input,textarea,[contenteditable="true"]{
+  -webkit-user-select:text;
+  user-select:text;
+}
+</style>
+<script>
+(function(){
+  document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, { passive:false });
+  document.addEventListener('contextmenu', function(e){
+    var t = e.target;
+    if(t && t.closest && t.closest('input,textarea,[contenteditable="true"]')) return;
+    e.preventDefault();
+  });
+})();
+<\/script>
+    `);
+  }
+  /* Écran toujours allumé optionnel */
+  if(store.getItem('mastercode_wakelock_module') === '1'){
+    blocks.push(`
+<script>
+(function(){
+  if(!('wakeLock' in navigator)) return;
+  var lock = null;
+  async function acquire(){
+    try{
+      lock = await navigator.wakeLock.request('screen');
+      lock.addEventListener('release', function(){ lock = null; });
+    }catch(e){}
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible' && !lock) acquire();
+  });
+  document.addEventListener('pointerdown', function(){ if(!lock) acquire(); }, { once:true });
+  acquire();
+})();
+<\/script>
+    `);
+  }
+  /* Bandeau hors ligne optionnel */
+  if(store.getItem('mastercode_offline_module') === '1'){
+    blocks.push(`
+<style id="mastercode-offline-style">
+#mastercode-offline{
+  position:fixed;
+  top:calc(8px + env(safe-area-inset-top, 0px));
+  left:50%;
+  transform:translate(-50%,-250%);
+  z-index:2147483100;
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(15,23,42,.94);
+  border:1px solid rgba(250,204,21,.35);
+  color:#fde68a;
+  font:600 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.04em;
+  pointer-events:none;
+  transition:transform .3s ease;
+}
+#mastercode-offline.show{
+  transform:translate(-50%,0);
+}
+</style>
+<div id="mastercode-offline">Hors ligne</div>
+<script>
+(function(){
+  var el = document.getElementById('mastercode-offline');
+  if(!el) return;
+  function sync(){ el.classList.toggle('show', !navigator.onLine); }
+  window.addEventListener('online', sync);
+  window.addEventListener('offline', sync);
+  sync();
+})();
+<\/script>
+    `);
+  }
+  /* Notification de mise à jour optionnelle */
+  if(store.getItem('mastercode_update_module') === '1'){
+    blocks.push(`
+<style id="mastercode-update-style">
+#mastercode-update{
+  position:fixed;
+  top:calc(44px + env(safe-area-inset-top, 0px));
+  left:50%;
+  transform:translate(-50%,-300%);
+  z-index:2147483100;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  max-width:calc(100% - 24px);
+  padding:7px 8px 7px 14px;
+  border-radius:999px;
+  background:rgba(17,19,25,.96);
+  border:1px solid rgba(232,184,76,.4);
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  color:#f3d58f;
+  font:600 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:transform .3s ease;
+}
+#mastercode-update.show{
+  transform:translate(-50%,0);
+}
+#mastercode-update button{
+  border:0;
+  border-radius:999px;
+  padding:7px 12px;
+  background:linear-gradient(135deg,#f5d88f,#e8b84c);
+  color:#17130a;
+  font:800 10px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.05em;
+  cursor:pointer;
+}
+</style>
+<div id="mastercode-update">
+  <span>Nouvelle version disponible</span>
+  <button type="button" id="mastercode-update-btn">RECHARGER</button>
+</div>
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  var el = document.getElementById('mastercode-update');
+  var btn = document.getElementById('mastercode-update-btn');
+  if(!el || !btn) return;
+  var had = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    if(had) el.classList.add('show');
+    had = true;
+  });
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState !== 'visible') return;
+    navigator.serviceWorker.getRegistration().then(function(r){
+      if(r) r.update().catch(function(){});
+    }).catch(function(){});
+  });
+  btn.addEventListener('click', function(){ location.reload(); });
+})();
+<\/script>
+    `);
+  }
+  /* Retour haptique optionnel */
+  if(store.getItem('mastercode_haptic_module') === '1'){
+    blocks.push(`
+<script>
+(function(){
+  if(!navigator.vibrate) return;
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('button,[role="button"],a,input[type="button"],input[type="submit"]') : null;
+    if(t) navigator.vibrate(8);
+  }, true);
+})();
+<\/script>
+    `);
+  }
+  /* Thème automatique optionnel (theme-color clair / sombre) */
+  if(store.getItem('mastercode_theme_module') === '1'){
+    blocks.push(`
+<script>
+(function(){
+  var DARK = '${bg}';
+  var LIGHT = '#ffffff';
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply(){
+    var tag = document.querySelector('meta[name="theme-color"]');
+    if(!tag){
+      tag = document.createElement('meta');
+      tag.setAttribute('name', 'theme-color');
+      document.head.appendChild(tag);
+    }
+    tag.setAttribute('content', mq.matches ? DARK : LIGHT);
+  }
+  apply();
+  if(mq.addEventListener) mq.addEventListener('change', apply);
+})();
+<\/script>
+    `);
   }
   /* Module d'installation optionnel */
   if(store.getItem('mastercode_install_module') === '1'){
@@ -1833,6 +2218,30 @@ function buildManifest(appName){
     ]
   };
   if(description) manifest.description = description;
+  /* Plein écran optionnel (Android : masque barre d'état et de navigation) */
+  if(store.getItem('mastercode_fullscreen_module') === '1'){
+    manifest.display = 'fullscreen';
+    manifest.display_override = ['fullscreen', 'standalone'];
+  }
+  /* Orientation (Android) */
+  const orient = store.getItem('mastercode_orientation');
+  if(orient === 'portrait' || orient === 'landscape') manifest.orientation = orient;
+  /* Raccourcis d'icône (Android) : « Nom | lien », 4 maximum */
+  if(store.getItem('mastercode_shortcuts_module') === '1'){
+    const shortcuts = (store.getItem('mastercode_shortcuts_list') || '')
+      .split('\n')
+      .map(l => l.trim())
+      .filter(Boolean)
+      .slice(0, 4)
+      .map(l => {
+        const p = l.split('|');
+        const name = p[0].trim();
+        const url = (p[1] || '').trim() || './';
+        return { name, short_name: name.slice(0, 12), url };
+      })
+      .filter(s => s.name);
+    if(shortcuts.length) manifest.shortcuts = shortcuts;
+  }
   return JSON.stringify(manifest,null,2);
 }
 
@@ -2242,6 +2651,15 @@ if(initDescription) byId('appDescription').value = initDescription;
   if(installToggle){
     installToggle.checked = store.getItem('mastercode_install_module') === '1';
   }
+  const signatureToggle = byId('signatureModuleToggle');
+  if(signatureToggle){
+    signatureToggle.checked = store.getItem('mastercode_signature_module') === '1';
+  }
+  const fullscreenToggle = byId('fullscreenModuleToggle');
+  if(fullscreenToggle){
+    fullscreenToggle.checked = store.getItem('mastercode_fullscreen_module') === '1';
+  }
+  updatePrefBadge();
 
   /* Restaure le HTML */
   const html = store.getItem(LS_KEYS.HTML);
@@ -2279,7 +2697,7 @@ if(initDescription) byId('appDescription').value = initDescription;
 
 /* Escape */
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closeSwModal(); closeSessionsModal(); }
+  if(e.key==='Escape'){ closeSwModal(); closeSessionsModal(); closePrefModal(); }
 });
 
 /* Curseur lumineux sur Forger */
