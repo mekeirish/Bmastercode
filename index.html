@@ -292,13 +292,22 @@ button{ -webkit-user-select:none; user-select:none; }
 /* Modale : prompt logo */
 .logo-style-list{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
 .logo-style{
-  position:relative; display:block; padding:9px 10px; border-radius:11px;
+  position:relative; display:flex; align-items:center; gap:9px;
+  padding:8px 9px; border-radius:11px;
   background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.06);
   cursor:pointer; transition:.15s ease;
   -webkit-user-select:none; user-select:none;
 }
 .logo-style input{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 .logo-style.active{ background:rgba(232,184,76,.1); border-color:rgba(232,184,76,.65); }
+.logo-style-preview{
+  width:36px; height:36px; flex:0 0 36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  background:#0b0e14; border:1px solid rgba(255,255,255,.08);
+}
+.logo-style-preview svg{ width:26px; height:26px; display:block; overflow:visible; }
+.logo-style.active .logo-style-preview{ border-color:rgba(232,184,76,.45); }
+.logo-style-text{ min-width:0; flex:1; }
 .logo-style-name{ font-size:11.5px; font-weight:800; color:#f1f5f9; }
 .logo-style.active .logo-style-name{ color:#f3d58f; }
 .logo-style-desc{ margin-top:2px; font-size:9px; line-height:1.35; color:#94a3b8; }
@@ -1302,14 +1311,82 @@ function clearIcon(){
   toast('Icône supprimée');
 }
 const LOGO_STYLES = [
-  { id:'flat',      name:'Minimaliste plat',     desc:'formes simples en aplats de couleur, sans relief' },
-  { id:'gradient',  name:'Dégradé moderne',      desc:'formes nettes avec un dégradé lumineux dans le logo' },
-  { id:'line',      name:'Trait épais',          desc:'pictogramme au trait, lignes épaisses et arrondies' },
-  { id:'soft3d',    name:'3D doux',              desc:'volumes arrondis, éclairage doux, aspect pâte à modeler' },
-  { id:'glass',     name:'Verre',                desc:'formes translucides superposées, reflets légers' },
-  { id:'neon',      name:'Néon',                 desc:'tracés lumineux néon, la lueur reste collée au logo' },
-  { id:'geometric', name:'Géométrique abstrait', desc:'symbole abstrait construit de formes géométriques' },
-  { id:'mascot',    name:'Mascotte',             desc:'petit personnage ou animal simple et sympathique, de face' }
+  {
+    id:'flat', name:'Minimaliste plat', desc:'formes simples en aplats de couleur, sans relief',
+    svg:'<svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="#e8b84c"/></svg>'
+  },
+  {
+    id:'gradient', name:'Dégradé moderne', desc:'formes nettes avec un dégradé lumineux dans le logo',
+    svg:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ls-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f472b6"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="url(#ls-grad)"/></svg>'
+  },
+  {
+    id:'duotone', name:'Duotone', desc:'deux teintes seulement, formes pleines et contrastées',
+    svg:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1e3a8a"/><path d="M13 4.5 6.5 13.2h5l-.8 6.3 6.8-8.9h-5.1l.6-6.1z" fill="#93c5fd"/></svg>'
+  },
+  {
+    id:'line', name:'Trait épais', desc:'pictogramme au trait, lignes épaisses et arrondies',
+    svg:'<svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="none" stroke="#e2e8f0" stroke-width="2.2" stroke-linejoin="round"/></svg>'
+  },
+  {
+    id:'oneline', name:'Ligne continue', desc:'dessiné d\'un seul trait continu, fluide et élégant',
+    svg:'<svg viewBox="0 0 24 24"><path d="M3 15c3-8 6-8 6-3s-3 6-1 6 5-12 8-12 3 6 0 9" fill="none" stroke="#e2e8f0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  },
+  {
+    id:'handdrawn', name:'Dessiné à la main', desc:'trait au feutre légèrement irrégulier, chaleureux',
+    svg:'<svg viewBox="0 0 24 24"><path d="M13.3 2.3 4.4 13.8l6.8.3-1.2 7.6 8.8-11.7-7 .2 1.5-7.9z" fill="none" stroke="#fde68a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.6 2.8 4 14.3h7.2l-.7 7.3" fill="none" stroke="#fde68a" stroke-width=".8" opacity=".6" stroke-linecap="round"/></svg>'
+  },
+  {
+    id:'soft3d', name:'3D doux', desc:'volumes arrondis, éclairage doux, aspect pâte à modeler',
+    svg:'<svg viewBox="0 0 24 24"><defs><radialGradient id="ls-3d" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></radialGradient></defs><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="#92400e" opacity=".55" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round" transform="translate(1.2 1.4)"/><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="url(#ls-3d)" stroke="url(#ls-3d)" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+  },
+  {
+    id:'glass', name:'Verre', desc:'formes translucides superposées, reflets légers',
+    svg:'<svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="6.5" fill="#60a5fa" opacity=".55"/><circle cx="15" cy="14" r="6.5" fill="#a78bfa" opacity=".55"/><circle cx="15" cy="14" r="6.5" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".8"/><path d="M5.5 8a4.5 4.5 0 0 1 3.5-2.5" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.2" stroke-linecap="round"/></svg>'
+  },
+  {
+    id:'chrome', name:'Métal chromé', desc:'métal chromé brillant avec reflets, aspect premium',
+    svg:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ls-chrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset=".45" stop-color="#94a3b8"/><stop offset=".55" stop-color="#334155"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient></defs><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="url(#ls-chrome)" stroke="#f8fafc" stroke-width=".6" stroke-linejoin="round"/></svg>'
+  },
+  {
+    id:'neon', name:'Néon', desc:'tracés lumineux néon, la lueur reste collée au logo',
+    svg:'<svg viewBox="0 0 24 24"><defs><filter id="ls-neon" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2"/></filter></defs><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="none" stroke="#22d3ee" stroke-width="2.4" stroke-linejoin="round" filter="url(#ls-neon)"/><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="none" stroke="#cffafe" stroke-width="1" stroke-linejoin="round"/></svg>'
+  },
+  {
+    id:'geometric', name:'Géométrique abstrait', desc:'symbole abstrait construit de formes géométriques',
+    svg:'<svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="5.5" fill="#f87171"/><path d="M12 6 21 21H3z" fill="#facc15" opacity=".9"/><rect x="11" y="11" width="8" height="8" fill="#38bdf8" opacity=".85"/></svg>'
+  },
+  {
+    id:'lowpoly', name:'Low-poly', desc:'facettes triangulaires façon cristal',
+    svg:'<svg viewBox="0 0 24 24"><path d="M12 2 4 9l8 13z" fill="#34d399"/><path d="M12 2 20 9l-8 13z" fill="#059669"/><path d="M4 9h16l-8 13z" fill="#10b981" opacity=".8"/><path d="M12 2 8 9h8z" fill="#6ee7b7"/></svg>'
+  },
+  {
+    id:'isometric', name:'Isométrique', desc:'objet en perspective isométrique, faces claires et sombres',
+    svg:'<svg viewBox="0 0 24 24"><path d="M12 3 20 7.5 12 12 4 7.5z" fill="#a5b4fc"/><path d="M4 7.5 12 12v9L4 16.5z" fill="#6366f1"/><path d="M20 7.5 12 12v9l8-4.5z" fill="#4338ca"/></svg>'
+  },
+  {
+    id:'origami', name:'Origami', desc:'papier plié, plis nets et ombres franches dans le logo',
+    svg:'<svg viewBox="0 0 24 24"><path d="M3 18 12 4l9 14z" fill="#fbbf24"/><path d="M12 4v14H3z" fill="#f59e0b"/><path d="M3 18h18l-9 3z" fill="#d97706"/></svg>'
+  },
+  {
+    id:'cutout', name:'Découpe négative', desc:'symbole évidé dans une forme pleine (espace négatif)',
+    svg:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8b84c"/><path d="M13 4.5 6.5 13.2h5l-.8 6.3 6.8-8.9h-5.1l.6-6.1z" fill="#0b0e14"/></svg>'
+  },
+  {
+    id:'pixel', name:'Pixel art', desc:'gros pixels nets, style jeu vidéo rétro',
+    svg:'<svg viewBox="0 0 24 24" shape-rendering="crispEdges"><g fill="#f43f5e"><rect x="3" y="2" width="6" height="3"/><rect x="15" y="2" width="6" height="3"/><rect x="0" y="5" width="24" height="6"/><rect x="3" y="11" width="18" height="3"/><rect x="6" y="14" width="12" height="3"/><rect x="9" y="17" width="6" height="3"/></g><rect x="3" y="5" width="3" height="3" fill="#fecdd3"/></svg>'
+  },
+  {
+    id:'watercolor', name:'Aquarelle', desc:'taches d\'aquarelle douces, uniquement dans le logo',
+    svg:'<svg viewBox="0 0 24 24"><defs><filter id="ls-aqua" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".8"/></filter></defs><circle cx="10" cy="10" r="6" fill="#60a5fa" opacity=".6" filter="url(#ls-aqua)"/><circle cx="14.5" cy="13" r="6" fill="#f472b6" opacity=".55" filter="url(#ls-aqua)"/><circle cx="10.5" cy="15.5" r="4.5" fill="#facc15" opacity=".5" filter="url(#ls-aqua)"/></svg>'
+  },
+  {
+    id:'retro', name:'Rétro 80s', desc:'soleil rétro synthwave, dégradé jaune-magenta-violet à rayures',
+    svg:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ls-retro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#facc15"/><stop offset=".5" stop-color="#f472b6"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="12" cy="12" r="9" fill="url(#ls-retro)"/><rect x="2" y="13" width="20" height="1.2" fill="#0b0e14"/><rect x="2" y="16" width="20" height="1.5" fill="#0b0e14"/><rect x="2" y="19" width="20" height="1.8" fill="#0b0e14"/></svg>'
+  },
+  {
+    id:'mascot', name:'Mascotte', desc:'petit personnage ou animal simple et sympathique, de face',
+    svg:'<svg viewBox="0 0 24 24"><circle cx="6.5" cy="6.5" r="3" fill="#fb923c"/><circle cx="17.5" cy="6.5" r="3" fill="#fb923c"/><circle cx="12" cy="13" r="8" fill="#fdba74"/><circle cx="9" cy="12" r="1.3" fill="#1f2937"/><circle cx="15" cy="12" r="1.3" fill="#1f2937"/><path d="M9.5 15.5q2.5 2 5 0" fill="none" stroke="#1f2937" stroke-width="1.3" stroke-linecap="round"/></svg>'
+  }
 ];
 /* ========================================================= PROMPT LOGO IA ========================================================= */
 function buildLogoPrompt(theme, styleId){
@@ -1377,8 +1454,11 @@ function openLogoModal(){
     row.className = 'logo-style' + (s.id === saved ? ' active' : '');
     row.innerHTML = `
       <input type="radio" name="logoStyle" value="${s.id}" ${s.id === saved ? 'checked' : ''}>
-      <div class="logo-style-name">${escapeHtml(s.name)}</div>
-      <div class="logo-style-desc">${escapeHtml(s.desc)}</div>
+      <div class="logo-style-preview">${s.svg}</div>
+      <div class="logo-style-text">
+        <div class="logo-style-name">${escapeHtml(s.name)}</div>
+        <div class="logo-style-desc">${escapeHtml(s.desc)}</div>
+      </div>
     `;
     row.querySelector('input').onchange = () => {
       list.querySelectorAll('.logo-style').forEach(el => el.classList.remove('active'));
