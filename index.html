@@ -268,6 +268,22 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .icon-clear.show{ display:flex; }
 .icon-clear:active{ transform:scale(.9); background:rgba(239,68,68,.28); }
+/* Bouton : prompt IA pour l'icône */
+.logo-prompt-col{
+  height:80px;
+  display:flex; align-items:center; justify-content:center;
+}
+.logo-prompt-btn{
+  width:40px; height:40px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  color:#c7d2fe; cursor:pointer;
+  background:linear-gradient(145deg, rgba(99,102,241,.24), rgba(168,85,247,.14));
+  border:1px solid rgba(129,140,248,.35);
+  transition:transform .15s ease, opacity .2s ease, filter .2s ease;
+}
+.logo-prompt-btn:active{ transform:scale(.92); }
+.logo-prompt-btn:disabled{ opacity:.3; filter:grayscale(1); cursor:not-allowed; }
+.logo-prompt-btn:disabled:active{ transform:none; }
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:0 0 auto; margin-top:4px; z-index:10; }
 .action-btn{
   height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;
@@ -582,14 +598,22 @@ button{ -webkit-user-select:none; user-select:none; }
             <input id="appDescription" class="field" type="text" placeholder="Meta description · SEO · partage" autocomplete="off" spellcheck="false" oninput="onDescriptionInput(this.value)">
           </div>
 
-          <!-- Fond + Icône -->
-          <div class="grid grid-cols-2 gap-3 w-full items-stretch">
+          <!-- Fond + Prompt logo + Icône -->
+          <div class="grid gap-2 w-full items-end" style="grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);">
             <div class="project-col">
               <label class="field-label">Fond de lancement</label>
               <div class="icon-zone color-zone" onclick="byId('iconBgInput').click()" title="Couleur du fond de lancement">
                 <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Couleur</span>
                 <input type="color" id="iconBgInput" class="color-swatch" value="#050608" oninput="onIconBgInput(this.value)" onclick="event.stopPropagation()">
               </div>
+            </div>
+            <div class="logo-prompt-col">
+              <button type="button" id="logoPromptBtn" class="logo-prompt-btn" onclick="copyLogoPrompt()" title="Copier un prompt IA pour générer l'icône" aria-label="Copier le prompt du logo" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 3l1.8 4.7 4.7 1.8-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z"/>
+                  <path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>
+                </svg>
+              </button>
             </div>
             <div class="project-col">
               <label class="field-label">Icône PWA</label>
@@ -1102,6 +1126,8 @@ function updateHtmlMeta(){
   const lines = code ? code.split('\n').length : 0;
   const size = (new Blob([code]).size / 1024).toFixed(1);
   byId('htmlMeta').innerHTML = `<span class="meta-lines">${lines}</span> l · ${size} Ko`;
+  const logoBtn = byId('logoPromptBtn');
+  if(logoBtn) logoBtn.disabled = !code.trim();
 }
 
 /* ========================================================= COULEUR DE FOND (LANCEMENT) ========================================================= */
@@ -1205,6 +1231,221 @@ function clearIcon(){
   store.removeItem(LS_KEYS.ICON_BG);
   updateBgPicker();
   toast('Icône supprimée');
+}
+/* ========================================================= PROMPT LOGO IA ========================================================= */
+function buildLogoPrompt(){
+  const code = byId('htmlInput').value;
+  const doc = new DOMParser().parseFromString(code, 'text/html');
+  const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
+  const uniq = arr => [...new Set(arr.map(clean).filter(Boolean))];
+  const toHex6 = c => {
+    const m = String(c || '').trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if(!m) return '';
+    let h = m[1].toLowerCase();
+    if(h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    return '#' + h;
+  };
+  const lum = h => {
+    const n = parseInt(h.slice(1), 16);
+    return (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+  };
+  const sat = h => {
+    const n = parseInt(h.slice(1), 16);
+    const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    return max === 0 ? 0 : (max - min) / max;
+  };
+  const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const STOP = new Set(norm(
+    'avec dans pour plus vous votre vos nous notre sont mais elle elles leur leurs cette ceci cela tout tous toute toutes ' +
+    'etre avoir fait faire sans sous entre aussi comme donc alors quand tres bien encore deja ici rien peut doit ' +
+    'the and for with your this that from have will are not you all can ' +
+    'ajouter supprimer annuler fermer copier coller enregistrer sauvegarder valider retour erreur impossible chargement ' +
+    'charger parametres reglages ouvrir modifier confirmer envoyer recherche rechercher aucun aucune nouveau nouvelle ' +
+    'charge copie supprime effacer vider tester afficher masquer cacher voir oui non ' +
+    'chaque apres avant plein ecran touchez touche toucher bouton boutons colle collez clique cliquez appui appuie appuyez ' +
+    'auto info aide version mode'
+  ).split(/\s+/));
+  const words = s => (norm(s).match(/[a-z\u0600-\u06ff]{4,}/g) || []).filter(w => !STOP.has(w));
+  /* Suite de lettres sans sens (ex. nom de test « ljyglggylg… ») */
+  const isGibberish = s => {
+    const t = norm(s).replace(/[^a-z]/g, '');
+    if(t.length < 4) return false;
+    const vowels = (t.match(/[aeiouy]/g) || []).length;
+    return /[^aeiouy]{5,}/.test(t) || vowels / t.length < .2;
+  };
+
+  /* Identité : le code fait foi, les champs saisis ne sont que des indications */
+  const metaContent = sel => { const m = doc.querySelector(sel); return clean(m && m.getAttribute('content')); };
+  const firstH1 = doc.querySelector('h1');
+  const names = uniq([
+    metaContent('meta[name="apple-mobile-web-app-title"]'),
+    metaContent('meta[name="application-name"]'),
+    metaContent('meta[property="og:title"]'),
+    clean(doc.title),
+    clean(firstH1 && firstH1.textContent),
+    clean(byId('appName').value)
+  ]).filter(n => n.length <= 60 && !isGibberish(n));
+  const lang = clean(doc.documentElement.getAttribute('lang')) || 'fr';
+  const themeMeta = doc.querySelector('meta[name="theme-color"]');
+  const themeHex = toHex6(themeMeta && themeMeta.getAttribute('content'));
+
+  /* Couleurs du code, par fréquence */
+  const counts = new Map();
+  (code.match(/#(?:[0-9a-f]{6}|[0-9a-f]{3})\b/gi) || []).forEach(h => {
+    const x = toHex6(h);
+    if(x) counts.set(x, (counts.get(x) || 0) + 1);
+  });
+  const palette = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(e => e[0]);
+
+  /* Fond : celui de l'app (body) pour une transition invisible au démarrage */
+  const bodyBg = toHex6((code.match(/body\s*\{[^}]*?background(?:-color)?\s*:[^;}]*?(#[0-9a-f]{6}|#[0-9a-f]{3})\b/i) || [])[1]);
+  const bg = bodyBg || themeHex || (isHex(iconBg) ? iconBg.toLowerCase() : '') || palette[0] || DEFAULT_BG;
+  const dark = lum(bg) < .5;
+  const accents = palette.filter(c => c !== bg && sat(c) > .3 && Math.abs(lum(c) - lum(bg)) > .25).slice(0, 4);
+
+  /* Code JavaScript seul (pour les textes affichés dynamiquement) */
+  const jsCode = [...doc.querySelectorAll('script:not([src])')].map(n => n.textContent).join('\n');
+
+  /* Textes visibles (hors scripts, styles, svg, pied de page) */
+  doc.querySelectorAll('script,style,noscript,template,svg,footer,[class*="footer"]').forEach(n => n.remove());
+  const hasWord = t => /[A-Za-zÀ-ÿ\u0600-\u06FF]{2}/.test(t);
+  const pick = (sel, max) => uniq([...doc.querySelectorAll(sel)]
+    .filter(n => /^(H[1-4]|BUTTON|A|LABEL|OPTION|TH)$/.test(n.tagName) || n.children.length === 0)
+    .map(n => n.textContent))
+    .filter(t => t.length > 1 && t.length <= 60 && hasWord(t))
+    .slice(0, max);
+  const headings = pick('h1,h2,h3,h4,[class*="title"],[class*="brand"],[class*="name"]', 14);
+  const actions = pick('button,a,label,[role="button"],option,th', 22);
+  const hints = uniq([...doc.querySelectorAll('[placeholder],[title],[aria-label]')]
+    .map(n => n.getAttribute('placeholder') || n.getAttribute('title') || n.getAttribute('aria-label')))
+    .filter(t => t.length <= 60 && hasWord(t) && !/\/\/|\|/.test(t))
+    .slice(0, 12);
+
+  /* Textes affichés par le JavaScript (toasts, rendus dynamiques) */
+  const jsTexts = uniq((jsCode.match(/['"`]([A-Za-zÀ-ÿ][^'"`<>{}$\\\n]{3,48})['"`]/g) || [])
+    .map(s => s.slice(1, -1))
+    .filter(s => / /.test(s)
+      && /^[A-ZÀ-Ý\u0600-\u06FF]/.test(s)
+      && !/ [A-Za-z]$/.test(s)
+      && !/[=;:#(){}|_]|\.\w|\w-\w|https?|\bpx\b|rgba?|var\(/i.test(s)
+      && !/\b(?:New|Code|Pro|Mono|Sans|Serif|Segoe|UI)\b/.test(s)))
+    .filter(s => !headings.includes(s) && !actions.includes(s) && !hints.includes(s))
+    .slice(0, 25);
+
+  /* Mots qui reviennent le plus dans l'interface : meilleur indice du métier */
+  const pool = [doc.body ? doc.body.textContent : '', hints.join(' '), jsTexts.join(' ')].join(' ');
+  const freq = new Map();
+  words(pool).forEach(w => freq.set(w, (freq.get(w) || 0) + 1));
+  const topWords = [...freq.entries()]
+    .filter(e => e[1] > 1 && !isGibberish(e[0]))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 15)
+    .map(e => e[0] + ' (' + e[1] + ')');
+
+  /* Description retenue seulement si l'interface la confirme (au moins la moitié de ses mots) */
+  const appWords = new Set(words(pool + ' ' + (jsCode.match(/(['"`])(?:(?!\1)[^\\\n])*\1/g) || []).join(' ')));
+  const confirmed = d => {
+    const w = words(d);
+    return w.length > 0 && w.filter(x => appWords.has(x)).length >= w.length / 2;
+  };
+  const descriptions = uniq([
+    metaContent('meta[name="description"]'),
+    clean(byId('appDescription').value)
+  ]).filter(d => !isGibberish(d) && confirmed(d));
+
+  /* Fonctionnalités détectées */
+  const FEATURES = [
+    [/firebase|firestore/i, 'données en ligne synchronisées (Firebase)'],
+    [/getUserMedia|<video/i, 'caméra / vidéo'],
+    [/MediaRecorder|AudioContext|webkitAudioContext|<audio/i, 'son / enregistrement audio'],
+    [/leaflet|google\.maps|mapbox|geolocation/i, 'carte / géolocalisation'],
+    [/new Chart\(|chart\.js/i, 'graphiques / statistiques'],
+    [/<canvas|getContext\(/i, 'dessin / rendu graphique (canvas)'],
+    [/whatsapp|wa\.me/i, 'messagerie WhatsApp'],
+    [/stripe|paypal|paiement|panier|commande/i, 'commerce / commandes / paiement'],
+    [/rendez-vous|agenda|calendrier|calendar/i, 'agenda / rendez-vous'],
+    [/Notification\.requestPermission|showNotification/i, 'notifications'],
+    [/api\.github\.com/i, 'GitHub / outils de développement'],
+    [/workers\.dev|cloudflare/i, 'Cloudflare / cloud'],
+    [/qr ?code|qrcode/i, 'QR code'],
+    [/[\u0600-\u06FF]/, 'contenu en arabe']
+  ];
+  const features = FEATURES.filter(([re]) => re.test(code)).map(([, label]) => label);
+
+  const line = (label, list) => list.length ? '• ' + label + ' : ' + list.join(' · ') : null;
+  const text = [
+    'Tu es un designer d\'icônes d\'applications de niveau Apple App Store / Google Play. Crée l\'icône officielle de la PWA décrite ci-dessous.',
+    '',
+    '═══ 1. CE QUE FAIT L\'APPLICATION (indices extraits de son code) ═══',
+    'Ces indices sont extraits automatiquement du code : certains sont du bruit. Déduis le métier de l\'app de leur ENSEMBLE, en donnant le plus de poids aux mots qui reviennent souvent, puis aux titres et aux actions. Ne te base jamais sur un mot isolé, et ne dessine pas littéralement un mot de la liste s\'il ne correspond pas à la fonction principale.',
+    '',
+    names.length ? '• Nom de l\'app : ' + names[0] + (names.length > 1 ? ' (aussi : ' + names.slice(1, 3).join(' · ') + ')' : '') : '• Nom de l\'app : non communiqué, déduis tout du contenu',
+    descriptions.length ? '• Description : ' + descriptions[0] : null,
+    line('Mots les plus fréquents (nombre d\'occurrences)', topWords),
+    line('Titres de l\'interface', headings),
+    line('Boutons et actions', actions),
+    line('Messages affichés par l\'app', jsTexts),
+    line('Champs et infobulles', hints),
+    line('Indices techniques (secondaires)', features),
+    '• Langue de l\'interface : ' + lang,
+    '',
+    'Choisis ensuite UN seul symbole, simple, fort et mémorable, qui évoque immédiatement la fonction principale de l\'app. Pas une initiale, pas un collage de plusieurs idées.',
+    '',
+    '═══ 2. COMMENT L\'IMAGE SERA UTILISÉE (À RESPECTER) ═══',
+    'Notre générateur de PWA traite l\'image automatiquement :',
+    '• il lit la couleur d\'une bande de 2 % sur les 4 bords pour en déduire la couleur de fond (les pixels transparents ou bruités faussent la détection) ;',
+    '• cette couleur devient le fond de l\'écran de démarrage iOS et Android, la theme-color et le background_color du manifest ;',
+    '• l\'icône est posée au centre de cet écran de démarrage, à environ 32 % de sa largeur : son fond doit se fondre sans aucune limite visible, comme au lancement d\'une app native.',
+    '',
+    '═══ 3. CONTRAINTES STRICTES ═══',
+    '1. Format carré 1024 × 1024 px, PNG, totalement opaque (aucune transparence).',
+    '2. Arrière-plan : aplat UNI de la couleur exacte ' + bg + ' sur 100 % de la surface, jusqu\'au dernier pixel des 4 bords. Aucun dégradé, aucune texture, aucun grain, aucun bruit, aucun vignettage, aucun halo, aucun motif, aucun cadre, aucune bordure.',
+    '3. Pas de coins arrondis ni de forme « squircle » dessinée : le téléphone applique lui-même le masque. L\'image reste un carré plein.',
+    '4. Le symbole tient entièrement dans le cercle central de 60 % de l\'image (zone de sécurité « maskable » d\'Android) : au moins 20 % de marge vide de chaque côté. Aucune ombre, lueur ou élément ne déborde dans cette marge.',
+    '5. Aucun texte : pas de lettres, pas de nom, pas de chiffres (illisibles en petit).',
+    '6. 2 à 3 couleurs maximum pour le symbole, en fort contraste avec le fond. ' + (dark
+      ? 'Le fond est sombre : symbole clair et lumineux.'
+      : 'Le fond est clair : symbole soutenu et foncé.') + ' ' + (accents.length
+      ? 'Couleurs d\'accent issues de l\'app, à privilégier : ' + accents.join(', ') + '.'
+      : 'Choisis des couleurs d\'accent harmonieuses avec le fond.'),
+    '7. Style moderne et épuré, formes géométriques nettes, finition premium. Un léger relief ou dégradé est permis UNIQUEMENT à l\'intérieur du symbole, jamais sur le fond.',
+    '8. Lisible et reconnaissable à 48 × 48 px : silhouette forte, pas de détails fins, pas de traits trop minces.',
+    '9. Pas de mise en scène : pas de téléphone, pas d\'écran d\'accueil, pas de main, pas de fond studio, pas de perspective 3D. Uniquement l\'icône, à plat et de face.',
+    '',
+    '═══ 4. LIVRABLE ═══',
+    'Avant de générer, écris : 1) en une phrase, ce que fait l\'app pour son utilisateur, d\'après les indices ; 2) le symbole choisi et pourquoi.',
+    'Puis génère une seule image finale. Vérifie que les 4 bords sont exactement ' + bg + ' et que rien ne s\'approche des bords.'
+  ].filter(l => l !== null).join('\n');
+
+  return { text, bg };
+}
+async function copyLogoPrompt(){
+  if(!byId('htmlInput').value.trim()){ toast('Colle d\'abord le code HTML', true); return; }
+  haptic(10);
+  let prompt;
+  try{
+    prompt = buildLogoPrompt();
+  }catch(e){
+    console.error(e);
+    toast('Analyse du code impossible', true);
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(prompt.text);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = prompt.text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try{ ok = document.execCommand('copy'); }catch(err){}
+    ta.remove();
+    if(!ok){ toast('Copie impossible', true); return; }
+  }
+  toast('Prompt logo copié · fond ' + prompt.bg);
 }
 
 /* ========================================================= DÉTECTION DÉPENDANCES ========================================================= */
