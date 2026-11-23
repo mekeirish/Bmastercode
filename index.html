@@ -755,6 +755,17 @@ button{ -webkit-user-select:none; user-select:none; }
       <label class="field-label" for="prefShortcuts">Raccourcis · un par ligne : Nom | lien</label>
       <textarea id="prefShortcuts" class="pref-textarea" spellcheck="false" placeholder="Accueil | ./&#10;Réglages | ./#reglages" oninput="onShortcutsInput(this.value)"></textarea>
     </div>
+    <div class="pref-extra">
+      <div class="field-label">Mastercode</div>
+      <label class="pref-row">
+        <div class="pref-info">
+          <div class="pref-name">Sons de notification</div>
+          <div class="pref-desc">Sons de Mastercode lui-même : réussite, erreur, site en ligne.</div>
+        </div>
+        <input type="checkbox" id="soundToggle" onchange="onSoundToggle(this.checked)">
+        <span class="pref-track"></span>
+      </label>
+    </div>
   </div>
 </div>
 
@@ -867,6 +878,52 @@ let isInjectRunning = false;
 
 /* ========================================================= HAPTIC ========================================================= */
 function haptic(ms=10){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+/* ========================================================= SONS ========================================================= */
+let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    audioCtx = new AC();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
+function playSound(kind='ok'){
+  if(store.getItem('mastercode_sound') === '0') return;
+  try{
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    const SOUNDS = {
+      ok:   { type:'sine',     notes:[880, 1320],             step:.09, len:.16, vol:.08 },
+      err:  { type:'triangle', notes:[330, 220],              step:.12, len:.22, vol:.12 },
+      done: { type:'sine',     notes:[523.25, 659.25, 783.99], step:.11, len:.35, vol:.08 }
+    };
+    const s = SOUNDS[kind] || SOUNDS.ok;
+    const t0 = ctx.currentTime + .01;
+    s.notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const t = t0 + i * s.step;
+      osc.type = s.type;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(s.vol, t + .015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + s.len);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + s.len + .02);
+    });
+  }catch(e){}
+}
+function onSoundToggle(enabled){
+  store.setItem('mastercode_sound', enabled ? '1' : '0');
+  haptic(6);
+  if(enabled) playSound('ok');
+}
+/* Débloque l'audio au premier appui (obligatoire sur iOS) */
+document.addEventListener('pointerdown', () => { getAudioCtx(); }, { once:true });
 
 /* ========================================================= SAVE INDICATOR ========================================================= */
 let saveIndicatorTimer = null;
@@ -879,7 +936,7 @@ function showSaveIndicator(){
 }
 
 /* ========================================================= TOAST ========================================================= */
-function toast(message,error=false){
+function toast(message,error=false,sound=''){
   const old=byId('toast'); if(old) old.remove();
   const el=document.createElement('div');
   el.id='toast';
@@ -896,6 +953,7 @@ function toast(message,error=false){
   el.textContent=(error?'⚠️ ':'✓ ')+message;
   document.body.appendChild(el);
   clearTimeout(toast.timer);
+  playSound(sound || (error ? 'err' : 'ok'));
   toast.timer=setTimeout(()=>{
     el.style.opacity='0'; el.style.transition='.25s';
     setTimeout(()=>el.remove(),250);
@@ -1258,6 +1316,7 @@ function renderPrefs(){
   byId('prefOrientation').value = store.getItem('mastercode_orientation') || 'auto';
   byId('prefShortcuts').value = store.getItem('mastercode_shortcuts_list') || '';
   byId('prefShortcutsBox').classList.toggle('hidden', store.getItem('mastercode_shortcuts_module') !== '1');
+  byId('soundToggle').checked = store.getItem('mastercode_sound') !== '0';
 }
 function onPrefChange(key, enabled){
   store.setItem(key, enabled ? '1' : '0');
@@ -1531,6 +1590,7 @@ async function commitFiles(token, owner, repo, files, message){
     batch.forEach((f, k) => tree.push({ path: f.path, mode: '100644', type: 'blob', sha: shas[k] }));
     updateStatus(`✅ ${Math.min(i + UPLOAD_CONCURRENCY, files.length)}/${files.length} fichiers préparés.`);
   }
+  const keep = new Set(tree.map(t => t.path));
 
   /* 2. Arbre + commit + déplacement de main (relancé si main a bougé entre-temps) */
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -1543,10 +1603,21 @@ async function commitFiles(token, owner, repo, files, message){
       if (!parentResp.ok) throw new Error(`Lecture du dernier commit impossible : ${ await ghErrorMessage(parentResp) }`);
       const baseTree = ( await parentResp.json() ).tree.sha;
 
+      /* Écrans de lancement d'anciennes tailles : seuls fichiers Mastercode pouvant devenir obsolètes */
+      const stale = [];
+      const listResp = await ghFetch(`${base}/trees/${baseTree}`, { headers: ghHeaders(token) });
+      if (listResp.ok) {
+        ( ( await listResp.json() ).tree || [] ).forEach(e => {
+          if (e.type === 'blob' && /^splash-\d+x\d+\.png$/.test(e.path) && !keep.has(e.path)) {
+            stale.push({ path: e.path, mode: '100644', type: 'blob', sha: null });
+          }
+        });
+      }
+
       const treeResp = await ghFetch(`${base}/trees`, {
         method: 'POST',
         headers: ghHeaders(token),
-        body: JSON.stringify({ base_tree: baseTree, tree })
+        body: JSON.stringify({ base_tree: baseTree, tree: tree.concat(stale) })
       }, FETCH_TIMEOUT_UPLOAD_MS);
       if (!treeResp.ok) throw new Error(`Création de l'arbre échouée : ${ await ghErrorMessage(treeResp) }`);
       const treeSha = ( await treeResp.json() ).sha;
@@ -1564,7 +1635,10 @@ async function commitFiles(token, owner, repo, files, message){
         headers: ghHeaders(token),
         body: JSON.stringify({ sha: commitSha, force: false })
       });
-      if (updResp.ok) return;
+      if (updResp.ok) {
+        if (stale.length) updateStatus(`✅ ${stale.length} ancien(s) écran(s) de lancement supprimé(s).`);
+        return;
+      }
       lastErr = new Error(`Mise à jour de main échouée : ${ await ghErrorMessage(updResp) }`);
     } catch (e) {
       lastErr = e;
@@ -1607,6 +1681,14 @@ function fixTailwindConfig(html){
     /(^|[^.\w])tailwind\.config\s*=/g,
     (match, before) => `${before}window.tailwind = window.tailwind || {}; window.tailwind.config =`
   );
+}
+/* Remplace le contenu d'une balise meta existante, sinon l'ajoute à headTags */
+function upsertMeta(html, attr, key, value, headTags){
+  const re = new RegExp('<meta[^>]+' + attr + '=["\']' + key + '["\'][^>]*>', 'i');
+  const tag = '<meta ' + attr + '="' + key + '" content="' + value + '">';
+  if(re.test(html)) return html.replace(re, () => tag);
+  headTags.push(tag);
+  return html;
 }
 
 /* ========================================================= ÉCRANS DE LANCEMENT iOS ========================================================= */
@@ -1662,21 +1744,21 @@ function buildPwaHtml(source, owner, repo){
   if(title){
     const safeTitle = escapeHtml(title);
     if(/<title[^>]*>[\s\S]*?<\/title>/i.test(html)){
-      html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, '<title>' + safeTitle + '</title>');
+      html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, () => '<title>' + safeTitle + '</title>');
     } else {
       headTags.unshift('<title>' + safeTitle + '</title>');
     }
-    if(!/<meta[^>]+property=["']og:title["']/i.test(html)) headTags.push('<meta property="og:title" content="' + safeTitle + '">');
-    if(!/<meta[^>]+name=["']twitter:title["']/i.test(html)) headTags.push('<meta name="twitter:title" content="' + safeTitle + '">');
-    if(!/<meta[^>]+name=["']application-name["']/i.test(html)) headTags.push('<meta name="application-name" content="' + safeTitle + '">');
-    if(!/<meta[^>]+name=["']apple-mobile-web-app-title["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-title" content="' + safeTitle + '">');
+    html = upsertMeta(html, 'property', 'og:title', safeTitle, headTags);
+    html = upsertMeta(html, 'name', 'twitter:title', safeTitle, headTags);
+    html = upsertMeta(html, 'name', 'application-name', safeTitle, headTags);
+    html = upsertMeta(html, 'name', 'apple-mobile-web-app-title', safeTitle, headTags);
   }
 
   if(description){
     const safeDesc = escapeHtml(description);
-    if(!/<meta[^>]+name=["']description["']/i.test(html)) headTags.push('<meta name="description" content="' + safeDesc + '">');
-    if(!/<meta[^>]+property=["']og:description["']/i.test(html)) headTags.push('<meta property="og:description" content="' + safeDesc + '">');
-    if(!/<meta[^>]+name=["']twitter:description["']/i.test(html)) headTags.push('<meta name="twitter:description" content="' + safeDesc + '">');
+    html = upsertMeta(html, 'name', 'description', safeDesc, headTags);
+    html = upsertMeta(html, 'property', 'og:description', safeDesc, headTags);
+    html = upsertMeta(html, 'name', 'twitter:description', safeDesc, headTags);
   }
 
   if(/<html(\s[^>]*)?>/i.test(html)){
@@ -1717,7 +1799,11 @@ function buildPwaHtml(source, owner, repo){
   }
   if(!/<link[^>]+rel=["']manifest["']/i.test(html)) headTags.push('<link rel="manifest" href="./manifest.json">');
   if(!/<meta[^>]+name=["']viewport["']/i.test(html)) headTags.push('<meta name="viewport" content="width=device-width,initial-scale=1">');
-  if(!/<meta[^>]+name=["']theme-color["']/i.test(html)) headTags.push('<meta name="theme-color" content="'+bg+'">');
+  if(isHex(iconBg)){
+    html = upsertMeta(html, 'name', 'theme-color', bg, headTags);
+  } else if(!/<meta[^>]+name=["']theme-color["']/i.test(html)){
+    headTags.push('<meta name="theme-color" content="'+bg+'">');
+  }
   if(!/<meta[^>]+name=["']apple-mobile-web-app-capable["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-capable" content="yes">');
   if(!/<meta[^>]+name=["']apple-mobile-web-app-status-bar-style["']/i.test(html)) headTags.push('<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');
   if(!/<link[^>]+rel=["']apple-touch-icon["']/i.test(html)) headTags.push('<link rel="apple-touch-icon" href="./icon.png">');
@@ -1844,7 +1930,46 @@ input,textarea,[contenteditable="true"]{
 (function(){
   var el = document.getElementById('mastercode-offline');
   if(!el) return;
-  function sync(){ el.classList.toggle('show', !navigator.onLine); }
+  function beep(notes){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = window.__mcAudio || (window.__mcAudio = new AC());
+      if(ctx.state === 'suspended') ctx.resume().catch(function(){});
+      var t0 = ctx.currentTime + .01;
+      notes.forEach(function(freq, i){
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var t = t0 + i * .11;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(.08, t + .015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + .2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + .22);
+      });
+    }catch(e){}
+  }
+  document.addEventListener('pointerdown', function(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = window.__mcAudio || (window.__mcAudio = new AC());
+      if(ctx.state === 'suspended') ctx.resume().catch(function(){});
+    }catch(e){}
+  }, { once:true });
+  var last = navigator.onLine;
+  function sync(){
+    var off = !navigator.onLine;
+    el.classList.toggle('show', off);
+    if(navigator.onLine !== last){
+      last = navigator.onLine;
+      beep(off ? [440, 330] : [660, 880]);
+    }
+  }
   window.addEventListener('online', sync);
   window.addEventListener('offline', sync);
   sync();
@@ -1899,9 +2024,43 @@ input,textarea,[contenteditable="true"]{
   var el = document.getElementById('mastercode-update');
   var btn = document.getElementById('mastercode-update-btn');
   if(!el || !btn) return;
+  function beep(notes){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = window.__mcAudio || (window.__mcAudio = new AC());
+      if(ctx.state === 'suspended') ctx.resume().catch(function(){});
+      var t0 = ctx.currentTime + .01;
+      notes.forEach(function(freq, i){
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var t = t0 + i * .12;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(.08, t + .015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + .3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + .32);
+      });
+    }catch(e){}
+  }
+  document.addEventListener('pointerdown', function(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = window.__mcAudio || (window.__mcAudio = new AC());
+      if(ctx.state === 'suspended') ctx.resume().catch(function(){});
+    }catch(e){}
+  }, { once:true });
   var had = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', function(){
-    if(had) el.classList.add('show');
+    if(had){
+      el.classList.add('show');
+      beep([523.25, 783.99]);
+    }
     had = true;
   });
   document.addEventListener('visibilitychange', function(){
@@ -2347,7 +2506,7 @@ async function watchDeployment(token, since) {
       byId('liveOpenBtn').disabled = false;
       byId('liveStatusTitle').textContent = 'Application en ligne';
       byId('liveStatusText').textContent = 'Délai dépassé · site probablement disponible';
-      toast('Site disponible');
+      toast('Site disponible', false, 'done');
       return;
     }
 
@@ -2361,7 +2520,7 @@ async function watchDeployment(token, since) {
         byId('liveOpenBtn').disabled = false;
         byId('liveStatusTitle').textContent = 'Application en ligne';
         byId('liveStatusText').textContent = 'Site accessible';
-        toast('Site disponible');
+        toast('Site disponible', false, 'done');
         return;
       }
     }
@@ -2387,6 +2546,7 @@ async function watchDeployment(token, since) {
         byId('liveStatusText').textContent = 'Consultez le rapport';
         byId('statusCard').classList.remove('hidden');
         updateStatus(`❌ Déploiement : ${run.conclusion}`);
+        playSound('err');
         return;
       }
 
