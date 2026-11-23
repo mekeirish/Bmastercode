@@ -191,6 +191,11 @@ button{ -webkit-user-select:none; user-select:none; }
   transition:.15s ease;
 }
 .paste-html:active{ transform:scale(.96); }
+.paste-html.clear-html{
+  background:rgba(239,68,68,.12);
+  border-color:rgba(239,68,68,.28);
+  color:#fca5a5;
+}
 .editor-meta{
   font-size:10px; color:#94a3b8; font-weight:700;
   font-variant-numeric:tabular-nums; letter-spacing:.05em;
@@ -284,6 +289,34 @@ button{ -webkit-user-select:none; user-select:none; }
 .logo-prompt-btn:active{ transform:scale(.92); }
 .logo-prompt-btn:disabled{ opacity:.3; filter:grayscale(1); cursor:not-allowed; }
 .logo-prompt-btn:disabled:active{ transform:none; }
+/* Modale : prompt logo */
+.logo-style-list{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.logo-style{
+  position:relative; display:block; padding:9px 10px; border-radius:11px;
+  background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.06);
+  cursor:pointer; transition:.15s ease;
+  -webkit-user-select:none; user-select:none;
+}
+.logo-style input{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.logo-style.active{ background:rgba(232,184,76,.1); border-color:rgba(232,184,76,.65); }
+.logo-style-name{ font-size:11.5px; font-weight:800; color:#f1f5f9; }
+.logo-style.active .logo-style-name{ color:#f3d58f; }
+.logo-style-desc{ margin-top:2px; font-size:9px; line-height:1.35; color:#94a3b8; }
+.logo-bg-info{
+  display:flex; align-items:center; gap:8px; margin-top:12px;
+  font-size:10px; font-weight:700; color:#94a3b8; font-variant-numeric:tabular-nums;
+}
+.logo-bg-swatch{
+  width:16px; height:16px; flex:0 0 16px; border-radius:5px;
+  border:1px solid rgba(255,255,255,.25);
+}
+.logo-validate{
+  width:100%; height:46px; margin-top:12px; border-radius:12px;
+  color:#fff; font-size:11px; font-weight:800; letter-spacing:.05em;
+  background:linear-gradient(135deg, rgba(89,103,232,.9), rgba(113,71,216,.9));
+  border:1px solid rgba(167,139,250,.2);
+}
+.logo-validate:active{ transform:scale(.985); }
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:0 0 auto; margin-top:4px; z-index:10; }
 .action-btn{
   height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;
@@ -641,7 +674,10 @@ button{ -webkit-user-select:none; user-select:none; }
               <label class="field-label !mb-0">Code HTML</label>
               <span class="editor-meta" id="htmlMeta">0 l · 0 Ko</span>
             </div>
-            <button class="paste-html" onclick="pasteHTML()">📋 COLLER</button>
+            <div class="flex items-center gap-2">
+              <button class="paste-html clear-html" onclick="clearHTML()" title="Vider le code">🗑 VIDER</button>
+              <button class="paste-html" onclick="pasteHTML()">📋 COLLER</button>
+            </div>
           </div>
           <div class="html-editor">
             <textarea id="htmlInput" placeholder="Colle ton code HTML ici..." spellcheck="false" oninput="onHtmlInput()"></textarea>
@@ -790,6 +826,27 @@ button{ -webkit-user-select:none; user-select:none; }
         <span class="pref-track"></span>
       </label>
     </div>
+  </div>
+</div>
+<div id="logoOverlay" class="overlay" onclick="closeLogoModal()"></div>
+<div id="logoModal" class="modal glass">
+  <div class="modal-body">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="modal-icon">✨</div>
+        <div>
+          <div class="modal-sub">Prompt IA</div>
+          <div class="modal-title">Logo de l'application</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeLogoModal()">×</button>
+    </div>
+    <label class="field-label" for="logoTheme">Thème général de l'app</label>
+    <input id="logoTheme" class="field" type="text" placeholder="ex : livraison de repas à domicile" autocomplete="off" spellcheck="false">
+    <div class="field-label" style="margin-top:12px;">Style du logo</div>
+    <div class="logo-style-list" id="logoStyleList"></div>
+    <div class="logo-bg-info" id="logoBgInfo"></div>
+    <button type="button" class="logo-validate" onclick="confirmLogoPrompt()">✨ COPIER LE PROMPT</button>
   </div>
 </div>
 
@@ -1073,6 +1130,18 @@ async function pasteHTML(){
     byId('htmlInput').focus();
   }catch(e){ toast('Autorisation presse-papier refusée',true); }
 }
+function clearHTML(){
+  const input = byId('htmlInput');
+  if(!input.value){ toast('Zone de code déjà vide', true); return; }
+  if(!confirm('Vider le code HTML ?')) return;
+  clearTimeout(htmlSaveTimer);
+  input.value = '';
+  store.removeItem(LS_KEYS.HTML);
+  updateHtmlMeta();
+  haptic(8);
+  toast('Code HTML vidé');
+  input.focus();
+}
 
 /* ========================================================= CLEAR TOKEN ========================================================= */
 function clearAllData(){
@@ -1232,12 +1301,20 @@ function clearIcon(){
   updateBgPicker();
   toast('Icône supprimée');
 }
+const LOGO_STYLES = [
+  { id:'flat',      name:'Minimaliste plat',     desc:'formes simples en aplats de couleur, sans relief' },
+  { id:'gradient',  name:'Dégradé moderne',      desc:'formes nettes avec un dégradé lumineux dans le logo' },
+  { id:'line',      name:'Trait épais',          desc:'pictogramme au trait, lignes épaisses et arrondies' },
+  { id:'soft3d',    name:'3D doux',              desc:'volumes arrondis, éclairage doux, aspect pâte à modeler' },
+  { id:'glass',     name:'Verre',                desc:'formes translucides superposées, reflets légers' },
+  { id:'neon',      name:'Néon',                 desc:'tracés lumineux néon, la lueur reste collée au logo' },
+  { id:'geometric', name:'Géométrique abstrait', desc:'symbole abstrait construit de formes géométriques' },
+  { id:'mascot',    name:'Mascotte',             desc:'petit personnage ou animal simple et sympathique, de face' }
+];
 /* ========================================================= PROMPT LOGO IA ========================================================= */
-function buildLogoPrompt(){
+function buildLogoPrompt(theme, styleId){
   const code = byId('htmlInput').value;
   const doc = new DOMParser().parseFromString(code, 'text/html');
-  const clean = s => String(s || '').replace(/\s+/g, ' ').trim();
-  const uniq = arr => [...new Set(arr.map(clean).filter(Boolean))];
   const toHex6 = c => {
     const m = String(c || '').trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
     if(!m) return '';
@@ -1255,40 +1332,6 @@ function buildLogoPrompt(){
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
     return max === 0 ? 0 : (max - min) / max;
   };
-  const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const STOP = new Set(norm(
-    'avec dans pour plus vous votre vos nous notre sont mais elle elles leur leurs cette ceci cela tout tous toute toutes ' +
-    'etre avoir fait faire sans sous entre aussi comme donc alors quand tres bien encore deja ici rien peut doit ' +
-    'the and for with your this that from have will are not you all can ' +
-    'ajouter supprimer annuler fermer copier coller enregistrer sauvegarder valider retour erreur impossible chargement ' +
-    'charger parametres reglages ouvrir modifier confirmer envoyer recherche rechercher aucun aucune nouveau nouvelle ' +
-    'charge copie supprime effacer vider tester afficher masquer cacher voir oui non ' +
-    'chaque apres avant plein ecran touchez touche toucher bouton boutons colle collez clique cliquez appui appuie appuyez ' +
-    'auto info aide version mode'
-  ).split(/\s+/));
-  const words = s => (norm(s).match(/[a-z\u0600-\u06ff]{4,}/g) || []).filter(w => !STOP.has(w));
-  /* Suite de lettres sans sens (ex. nom de test « ljyglggylg… ») */
-  const isGibberish = s => {
-    const t = norm(s).replace(/[^a-z]/g, '');
-    if(t.length < 4) return false;
-    const vowels = (t.match(/[aeiouy]/g) || []).length;
-    return /[^aeiouy]{5,}/.test(t) || vowels / t.length < .2;
-  };
-
-  /* Identité : le code fait foi, les champs saisis ne sont que des indications */
-  const metaContent = sel => { const m = doc.querySelector(sel); return clean(m && m.getAttribute('content')); };
-  const firstH1 = doc.querySelector('h1');
-  const names = uniq([
-    metaContent('meta[name="apple-mobile-web-app-title"]'),
-    metaContent('meta[name="application-name"]'),
-    metaContent('meta[property="og:title"]'),
-    clean(doc.title),
-    clean(firstH1 && firstH1.textContent),
-    clean(byId('appName').value)
-  ]).filter(n => n.length <= 60 && !isGibberish(n));
-  const lang = clean(doc.documentElement.getAttribute('lang')) || 'fr';
-  const themeMeta = doc.querySelector('meta[name="theme-color"]');
-  const themeHex = toHex6(themeMeta && themeMeta.getAttribute('content'));
 
   /* Couleurs du code, par fréquence */
   const counts = new Map();
@@ -1299,133 +1342,68 @@ function buildLogoPrompt(){
   const palette = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(e => e[0]);
 
   /* Fond : celui de l'app (body) pour une transition invisible au démarrage */
+  const themeMeta = doc.querySelector('meta[name="theme-color"]');
+  const themeHex = toHex6(themeMeta && themeMeta.getAttribute('content'));
   const bodyBg = toHex6((code.match(/body\s*\{[^}]*?background(?:-color)?\s*:[^;}]*?(#[0-9a-f]{6}|#[0-9a-f]{3})\b/i) || [])[1]);
   const bg = bodyBg || themeHex || (isHex(iconBg) ? iconBg.toLowerCase() : '') || palette[0] || DEFAULT_BG;
-  const dark = lum(bg) < .5;
-  const accents = palette.filter(c => c !== bg && sat(c) > .3 && Math.abs(lum(c) - lum(bg)) > .25).slice(0, 4);
+  const accents = palette.filter(c => c !== bg && sat(c) > .3 && Math.abs(lum(c) - lum(bg)) > .25).slice(0, 3);
 
-  /* Code JavaScript seul (pour les textes affichés dynamiquement) */
-  const jsCode = [...doc.querySelectorAll('script:not([src])')].map(n => n.textContent).join('\n');
-
-  /* Textes visibles (hors scripts, styles, svg, pied de page) */
-  doc.querySelectorAll('script,style,noscript,template,svg,footer,[class*="footer"]').forEach(n => n.remove());
-  const hasWord = t => /[A-Za-zÀ-ÿ\u0600-\u06FF]{2}/.test(t);
-  const pick = (sel, max) => uniq([...doc.querySelectorAll(sel)]
-    .filter(n => /^(H[1-4]|BUTTON|A|LABEL|OPTION|TH)$/.test(n.tagName) || n.children.length === 0)
-    .map(n => n.textContent))
-    .filter(t => t.length > 1 && t.length <= 60 && hasWord(t))
-    .slice(0, max);
-  const headings = pick('h1,h2,h3,h4,[class*="title"],[class*="brand"],[class*="name"]', 14);
-  const actions = pick('button,a,label,[role="button"],option,th', 22);
-  const hints = uniq([...doc.querySelectorAll('[placeholder],[title],[aria-label]')]
-    .map(n => n.getAttribute('placeholder') || n.getAttribute('title') || n.getAttribute('aria-label')))
-    .filter(t => t.length <= 60 && hasWord(t) && !/\/\/|\|/.test(t))
-    .slice(0, 12);
-
-  /* Textes affichés par le JavaScript (toasts, rendus dynamiques) */
-  const jsTexts = uniq((jsCode.match(/['"`]([A-Za-zÀ-ÿ][^'"`<>{}$\\\n]{3,48})['"`]/g) || [])
-    .map(s => s.slice(1, -1))
-    .filter(s => / /.test(s)
-      && /^[A-ZÀ-Ý\u0600-\u06FF]/.test(s)
-      && !/ [A-Za-z]$/.test(s)
-      && !/[=;:#(){}|_]|\.\w|\w-\w|https?|\bpx\b|rgba?|var\(/i.test(s)
-      && !/\b(?:New|Code|Pro|Mono|Sans|Serif|Segoe|UI)\b/.test(s)))
-    .filter(s => !headings.includes(s) && !actions.includes(s) && !hints.includes(s))
-    .slice(0, 25);
-
-  /* Mots qui reviennent le plus dans l'interface : meilleur indice du métier */
-  const pool = [doc.body ? doc.body.textContent : '', hints.join(' '), jsTexts.join(' ')].join(' ');
-  const freq = new Map();
-  words(pool).forEach(w => freq.set(w, (freq.get(w) || 0) + 1));
-  const topWords = [...freq.entries()]
-    .filter(e => e[1] > 1 && !isGibberish(e[0]))
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
-    .map(e => e[0] + ' (' + e[1] + ')');
-
-  /* Description retenue seulement si l'interface la confirme (au moins la moitié de ses mots) */
-  const appWords = new Set(words(pool + ' ' + (jsCode.match(/(['"`])(?:(?!\1)[^\\\n])*\1/g) || []).join(' ')));
-  const confirmed = d => {
-    const w = words(d);
-    return w.length > 0 && w.filter(x => appWords.has(x)).length >= w.length / 2;
-  };
-  const descriptions = uniq([
-    metaContent('meta[name="description"]'),
-    clean(byId('appDescription').value)
-  ]).filter(d => !isGibberish(d) && confirmed(d));
-
-  /* Fonctionnalités détectées */
-  const FEATURES = [
-    [/firebase|firestore/i, 'données en ligne synchronisées (Firebase)'],
-    [/getUserMedia|<video/i, 'caméra / vidéo'],
-    [/MediaRecorder|AudioContext|webkitAudioContext|<audio/i, 'son / enregistrement audio'],
-    [/leaflet|google\.maps|mapbox|geolocation/i, 'carte / géolocalisation'],
-    [/new Chart\(|chart\.js/i, 'graphiques / statistiques'],
-    [/<canvas|getContext\(/i, 'dessin / rendu graphique (canvas)'],
-    [/whatsapp|wa\.me/i, 'messagerie WhatsApp'],
-    [/stripe|paypal|paiement|panier|commande/i, 'commerce / commandes / paiement'],
-    [/rendez-vous|agenda|calendrier|calendar/i, 'agenda / rendez-vous'],
-    [/Notification\.requestPermission|showNotification/i, 'notifications'],
-    [/api\.github\.com/i, 'GitHub / outils de développement'],
-    [/workers\.dev|cloudflare/i, 'Cloudflare / cloud'],
-    [/qr ?code|qrcode/i, 'QR code'],
-    [/[\u0600-\u06FF]/, 'contenu en arabe']
-  ];
-  const features = FEATURES.filter(([re]) => re.test(code)).map(([, label]) => label);
-
-  const line = (label, list) => list.length ? '• ' + label + ' : ' + list.join(' · ') : null;
+  const style = LOGO_STYLES.find(s => s.id === styleId) || LOGO_STYLES[0];
   const text = [
-    'Tu es un designer d\'icônes d\'applications de niveau Apple App Store / Google Play. Crée l\'icône officielle de la PWA décrite ci-dessous.',
+    'Crée le logo d\'une application mobile. Thème : ' + theme + '.',
+    'Style : ' + style.name + ', ' + style.desc + '.',
     '',
-    '═══ 1. CE QUE FAIT L\'APPLICATION (indices extraits de son code) ═══',
-    'Ces indices sont extraits automatiquement du code : certains sont du bruit. Déduis le métier de l\'app de leur ENSEMBLE, en donnant le plus de poids aux mots qui reviennent souvent, puis aux titres et aux actions. Ne te base jamais sur un mot isolé, et ne dessine pas littéralement un mot de la liste s\'il ne correspond pas à la fonction principale.',
-    '',
-    names.length ? '• Nom de l\'app : ' + names[0] + (names.length > 1 ? ' (aussi : ' + names.slice(1, 3).join(' · ') + ')' : '') : '• Nom de l\'app : non communiqué, déduis tout du contenu',
-    descriptions.length ? '• Description : ' + descriptions[0] : null,
-    line('Mots les plus fréquents (nombre d\'occurrences)', topWords),
-    line('Titres de l\'interface', headings),
-    line('Boutons et actions', actions),
-    line('Messages affichés par l\'app', jsTexts),
-    line('Champs et infobulles', hints),
-    line('Indices techniques (secondaires)', features),
-    '• Langue de l\'interface : ' + lang,
-    '',
-    'Choisis ensuite UN seul symbole, simple, fort et mémorable, qui évoque immédiatement la fonction principale de l\'app. Pas une initiale, pas un collage de plusieurs idées.',
-    '',
-    '═══ 2. COMMENT L\'IMAGE SERA UTILISÉE (À RESPECTER) ═══',
-    'Notre générateur de PWA traite l\'image automatiquement :',
-    '• il lit la couleur d\'une bande de 2 % sur les 4 bords pour en déduire la couleur de fond (les pixels transparents ou bruités faussent la détection) ;',
-    '• cette couleur devient le fond de l\'écran de démarrage iOS et Android, la theme-color et le background_color du manifest ;',
-    '• l\'icône est posée au centre de cet écran de démarrage, à environ 32 % de sa largeur : son fond doit se fondre sans aucune limite visible, comme au lancement d\'une app native.',
-    '',
-    '═══ 3. CONTRAINTES STRICTES ═══',
-    '1. Format carré 1024 × 1024 px, PNG, totalement opaque (aucune transparence).',
-    '2. Arrière-plan : aplat UNI de la couleur exacte ' + bg + ' sur 100 % de la surface, jusqu\'au dernier pixel des 4 bords. Aucun dégradé, aucune texture, aucun grain, aucun bruit, aucun vignettage, aucun halo, aucun motif, aucun cadre, aucune bordure.',
-    '3. Pas de coins arrondis ni de forme « squircle » dessinée : le téléphone applique lui-même le masque. L\'image reste un carré plein.',
-    '4. Le symbole tient entièrement dans le cercle central de 60 % de l\'image (zone de sécurité « maskable » d\'Android) : au moins 20 % de marge vide de chaque côté. Aucune ombre, lueur ou élément ne déborde dans cette marge.',
-    '5. Aucun texte : pas de lettres, pas de nom, pas de chiffres (illisibles en petit).',
-    '6. 2 à 3 couleurs maximum pour le symbole, en fort contraste avec le fond. ' + (dark
-      ? 'Le fond est sombre : symbole clair et lumineux.'
-      : 'Le fond est clair : symbole soutenu et foncé.') + ' ' + (accents.length
-      ? 'Couleurs d\'accent issues de l\'app, à privilégier : ' + accents.join(', ') + '.'
-      : 'Choisis des couleurs d\'accent harmonieuses avec le fond.'),
-    '7. Style moderne et épuré, formes géométriques nettes, finition premium. Un léger relief ou dégradé est permis UNIQUEMENT à l\'intérieur du symbole, jamais sur le fond.',
-    '8. Lisible et reconnaissable à 48 × 48 px : silhouette forte, pas de détails fins, pas de traits trop minces.',
-    '9. Pas de mise en scène : pas de téléphone, pas d\'écran d\'accueil, pas de main, pas de fond studio, pas de perspective 3D. Uniquement l\'icône, à plat et de face.',
-    '',
-    '═══ 4. LIVRABLE ═══',
-    'Avant de générer, écris : 1) en une phrase, ce que fait l\'app pour son utilisateur, d\'après les indices ; 2) le symbole choisi et pourquoi.',
-    'Puis génère une seule image finale. Vérifie que les 4 bords sont exactement ' + bg + ' et que rien ne s\'approche des bords.'
-  ].filter(l => l !== null).join('\n');
+    'Image : carré 1024 × 1024 px, PNG sans transparence.',
+    'Fond : couleur unie exacte ' + bg + ' sur toute l\'image, d\'un bord à l\'autre. Aucun dégradé, aucune texture, aucune ombre, aucun halo sur le fond.',
+    'Le logo est posé directement sur ce fond. Ne dessine pas de tuile d\'application, de carré arrondi, de cadre, de bordure ni de marge blanche ou d\'une autre couleur autour.',
+    'Taille : logo centré, environ 60 % de la largeur de l\'image ; 20 % de fond uni de chaque côté, rien ne touche les bords.',
+    'Couleurs du logo : 2 à 3 maximum, bien contrastées avec le fond' + (accents.length ? ', de préférence ' + accents.join(', ') : '') + '.',
+    'Aucun texte, aucune lettre. Lisible même en tout petit (48 px). Une seule image.'
+  ].join('\n');
 
   return { text, bg };
 }
-async function copyLogoPrompt(){
+/* Bouton ✨ : ouvre la modale du prompt logo */
+function copyLogoPrompt(){
   if(!byId('htmlInput').value.trim()){ toast('Colle d\'abord le code HTML', true); return; }
-  haptic(10);
+  openLogoModal();
+}
+function openLogoModal(){
+  const saved = store.getItem('mastercode_logo_style') || LOGO_STYLES[0].id;
+  const list = byId('logoStyleList');
+  list.innerHTML = '';
+  LOGO_STYLES.forEach(s => {
+    const row = document.createElement('label');
+    row.className = 'logo-style' + (s.id === saved ? ' active' : '');
+    row.innerHTML = `
+      <input type="radio" name="logoStyle" value="${s.id}" ${s.id === saved ? 'checked' : ''}>
+      <div class="logo-style-name">${escapeHtml(s.name)}</div>
+      <div class="logo-style-desc">${escapeHtml(s.desc)}</div>
+    `;
+    row.querySelector('input').onchange = () => {
+      list.querySelectorAll('.logo-style').forEach(el => el.classList.remove('active'));
+      row.classList.add('active');
+      store.setItem('mastercode_logo_style', s.id);
+      haptic(6);
+    };
+    list.appendChild(row);
+  });
+  let bg = DEFAULT_BG;
+  try{ bg = buildLogoPrompt('', saved).bg; }catch(e){ console.warn(e); }
+  byId('logoBgInfo').innerHTML = `<span class="logo-bg-swatch" style="background:${bg}"></span>Fond imposé : ${bg}`;
+  byId('logoModal').classList.add('open');
+  byId('logoOverlay').classList.add('open');
+  haptic(8);
+}
+function closeLogoModal(){ byId('logoModal').classList.remove('open'); byId('logoOverlay').classList.remove('open'); }
+async function confirmLogoPrompt(){
+  const theme = byId('logoTheme').value.trim();
+  if(!theme){ toast('Indique le thème de l\'app', true); byId('logoTheme').focus(); return; }
+  const checked = document.querySelector('input[name="logoStyle"]:checked');
+  const styleId = checked ? checked.value : LOGO_STYLES[0].id;
   let prompt;
   try{
-    prompt = buildLogoPrompt();
+    prompt = buildLogoPrompt(theme, styleId);
   }catch(e){
     console.error(e);
     toast('Analyse du code impossible', true);
@@ -1445,6 +1423,7 @@ async function copyLogoPrompt(){
     ta.remove();
     if(!ok){ toast('Copie impossible', true); return; }
   }
+  closeLogoModal();
   toast('Prompt logo copié · fond ' + prompt.bg);
 }
 
@@ -3098,7 +3077,7 @@ if(initDescription) byId('appDescription').value = initDescription;
 
 /* Escape */
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closeSwModal(); closeSessionsModal(); closePrefModal(); }
+  if(e.key==='Escape'){ closeSwModal(); closeSessionsModal(); closePrefModal(); closeLogoModal(); }
 });
 
 </script>
