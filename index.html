@@ -43,11 +43,6 @@ button{ -webkit-user-select:none; user-select:none; }
   box-shadow: none;
   backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
 }
-.glass-dark{
-  background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.05);
-  backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
-  box-shadow: none;
-}
 .header{ height:48px; min-height:48px; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
 .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
 .brand-logo{
@@ -75,7 +70,7 @@ button{ -webkit-user-select:none; user-select:none; }
 .header-icon-btn:hover{ color:#f8fafc; background:rgba(255,255,255,.06); }
 .header-icon-btn:active{ transform:scale(.94); }
 .save-indicator{
-  position:absolute; top:0; right:0;
+  position:absolute; top:4px; right:4px;
   width:8px; height:8px; border-radius:50%;
   background:#22c55e; box-shadow: 0 0 6px #22c55e;
   opacity:0; transition:.3s ease;
@@ -85,7 +80,6 @@ button{ -webkit-user-select:none; user-select:none; }
 .main{ flex:1; min-height:0; display:flex; flex-direction:column; gap:6px; overflow-y:auto; padding-bottom:4px; }
 .card{ border-radius:16px; padding:10px; flex:0 0 auto; }
 .section-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.section-title{ font-size:10px; line-height:12px; text-transform:uppercase; letter-spacing:.15em; color:#94a3b8; font-weight:800; }
 .section-name{ font-size:15px; line-height:18px; font-weight:700; letter-spacing:-.2px; }
 .token-row{ display:grid; grid-template-columns:minmax(0,1fr) 58px 72px; gap:4px; width:100%; }
 .field{
@@ -131,76 +125,6 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .project-name-head .field-label{
   margin:0 0 0 1px;
-}
-.install-toggle{
-  display:inline-flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:7px;
-  min-height:30px;
-  flex-shrink:0;
-  cursor:pointer;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.install-toggle input{
-  position:absolute;
-  width:1px;
-  height:1px;
-  opacity:0;
-  pointer-events:none;
-}
-.install-toggle-track{
-  position:relative;
-  width:34px;
-  height:19px;
-  border-radius:20px;
-  background:#272b35;
-  border:1px solid rgba(255,255,255,.12);
-  transition:background .2s ease,border-color .2s ease;
-  flex-shrink:0;
-}
-.install-toggle-track::after{
-  content:"";
-  position:absolute;
-  top:2px;
-  left:2px;
-  width:13px;
-  height:13px;
-  border-radius:50%;
-  background:#94a3b8;
-  transition:transform .2s ease,background .2s ease;
-}
-.install-toggle input:checked + .install-toggle-track{
-  background:rgba(232,184,76,.22);
-  border-color:rgba(232,184,76,.65);
-}
-.install-toggle input:checked + .install-toggle-track::after{
-  transform:translateX(15px);
-  background:#e8b84c;
-  box-shadow:0 0 8px rgba(232,184,76,.5);
-}
-.install-toggle input:focus-visible + .install-toggle-track{
-  outline:2px solid #e8b84c;
-  outline-offset:3px;
-}
-.install-toggle-text{
-  color:#94a3b8;
-  font-size:8px;
-  font-weight:800;
-  letter-spacing:.07em;
-  white-space:nowrap;
-}
-.install-toggle input:checked ~ .install-toggle-text{
-  color:#e8b84c;
-}
-.toggle-group{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-  gap:2px 12px;
-  min-width:0;
 }
 /* ========================================================= PRÉFÉRENCES ========================================================= */
 .pref-btn{ position:relative; }
@@ -344,20 +268,6 @@ button{ -webkit-user-select:none; user-select:none; }
 }
 .icon-clear.show{ display:flex; }
 .icon-clear:active{ transform:scale(.9); background:rgba(239,68,68,.28); }
-/* Sélecteur de couleur de fond (lancement) */
-.bg-pick{
-  display:none; align-items:center; gap:4px;
-  font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#94a3b8;
-}
-.bg-pick.show{ display:flex; }
-.bg-pick input{
-  -webkit-appearance:none; appearance:none;
-  width:22px; height:22px; padding:0; border:1px solid rgba(255,255,255,.2);
-  border-radius:7px; background:none; cursor:pointer; overflow:hidden;
-}
-.bg-pick input::-webkit-color-swatch-wrapper{ padding:0; }
-.bg-pick input::-webkit-color-swatch{ border:0; border-radius:6px; }
-.bg-pick input::-moz-color-swatch{ border:0; border-radius:6px; }
 .actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; flex:0 0 auto; margin-top:4px; z-index:10; }
 .action-btn{
   height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center;
@@ -591,7 +501,6 @@ button{ -webkit-user-select:none; user-select:none; }
   .brand-name{ font-size:15px; }
   .sw-open, .header-icon-btn{ width:38px; height:38px; flex-basis:38px; }
   .card{ padding:8px; border-radius:14px; }
-  .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); }
   .html-editor textarea{ min-height:130px; }
   .icon-zone{ min-height:82px; }
   .action-btn{ height:46px; }
@@ -601,7 +510,7 @@ button{ -webkit-user-select:none; user-select:none; }
 @media(max-width:360px){
   .app-inner{ padding-left:6px; padding-right:6px; }
   .token-row{ grid-template-columns:minmax(0,1fr) 52px 64px; }
-  .project-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:4px; }
+  .project-grid{ gap:4px; }
   .field{ font-size:12px; }
   .small-btn{ font-size:8.5px; padding:0 5px; }
   .action-btn{ font-size:11px; }
@@ -615,7 +524,7 @@ button{ -webkit-user-select:none; user-select:none; }
     <!-- HEADER -->
     <header class="header">
       <div class="brand">
-        <div class="brand-logo"><span>M</span></div>
+        <div class="brand-logo"><span>M</span><div id="saveIndicator" class="save-indicator"></div></div>
         <div class="min-w-0">
           <div class="brand-name">Mastercode</div>
           <div class="brand-sub">Premium PWA Factory</div>
@@ -873,6 +782,7 @@ const FETCH_TIMEOUT_UPLOAD_MS = 60000; /* Timeout sur les uploads (PUT) */
 const UPLOAD_CONCURRENCY = 3; /* Fichiers envoyés en parallèle */
 const DEFAULT_BG = '#050608';   /* Fond par défaut si l'icône est transparente / non détectable */
 
+const MARK_MOD_START=LT+'!-- mastercode:modules:start -->';
 /* Écrans de lancement iOS : [px largeur, px hauteur, css largeur, css hauteur, ratio] */
 const SPLASH_SIZES = [
   [1320,2868,440,956,3],
@@ -1115,15 +1025,6 @@ function toggleGithubAccess(){
 function onAppNameInput(val){
   store.setItem(LS_KEYS.APP_NAME, val);
   showSaveIndicator();
-}
-function toggleInstallModule(enabled){
-  store.setItem('mastercode_install_module', enabled ? '1' : '0');
-}
-function toggleSignature(enabled){
-  store.setItem('mastercode_signature_module', enabled ? '1' : '0');
-}
-function toggleFullscreen(enabled){
-  store.setItem('mastercode_fullscreen_module', enabled ? '1' : '0');
 }
 function onDescriptionInput(val){
   store.setItem(LS_KEYS.DESCRIPTION, val);
@@ -1463,14 +1364,23 @@ function loadSession(idx){
     byId('iconPreview').src = s.iconPreview || ('data:image/png;base64,' + s.icon512);
     byId('iconPreviewWrap').classList.remove('hidden');
     byId('iconClear').classList.add('show');
+    byId('iconUpload').classList.add('hidden');
+    byId('iconZone').classList.add('has-icon');
     store.setItem(LS_KEYS.ICON_512, s.icon512);
     store.setItem(LS_KEYS.ICON_192, s.icon192);
     store.setItem(LS_KEYS.ICON_PREVIEW, byId('iconPreview').src);
     if(iconBg) store.setItem(LS_KEYS.ICON_BG, iconBg); else store.removeItem(LS_KEYS.ICON_BG);
   } else {
     icon512 = ''; icon192 = ''; iconBg = '';
+    byId('iconInput').value = '';
+    byId('iconPreview').src = '';
     byId('iconPreviewWrap').classList.add('hidden');
     byId('iconClear').classList.remove('show');
+    byId('iconUpload').classList.remove('hidden');
+    byId('iconZone').classList.remove('has-icon');
+    store.removeItem(LS_KEYS.ICON_512);
+    store.removeItem(LS_KEYS.ICON_192);
+    store.removeItem(LS_KEYS.ICON_PREVIEW);
     store.removeItem(LS_KEYS.ICON_BG);
   }
   updateBgPicker();
@@ -1600,6 +1510,72 @@ async function putFile(token, owner, repo, path, contentB64, message){
   }
   throw lastErr || new Error(`Upload de ${path} échoué après ${maxAttempts} tentatives`);
 }
+async function commitFiles(token, owner, repo, files, message){
+  const base = `${GH_API}/repos/${owner}/${repo}/git`;
+  const maxAttempts = 3;
+  let lastErr = null;
+
+  /* 1. Blobs : créés une seule fois, réutilisés à chaque tentative */
+  const tree = [];
+  for (let i = 0; i < files.length; i += UPLOAD_CONCURRENCY) {
+    const batch = files.slice(i, i + UPLOAD_CONCURRENCY);
+    const shas = await Promise.all(batch.map(async f => {
+      const resp = await ghFetch(`${base}/blobs`, {
+        method: 'POST',
+        headers: ghHeaders(token),
+        body: JSON.stringify({ content: f.content, encoding: 'base64' })
+      }, FETCH_TIMEOUT_UPLOAD_MS);
+      if (!resp.ok) throw new Error(`Préparation de ${f.path} échouée : ${ await ghErrorMessage(resp) }`);
+      return ( await resp.json() ).sha;
+    }));
+    batch.forEach((f, k) => tree.push({ path: f.path, mode: '100644', type: 'blob', sha: shas[k] }));
+    updateStatus(`✅ ${Math.min(i + UPLOAD_CONCURRENCY, files.length)}/${files.length} fichiers préparés.`);
+  }
+
+  /* 2. Arbre + commit + déplacement de main (relancé si main a bougé entre-temps) */
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const refResp = await ghFetch(`${base}/ref/heads/main`, { headers: ghHeaders(token) });
+      if (!refResp.ok) throw new Error(`Branche main introuvable : ${ await ghErrorMessage(refResp) }`);
+      const parentSha = ( await refResp.json() ).object.sha;
+
+      const parentResp = await ghFetch(`${base}/commits/${parentSha}`, { headers: ghHeaders(token) });
+      if (!parentResp.ok) throw new Error(`Lecture du dernier commit impossible : ${ await ghErrorMessage(parentResp) }`);
+      const baseTree = ( await parentResp.json() ).tree.sha;
+
+      const treeResp = await ghFetch(`${base}/trees`, {
+        method: 'POST',
+        headers: ghHeaders(token),
+        body: JSON.stringify({ base_tree: baseTree, tree })
+      }, FETCH_TIMEOUT_UPLOAD_MS);
+      if (!treeResp.ok) throw new Error(`Création de l'arbre échouée : ${ await ghErrorMessage(treeResp) }`);
+      const treeSha = ( await treeResp.json() ).sha;
+
+      const commitResp = await ghFetch(`${base}/commits`, {
+        method: 'POST',
+        headers: ghHeaders(token),
+        body: JSON.stringify({ message, tree: treeSha, parents: [parentSha] })
+      });
+      if (!commitResp.ok) throw new Error(`Création du commit échouée : ${ await ghErrorMessage(commitResp) }`);
+      const commitSha = ( await commitResp.json() ).sha;
+
+      const updResp = await ghFetch(`${base}/refs/heads/main`, {
+        method: 'PATCH',
+        headers: ghHeaders(token),
+        body: JSON.stringify({ sha: commitSha, force: false })
+      });
+      if (updResp.ok) return;
+      lastErr = new Error(`Mise à jour de main échouée : ${ await ghErrorMessage(updResp) }`);
+    } catch (e) {
+      lastErr = e;
+    }
+    if (attempt < maxAttempts) {
+      updateStatus(`⚠️ Nouvelle tentative ${attempt}/${maxAttempts} du commit...`);
+      await new Promise(r => setTimeout(r, 2000 * attempt));
+    }
+  }
+  throw lastErr || new Error(`Commit groupé échoué après ${maxAttempts} tentatives`);
+}
 
 async function ensurePages(token, owner, repo){
   const resp= await ghFetch(`${GH_API}/repos/${owner}/${repo}/pages`,{
@@ -1628,8 +1604,8 @@ function insertBeforeBodyEnd(html, block){
 function fixTailwindConfig(html){
   if(!/tailwind\.config\s*=/.test(html)) return html;
   return html.replace(
-    /(?:^|[^.\w])tailwind\.config\s*=\s*(\{[\s\S]*?\})\s*;?/g,
-    (match, obj) => `window.tailwind = window.tailwind || {}; window.tailwind.config = ${obj};`
+    /(^|[^.\w])tailwind\.config\s*=/g,
+    (match, before) => `${before}window.tailwind = window.tailwind || {}; window.tailwind.config =`
   );
 }
 
@@ -1671,6 +1647,8 @@ function buildPwaHtml(source, owner, repo){
   html = fixTailwindConfig(html);
   const oldBlock= new RegExp( MARK_START+ '[\\s\\S]*?'+ MARK_END+ '\\n?', 'g' );
   html= html.replace( oldBlock, '' );
+  const oldModules= new RegExp( MARK_MOD_START+ '[\\s\\S]*?(?='+ LT+ '/body>|$)', 'i' );
+  html= html.replace( oldModules, '' );
 
   const bg = getBg();
   const headTags=[];
@@ -1746,7 +1724,7 @@ function buildPwaHtml(source, owner, repo){
   if(icon512 && !/apple-touch-startup-image/i.test(html)) headTags.push(splashLinks());
   if(headTags.length) html= insertInHead(html, headTags.join('\n'));
 
-  const blocks=[];
+  const blocks=[MARK_MOD_START];
   const custom= ( store.getItem(LS_KEYS.CUSTOM_SCRIPT)||'' ).trim();
   if(custom){
     const safeCustom= custom.replace(/<\/script/gi, '<\\/script');
@@ -2341,6 +2319,15 @@ async function watchDeployment(token, since) {
 
   const checkSiteLive = async () => {
     try {
+      // Le dernier build Pages doit être postérieur à l'envoi et terminé
+      const b = await ghFetch(`${GH_API}/repos/${liveOwner}/${liveRepo}/pages/builds/latest`, {
+        headers: ghHeaders(token)
+      });
+      if (b.ok) {
+        const build = await b.json();
+        const fresh = new Date(build.created_at).getTime() >= since - 15000;
+        if (!fresh || build.status !== 'built') return false;
+      }
       const res = await fetch(siteUrl + '?t=' + Date.now(), {
         method: 'GET',
         cache: 'no-store',
@@ -2381,7 +2368,7 @@ async function watchDeployment(token, since) {
 
     try {
       // 2. Vérification de secours via l'API Actions (pour les erreurs)
-      const res = await ghFetch(`\( {GH_API}/repos/ \){liveOwner}/${liveRepo}/actions/runs?per_page=5`, {
+      const res = await ghFetch(`${GH_API}/repos/${liveOwner}/${liveRepo}/actions/runs?per_page=5`, {
         headers: ghHeaders(token)
       });
       if (!res.ok) return;
@@ -2415,8 +2402,18 @@ async function watchDeployment(token, since) {
     }
   };
 
-  tick();
-  deploymentInterval = setInterval(tick, 5000);
+  let ticking = false;
+  const safeTick = async () => {
+    if (ticking) return;
+    ticking = true;
+    try {
+      await tick();
+    } finally {
+      ticking = false;
+    }
+  };
+  safeTick();
+  deploymentInterval = setInterval(safeTick, 5000);
 }
 
 function openLiveSite(){
@@ -2460,7 +2457,15 @@ async function injectPwaToGitHub() {
   updateStatus('--- INJECTION PWA ---', true);
 
   try {
-    try { detectDependencies(true); } catch (e) { console.warn(e); }
+    try {
+      const deps = detectDependencies(true);
+      if (deps && deps.missing && deps.missing.length) {
+        updateStatus('⚠️ Dépendances détectées : ' + deps.missing.map(d => d.name).join(', '));
+        injectDependencies(deps.missing);
+      }
+    } catch (e) {
+      console.warn('Dep detection failed:', e);
+    }
 
     const owner = await getOwner(token);
     updateStatus('✅ Authentification GitHub réussie.');
@@ -2501,11 +2506,9 @@ async function injectPwaToGitHub() {
 
     byId('statusCard').classList.remove('hidden'); // réaffiche la console en cas d'erreur
 
-    if (!liveOwner) {
-      byId('liveBtn').classList.remove('hidden');
-      byId('liveStatusTitle').textContent = 'Erreur';
-      byId('liveStatusText').textContent = err.message.slice(0, 60);
-    }
+    byId('liveBtn').classList.remove('hidden');
+    byId('liveStatusTitle').textContent = 'Erreur';
+    byId('liveStatusText').textContent = err.message.slice(0, 60);
   } finally {
     resetInjectButton();
   }
@@ -2588,21 +2591,31 @@ async function generatePWA() {
     ];
 
     const since = Date.now();
+    const allFiles = filesToUpload.concat(splashFiles);
 
-    updateStatus('Upload des fichiers principaux...');
-    for (let i = 0; i < filesToUpload.length; i += UPLOAD_CONCURRENCY) {
-      const batch = filesToUpload.slice(i, i + UPLOAD_CONCURRENCY);
-      await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
-      batch.forEach(f => updateStatus(`✅ ${f.path} envoyé.`));
-    }
+    updateStatus('Upload : ' + allFiles.length + ' fichiers en un seul commit...');
+    try {
+      await commitFiles(token, owner, appName, allFiles, 'Mastercode Sync');
+      updateStatus('✅ ' + allFiles.length + ' fichiers envoyés (1 commit).');
+    } catch (e) {
+      console.warn('Commit groupé impossible :', e);
+      updateStatus('⚠️ Commit groupé impossible : envoi fichier par fichier...');
 
-    updateStatus('Upload : écrans de lancement (' + splashFiles.length + ')...');
-    for (let i = 0; i < splashFiles.length; i += UPLOAD_CONCURRENCY) {
-      const batch = splashFiles.slice(i, i + UPLOAD_CONCURRENCY);
-      await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
-      updateStatus(`✅ ${Math.min(i + UPLOAD_CONCURRENCY, splashFiles.length)}/${splashFiles.length} écrans envoyés.`);
+      updateStatus('Upload des fichiers principaux...');
+      for (let i = 0; i < filesToUpload.length; i += UPLOAD_CONCURRENCY) {
+        const batch = filesToUpload.slice(i, i + UPLOAD_CONCURRENCY);
+        await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
+        batch.forEach(f => updateStatus(`✅ ${f.path} envoyé.`));
+      }
+
+      updateStatus('Upload : écrans de lancement (' + splashFiles.length + ')...');
+      for (let i = 0; i < splashFiles.length; i += UPLOAD_CONCURRENCY) {
+        const batch = splashFiles.slice(i, i + UPLOAD_CONCURRENCY);
+        await Promise.all(batch.map(f => putFile(token, owner, appName, f.path, f.content, 'Mastercode Sync')));
+        updateStatus(`✅ ${Math.min(i + UPLOAD_CONCURRENCY, splashFiles.length)}/${splashFiles.length} écrans envoyés.`);
+      }
+      updateStatus('✅ Écrans de lancement envoyés.');
     }
-    updateStatus('✅ Écrans de lancement envoyés.');
 
     updateStatus('Activation de GitHub Pages...');
     await ensurePages(token, owner, appName);
@@ -2646,19 +2659,6 @@ async function generatePWA() {
   if(appName) byId('appName').value = appName;
 const initDescription = store.getItem(LS_KEYS.DESCRIPTION);
 if(initDescription) byId('appDescription').value = initDescription;
-
-  const installToggle = byId('installModuleToggle');
-  if(installToggle){
-    installToggle.checked = store.getItem('mastercode_install_module') === '1';
-  }
-  const signatureToggle = byId('signatureModuleToggle');
-  if(signatureToggle){
-    signatureToggle.checked = store.getItem('mastercode_signature_module') === '1';
-  }
-  const fullscreenToggle = byId('fullscreenModuleToggle');
-  if(fullscreenToggle){
-    fullscreenToggle.checked = store.getItem('mastercode_fullscreen_module') === '1';
-  }
   updatePrefBadge();
 
   /* Restaure le HTML */
@@ -2700,16 +2700,6 @@ document.addEventListener('keydown', e=>{
   if(e.key==='Escape'){ closeSwModal(); closeSessionsModal(); closePrefModal(); }
 });
 
-/* Curseur lumineux sur Forger */
-document.addEventListener('mousemove', e=>{
-  const btn = byId('mainBtn');
-  if(!btn) return;
-  const r = btn.getBoundingClientRect();
-  if(e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom){
-    btn.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
-    btn.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
-  }
-});
 </script>
 </body>
 </html>
